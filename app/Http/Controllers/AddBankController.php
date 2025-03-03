@@ -55,7 +55,7 @@ DB::table('add_bank')->insert([
 ]);
 
 
-        return redirect()->route('bankdetails.form')->with('success', 'Bank details added successfully!');
+        return redirect()->route('showBank')->with('success', 'Bank details added successfully!');
     }
 
     public function edit($id)
@@ -91,7 +91,7 @@ DB::table('add_bank')->insert([
     public function getBankDetails()
 {
     // Fetch all bank details from the 'add_Bank' table
-    $bankDetails = \DB::table('add_Bank')->get(['id', 'bank_name', 'ifsc', 'account_no']);
+    $bankDetails = \DB::table('add_Bank')->where('status',1)->get(['id', 'bank_name', 'ifsc', 'account_no']);
     return view('user.fund-transfer.bank-account',compact('bankDetails'));
 }
 
@@ -124,12 +124,35 @@ public function storeQr(Request $request)
             'updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'QR Code uploaded successfully to AWS S3.');
+        return redirect()->back()->with('success', 'QR Code uploaded successfully.');
     }
 
     return redirect()->back()->with('error', 'QR Code upload failed. Please try again.');
 }
 
 
+ public function showBank()
+ {
+    $bankDetails = \DB::table('add_Bank')->get(['id', 'bank_name', 'ifsc', 'account_no','status']);
+    //return $bankDetails;
+    $services=$bankDetails;
+    return view('admin.addBank.index',compact('services'));
+ }
+ public function toggleStatus($id)
+{
+    $service = \DB::table('add_bank')->where('id', $id)->first();
+
+    if (!$service) {
+        return redirect()->back()->with('error', 'Service not found!');
+    }
+
+    $newStatus = $service->status == 1 ? 0 : 1; // Toggle between 1 and 0
+
+    \DB::table('add_bank')
+        ->where('id', $id)
+        ->update(['status' => $newStatus]);
+
+    return redirect()->back()->with('success', 'Service status updated successfully!');
+}
 
 }
