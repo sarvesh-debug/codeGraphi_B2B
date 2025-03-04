@@ -120,7 +120,7 @@
                         <div class="center">
                             <h1>Welcome To Zpay</h1>
                         </div>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, Ipsum has been the industry's standard dummy </p>
+                        <p>Z Pay is a B2B fintech app streamlining business transactions with services like BBPS, AEPS, and DMT. It ensures secure, efficient, and seamless financial operations with advanced features and integrations.</p>
                     </div>
                 </div>
             </div>

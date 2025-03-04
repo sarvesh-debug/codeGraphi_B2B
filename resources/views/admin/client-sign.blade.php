@@ -47,7 +47,7 @@
                         <div class="center">
                             <h1>Welcome To Zpay</h1>
                         </div>
-                        <p>We provide fintech services that enhance digital transactions, including AEPS for biometric banking, BBPS for bill payments, DTH recharge, and more. Our solutions ensure secure, fast, and convenient financial access for users.</p>
+                        <p>Z Pay is a B2B fintech app streamlining business transactions with services like BBPS, AEPS, and DMT. It ensures secure, efficient, and seamless financial operations with advanced features and integrations.</p>
                     </div>
                 </div>
             </div>
