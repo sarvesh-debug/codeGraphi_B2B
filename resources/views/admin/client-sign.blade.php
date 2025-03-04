@@ -1,184 +1,176 @@
-<!DOCTYPE html>  
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zxx">
+
+<!-- Mirrored from storage.googleapis.com/theme-vessel-items/checking-sites/logdy-2-html/HTML/main/register-13.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 02 Mar 2025 12:38:30 GMT -->
 <head>
-    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        '../../../../../../www.googletagmanager.com/gtm5445.html?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TAGCODE');</script>
+    <!-- End Google Tag Manager -->
+    <title>Zpay Register</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Pay - Create an Account</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f5f5f5;
-            color: #333333;
-            font-family: 'Roboto', sans-serif;
-        }
- .brand-logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    <meta charset="UTF-8">
+    <!-- External CSS libraries -->
+    <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="assets/fonts/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="assets/fonts/flaticon/font/flaticon.css">
 
-        .brand-logo img {
-            max-width: 100px;
-        }
+    <!-- Favicon icon -->
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon" >
 
-        .brand-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00bcd4;
-            margin-top: 10px;
-        }
-        .form-container {
-            max-width: 600px;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            margin: 50px auto;
-        }
+    <!-- Google fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800%7CPoppins:400,500,700,800,900%7CRoboto:100,300,400,400i,500,700">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
 
-        .form-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #00bcd4;
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    <!-- Custom Stylesheet -->
+    <link type="text/css" rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" id="style_sheet" href="assets/css/skins/default.css">
 
-        .btn-primary {
-            background-color: #00bcd4;
-            border: none;
-            transition: background-color 0.3s;
-        }
-
-        .btn-primary:hover {
-            background-color: #0097a7;
-        }
-    </style>
 </head>
-<body>
-    <div class="form-container">
-         <div class="brand-logo">
-            <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="Z Pay Logo">
-            <div class="brand-name">Z Pay</div>
-            <div class="welcome-message">Welcome to ZPay</div>
-        </div>
-        <!-- Form Title -->
-        <h1 class="form-title">User Registration Form</h1>
-        @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-    
-        <!-- Registration Form -->
-        <form action="{{ route('admin.client.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="mb-3">
-                <label for="mobile" class="form-label">Mobile No (as per Aadhar Link)</label>
-                <input type="text" class="form-control" value=""  name="mobile" placeholder="Enter Mobile No" maxlength="10" required>
-            </div>
-            <!-- Name -->
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required>
-            </div>
+<body id="top">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TAGCODE"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="page_loader"></div>
 
-            <!-- Shop Name -->
-            <div class="mb-3">
-                <label for="shop_name" class="form-label">Shop Name</label>
-                <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Enter Shop Name" required>
-            </div>
-
-            <!-- Mobile Number -->
-           
-
-            <!-- Email ID -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email ID</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email ID" required>
-            </div>
-
-            <!-- Address (As per Aadhar) -->
-            {{-- <div class="mb-3">
-                <label for="address" class="form-label">Address (As per Aadhar)</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Full Address" required>
-                <div class="row mt-2">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="city" placeholder="City" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="state" placeholder="State" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="pincode" placeholder="PIN Code" required>
+<!-- Login 13 start -->
+<div class="login-13">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-12 bg-img ">
+                <div class="bg-img-inner">
+                    <div class="info">
+                        <div class="center">
+                            <h1>Welcome To Zpay</h1>
+                        </div>
+                        <p>We provide fintech services that enhance digital transactions, including AEPS for biometric banking, BBPS for bill payments, DTH recharge, and more. Our solutions ensure secure, fast, and convenient financial access for users.</p>
                     </div>
                 </div>
-            </div> --}}
-
-            <!-- Aadhar Number & Upload -->
-            {{-- <div class="mb-3">
-                <label for="aadhar" class="form-label">Aadhar No</label>
-                <input type="text" class="form-control" id="aadhar" name="aadhar" placeholder="Enter Aadhar No" maxlength="12" required>
-                <label class="form-label mt-2">Upload Aadhar Front & Back</label>
-                <input type="file" class="form-control mb-2" name="aadhar_front" accept="image/*" required>
-                <input type="file" class="form-control" name="aadhar_back" accept="image/*" required>
-            </div> --}}
-
-            <!-- PAN Number & Upload -->
-            {{-- <div class="mb-3">
-                <label for="pan" class="form-label">PAN No</label>
-                <input type="text" class="form-control" id="pan" name="pan" placeholder="Enter PAN No" maxlength="10" required>
-                <label class="form-label mt-2">Upload PAN Image</label>
-                <input type="file" class="form-control" name="pan_image" accept="image/*" required>
-            </div> --}}
-
-            <!-- Bank Details -->
-            {{-- <div class="mb-3">
-                <label for="account_no" class="form-label">Bank Account Details</label>
-                <input type="text" class="form-control mb-2" name="account_no" placeholder="Account Number" required>
-                <input type="text" class="form-control mb-2" name="ifsc" placeholder="IFSC Code" required>
-                <input type="text" class="form-control mb-2" name="bank_name" placeholder="Bank Name" required>
-                <label class="form-label mt-2">Upload Passbook / Cheque / Bank Statement</label>
-                <input type="file" class="form-control" name="bank_image" accept="image/*" required>
-            </div> --}}
-
-            <!-- Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
             </div>
+            <div class="col-lg-6 col-md-12 form-info">
+                <div class="form-section">
+                    <div class="form-section-innner">
+                        <div class="logo clearfix">
+                            <a href="{{route('/verfy-retailer.form')}}">
+                                <img src="{{asset('assets/img/logos/zpay logo.png')}}" alt="logo">
+                            </a>
+                        </div>
+                        <h3>Create An Cccount</h3>
+                        <div class="btn-section clearfix">
+                            <a href="{{route('customer.login')}}" class="link-btn active btn-1 active-bg">Login</a>
+                            <a href="{{route('/verfy-retailer.form')}}" class="link-btn btn-2 default-bg">Register</a>
+                        </div>
+                        <div class="login-inner-form">
 
-            <!-- Confirm Password -->
-            <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
+
+                            <form action="{{ route('admin.client.store') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+
+                                
+                               {{-- mobile --}}
+                                <div class="form-group form-box">
+                                    <input name="mobile" type="text" class="form-control" placeholder="Enter Mobile No" maxlength="10" required aria-label="Enter Mobile No">
+                                    <i class="flaticon-user"></i>
+                                </div>
+
+                                {{-- Name --}}
+                                <div class="form-group form-box">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required aria-label="Enter Name">
+                                    <i class="flaticon-mail-2"></i>
+                                </div>
+
+                                <!-- Shop Name -->
+                                <div class="form-group form-box">
+                                    <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Enter Shop Name" required aria-label="Enter Shop Name">
+                                    <i class="flaticon-mail-2"></i>
+                                </div>
+
+                                  <!-- Email ID -->
+                                 <div class="form-group form-box">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email ID" required required aria-label="Enter Email ID">
+                                    <i class="flaticon-mail-2"></i>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="form-group form-box clearfix">
+                                    <input type="password" class="form-control"  autocomplete="off" id="password" name="password" placeholder="Enter Password" required aria-label="Enter Password">
+                                    <i class="flaticon-password"></i>
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="form-group form-box clearfix">
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required aria-label="Confirm Password">
+                                    <i class="flaticon-password"></i>
+                                </div>
+
+
+                                  <!-- Shop Name2 -->
+                                  {{-- <div class="form-group form-box">
+                                    <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Enter Shop Name" required aria-label="Enter Shop Name">
+                                    <i class="flaticon-mail-2"></i>
+                                </div> --}}
+
+                                 <!-- Balance -->
+
+
+                                <div class="form-group checkbox clearfix">
+                                    <div class="clearfix float-start">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="rememberme">
+                                            <label class="form-check-label" for="rememberme">
+                                                I agree to the terms of service
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-theme">Register</button>
+                                </div>
+
+                                <input type="number" hidden class="form-control" value="0" id="balance" name="balance" placeholder="Enter Balance" required>
+                                <input type="text" hidden class="form-control" value="Retailer" id="balance" name="role" placeholder="Enter Balance" required>
+
+                            </form>
+                        </div>
+                        {{-- <ul class="social-list">
+                            <li><a href="#" class="facebook-color"><i class="fa fa-facebook facebook-i"></i><span>Facebook</span></a></li>
+                            <li><a href="#" class="twitter-color"><i class="fa fa-twitter twitter-i"></i><span>Twitter</span></a></li>
+                            <li><a href="#" class="google-color"><i class="fa fa-google google-i"></i><span>Google</span></a></li>
+                        </ul> --}}
+                        <p class="none-2">Already a member?<a href="{{route('customer.login')}}" class="thembo">Login here</a></p>
+                    </div>
+                </div>
             </div>
-  <!-- Balance -->
-                    
-          <input type="number" hidden class="form-control" value="0" id="balance" name="balance" placeholder="Enter Balance" required>
-          <input type="text" hidden class="form-control" value="Retailer" id="balance" name="role" placeholder="Enter Balance" required>
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary w-100">Submit</button>
-        </form>
+        </div>
     </div>
+</div>
+<!-- Login 13 end -->
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = field.nextElementSibling.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                field.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+<!-- External JS libraries -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = field.nextElementSibling.querySelector('i');
+        if (field.type === 'password') {
+            field.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            field.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
         }
-    </script>
+    }
+</script>
+
+<!-- Custom JS Script -->
 </body>
+
+<!-- Mirrored from storage.googleapis.com/theme-vessel-items/checking-sites/logdy-2-html/HTML/main/register-13.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 02 Mar 2025 12:38:30 GMT -->
 </html>
