@@ -627,6 +627,8 @@ public function login(Request $request)
         session(['dis_phone'=> $customer->dis_phone]);
         session(['adhar_no'=> $customer->aadhar_no]);
         session(['email'=> $customer->email]);
+        session(['mpin'=> $customer->mpin]);
+        session(['txnpin'=> $customer->txnpin]);
 
         $deviceId=md5(string: request()->ip() . request()->header('User-Agent'));
         $today = Carbon::today();
@@ -1150,6 +1152,30 @@ public function getProfile()
 //     return view('user.services', compact('activeServices', 'customer'));
 // }
 
+public function getMpin(Request $request)
+{
+    $mpin = CustomerModel::getMpin();
+    return response()->json(['mpin' => $mpin]);
+}
+public function changeMpin(Request $request)
+{
+    
+    $request->validate([
+        'mobile' => 'required',
+        'old_mpin' => 'required',
+        'new_mpin' => 'required|min:4|max:4',
+    ]);
 
+    $user = CustomerModel::where('phone', $request->mobile)->first();
+
+    if (!$user || $user->mpin !== $request->old_mpin) {
+        return back()->with('error', 'Old MPIN is incorrect.');
+    }
+
+    // Update MPIN
+    $user->update(['mpin' => $request->new_mpin]);
+    session(['mpin'=> $request->new_mpin]);
+    return back()->with('success', 'MPIN updated successfully.');
+}
 
 }
