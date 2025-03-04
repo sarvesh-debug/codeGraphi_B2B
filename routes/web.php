@@ -119,6 +119,8 @@ return view('user.auth.certificate');
     
     // Route::get('/user',function(){
     //     return view('user.auth.index');
+
+
     // })->name('customer.login1');
     
     // Route::get('/customer/login', [CustomerController::class, 'showForm'])->name('customer.login');
@@ -805,6 +807,10 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
     Route::get('admin/pan/history',[PanCardController::class,'panHistoryAdmin'])->name('admin.panHistory');
     Route::get('admin/pan/balance',[PanCardController::class,'getEpanBalance'])->name('admin.balance');
+
+    Route::get('/add/bank/details',[AddBankController::class,'showBank'])->name('showBank');
+    Route::post('/addbank/{id}/toggle-status', [AddBankController::class, 'toggleStatus'])->name('otherServices.toggle');
+
 
 });
 

@@ -1,4 +1,8 @@
+@php
+use Illuminate\Support\Facades\DB;
+$pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
 
+@endphp
 <!DOCTYPE html>
 <html
   lang="en"
@@ -170,37 +174,22 @@
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAMNJREFUSEvtlU0KwjAQRl+vYcGFG+3Kc+jGG7kRpV248nwuBEU8hTLFlJQWksmPKDjLMPleZr5MUpA5isz6fBSwAWpgEVHVAzgBe6NhV3AFyghxe+sO2MqCDXgmEheZOzDJCei0NSZXwBFYeVbaamsAkj8DzqEAlwfmMK683gXSmPwH4Ort97fI5/ZNgYtPohkBzRwsgQOwDgW4PPDU7dIGk5wSMPrYSW+lxyli9LmWD6cB5hGE2/vDEZ02NCYHcX8f8AKtTiAZznncCgAAAABJRU5ErkJggg=="/>
                   <div data-i18n="Layouts">
-                      Wallet</div>
+                    Fund Requests </div>
                 </a>
   
                 <ul class="menu-sub">
-                  {{-- <li class="menu-item">
-                    <a href="{{route('admin/wallet/credit-debit')}}" class="menu-link">
-                      <div data-i18n="Without menu">Wallet Credit & Debit</div>
-                    </a>
-                  </li>
-                  <li class="menu-item">
-                    <a href="{{route('admin/wallet/credit-lock')}}" class="menu-link">
-                      <div data-i18n="Without navbar">Wallet Lock & Release</div>
-                    </a>
-                  </li> --}}
+                
                   <li class="menu-item">
                     <a href="{{route('getFundRequests')}}" class="menu-link">
-                      <div data-i18n="Without navbar">Fund Requests</div>
+                      <div data-i18n="Without navbar">Pending</div>
                     </a>
                   </li>
                   <li class="menu-item">
-                    <a href="{{ route('bankdetails.edit', ['id' => '1']) }}" class="menu-link">
-                        <div data-i18n="Without menu">Bank Account</div>
-                    </a>
-                </li>
-                
-              
-                  <li class="menu-item">
-                    <a href="{{route('bankdetails.Qr')}}" class="menu-link">
-                      <div data-i18n="Without menu">QR Code</div>
+                    <a href="{{route('getFundRequests.History')}}" class="menu-link">
+                      <div data-i18n="Without navbar">History</div>
                     </a>
                   </li>
+                 
                  
                 </ul>
               </li>
@@ -337,17 +326,31 @@
 
               <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
-                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAJBJREFUSEvtlE0OQDAUhD+nsBYWDiK2LuMQTiSxcA4r1m5BiIq/Iq1KmrTbduZ7b9KMh+HjGfbnd0AGFECsuFkD5EAp9McNesBXNBeyDghlgGG5UI3upD8aOYCL6PEDu4gsiGjqkeBxzvsHLRDJuigFKk1AAtRXAPHFNP1X+dxz27IzDvhq8p2Pau+/HsZ+wAifXyEZA1BA5wAAAABJRU5ErkJggg=="/>
+                  <i class="bx bx-cog me-2"></i>
                   <div data-i18n="Layouts">
-                      Other Services</div>
+                      Settings</div>
                 </a>
   
                 <ul class="menu-sub">
+                  <li class="menu-item">
+                    {{-- <a href="{{ route('bankdetails.edit', ['id' => '1']) }}" class="menu-link"> --}}
+                      <a href="{{ route('showBank') }}" class="menu-link">
+                        <div data-i18n="Without menu">Bank Account</div>
+                    </a>
+                </li>
+                
+              
+                  <li class="menu-item">
+                    <a href="{{route('bankdetails.Qr')}}" class="menu-link">
+                      <div data-i18n="Without menu">QR Code</div>
+                    </a>
+                  </li>
                   <li class="menu-item">
                     <a href="{{route('otherServices.form')}}" class="menu-link">
                       <div data-i18n="Without menu">Latest News </div>
                     </a>
                   </li>
+                 
                   <li class="menu-item">
                     <a href="{{route('otherServices.index')}}" class="menu-link">
                       <div data-i18n="Without menu">Services</div>
@@ -417,14 +420,16 @@
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               <div class="navbar-nav align-items-center">
                 <div class="nav-item d-flex align-items-center">
-                  <i class="bx bx-search fs-4 lh-0"></i>
-                  <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+                
+                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b></li>
                 </div>
               </div>
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <!-- User -->
-                <li>Wallet Amount ₹ {{session('adminBalance')}}</li>
+                
+                <li style="margin-right: 50px"><a href="{{route('getFundRequests')}}"><i class="bx bx-bell me-2"><b style="color: red"><sup>{{$pendingCount}}</sup></b></i></a></li>
+                <li>Admin</li>
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
