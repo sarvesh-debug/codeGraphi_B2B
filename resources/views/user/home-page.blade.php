@@ -1,5 +1,52 @@
 @extends('user/include.layout')
+@php
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
+$mobile = Session::get('mobile', '');
+
+$mobile=session('mobile');
+$walletAmt=DB::table('add_moneys')->where('phone',$mobile) ->whereDate('created_at', Carbon::today())->sum('amount');
+$commissionAmt=DB::table('getcommission')->where('retailermobile',$mobile) ->whereDate('created_at', Carbon::today())->sum('commission');
+
+$DMTvalueAll=0;
+    $countDMT=0;
+            // Fetch data from 'cash_withdrawals'
+    $transactionsDMTInstantPay  = DB::table('transactions_dmt_instant_pay')->where('remitter_mobile_number',$mobile) ->whereDate('created_at', Carbon::today())->get();
+   
+    foreach ($transactionsDMTInstantPay  as $transaction)  {
+        $responseData = json_decode($transaction->response_data, true);
+                        $payableValue=0;
+
+        if(isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN')
+        {
+            $payableValue = (float)($responseData['data']['txnValue'] ?? 0);
+            $DMTvalueAll += $payableValue;
+            $countDMT +=1;
+          
+        }
+    }
+
+    $valueAll=0;
+    $countAEPS=0;
+            // Fetch data from 'cash_withdrawals'
+    $cashWithdrawals = DB::table('cash_withdrawals')->where('mobile',$mobile	) ->whereDate('created_at', Carbon::today())->get();
+    foreach ($cashWithdrawals as $withdrawal) {
+        $responseData = json_decode($withdrawal->response_data, true);
+        $payableValue=0;
+
+        if(isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN')
+        {
+            $payableValue = (float)($responseData['data']['transactionValue'] ?? 0);
+            $valueAll += $payableValue;
+            $countAEPS +=1;
+        }
+}
+
+$total_trans=$valueAll+$DMTvalueAll;
+
+
+@endphp
 @section('custom-css')
 <style>
     .service-icon
@@ -340,7 +387,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="#">
 						<h3 class="card-title mb-2 service-text">Today Transactions</h3>
-						<h3 class="card-title mb-2 service-text">₹ 0.00</h3>
+						<h3 class="card-title mb-2 service-text">₹ {{$total_trans}}</h3>
 					</a>
 				</div>
 			</div>
@@ -360,7 +407,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="#">
 						<h3 class="card-title mb-2 service-text">Wallet TopUp</h3>
-						<h3 class="card-title mb-2 service-text">₹ 0.00</h3>
+						<h3 class="card-title mb-2 service-text">₹ {{$walletAmt}}</h3>
 					</a>
 				</div>
 			</div>
@@ -370,7 +417,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="#">
 						<h3 class="card-title mb-2 service-text">Today Earning</h3>
-						<h3 class="card-title mb-2 service-text">₹ 0.00</h3>
+						<h3 class="card-title mb-2 service-text">₹ {{$commissionAmt}}</h3>
 					</a>
 				</div>
 			</div>
@@ -416,7 +463,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-id-card fa-3x"></i>
 						</div>
@@ -429,7 +476,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
                             <i class="fas fa-credit-card fa-3x"></i>
 						</div>
@@ -442,7 +489,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-calculator fa-3x"></i>
 						</div>
@@ -455,7 +502,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
             <div class="card  gradient-rechargee fixed-card">
                 <div class="card-body">
                     @if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
-                        <a href="{{ route('getISP') }}">
+                        <a href="{{route('pageNotFound')}}">
                             <!-- <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="card-img">
                                     <img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />
@@ -519,7 +566,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
                 <div class="card-body">
                     @if ($customer->payout == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
                         <!-- If AEPS is active, open the cash withdrawal form -->
-                        <a href="">
+                        <a href="{{route('pageNotFound')}}">
                             <!-- <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="">
                                     <img src="{{asset('assets/img/icons/pay_out.png')}}" class="service-icon" />
@@ -553,7 +600,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
                 <div class="card-body">
                     @if ($customer->cc_bill_payment == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
                         <!-- If AEPS is active, open the cash withdrawal form -->
-                        <a href="{{route('getcategory')}}">
+                        <a href="{{route('pageNotFound')}}">
                             <!-- <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="card-img">
                                     <img src="{{asset('assets/img/icons/bill_payment.png')}}" class="service-icon" />
@@ -586,7 +633,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-coins fa-3x"></i>
 						</div>
@@ -600,7 +647,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-shield-alt fa-3x"></i>
 						</div>
@@ -614,7 +661,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-sack-dollar fa-3x"></i>
 						</div>
@@ -628,7 +675,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-insurancee fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-id-card fa-3x"></i>
 						</div>
@@ -642,7 +689,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-postpaidd fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<!-- <i class="fas fa-phone-alt fa-3x"></i> -->
                             <i class="fa-solid fa-mobile-button fa-3x"></i>
@@ -657,7 +704,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-creditt fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-credit-card fa-3x"></i>
 						</div>
@@ -671,7 +718,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-electricityy fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-bolt fa-3x"></i>
 						</div>
@@ -685,7 +732,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-waterr fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<i class="fas fa-tint fa-3x"></i>
 						</div>
@@ -699,7 +746,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		<div class="col-lg-2 col-md-3 col-6 mb-4">
 			<div class="card gradient-gass fixed-card">
 				<div class="card-body">
-					<a href="#">
+					<a href="{{route('pageNotFound')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-bottle-droplet fa-3x"></i>
 						</div>
