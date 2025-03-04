@@ -865,18 +865,19 @@
                       </a>
                      
                   </li>
-                  <li>
-                    <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Logut</span>
-                    </a>
-                   
-                </li>
+                  
                   <li>
                     <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
                         <i class="bx bx-power-off me-2"></i>
                         <span class="align-middle">Certificate</span>
                     </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Logout</span>
+                    </a>
+                   
                 </li>
               </ul>
           </li>
@@ -954,7 +955,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
 
 <style>
     .otp-input {
