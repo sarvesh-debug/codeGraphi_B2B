@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Helpers\MailHelper;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use Illuminate\Support\Facades\Auth;
@@ -421,6 +421,17 @@ public function veryfyRetailer(Request $request)
             //    'pan_image' => $panImageUrl,
             //    'bank_document' => $bankImageUrl,
            ]);
+
+			$templateData = [
+				'user_id' => $username,
+				'phone' => $request->phone,
+				'name' =>  $request->name,
+				'password' => $request->password,
+				'role' => $request->role
+			];
+		
+			$emailSent = MailHelper::sendEmail('add_member_by_admin', $templateData, $request->email);
+	
    
            return redirect()->back()->with('success', 'Add '.$role.' completed successfully!');
        } catch (Exception $e) {
