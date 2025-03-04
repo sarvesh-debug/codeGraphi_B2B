@@ -696,8 +696,8 @@
             {{-- <div class="flex flex-row items-center justify-start gap-6 bg-red"> --}}
               <!-- Add Fund Button -->
               <div class=" rounded ">
-                <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold">
-                  Add Fund
+                <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold fa fa-plus">
+                 
                 </a>
               </div>
             
@@ -731,30 +731,47 @@
               </style>
 <div class="d-flex justify-content-between align-items-center gap-3">
   <!-- Wallet Icon and Balance -->
-  <div class="flex flex-row items-center gap-2">
+  <!-- <div class="flex flex-row items-center gap-2">
       <i class="bx bx-wallet bx-sm icon mb-1"></i>
-      <span class="text-gray-900 fw-bold bal">Balance ₹:</span>
+      <span class="text-gray-900 fw-bold bal">₹: </span>
       <span class="text-dark rup fw-bold">{{ session('balance') }}</span>
-  </div>
+  </div> -->
+      <!-- Wallet Icon and Balance -->
+      <div class="d-flex align-items-center gap-2">
+        <i class="bx bx-wallet bx-sm text-primary"></i>
+        <span class="fw-bold text-dark">₹</span>
+        <span class="fw-bold text-dark">{{ session('balance') }}</span>
+    </div>
+
   
   <!-- DT/RT Code -->
-  <span class="role d-none d-md-inline-block lg:mb-2 mb-md-0 text-primary">
+  <!-- <span class="role d-none d-md-inline-block lg:mb-2 mb-md-0 text-primary">
       <i class="bx bx-barcode bx-sm mb-1"></i>
       @if ($role==='distibuter')
-          DT Code
+          Distributer
       @else
-          RT Code
+          Retailer
       @endif: <span class="text-dark">{{ $customer->username }}</span>
+  </span> -->
+
+  <span class="role btn btn-primary d-inline-flex align-items-center px-3 py-1 rounded-pill">
+    <span class="fw-bold">Account: </span>&nbsp;
+    @if (trim(strtolower($role)) === 'distibuter')
+        Distributor
+    @else
+        Retailer
+    @endif
   </span>
 
+
   <!-- Verification Status aligned to the right -->
-  <span class="verify text-right text-success blink ml-auto">
+  <!-- <span class="verify text-right text-success blink ml-auto">
       @if(!$customer->pin > 0)
           <span class="text-danger blink me-1">Not Verified</span>
       @else
-          <span class="text-success blink me-1">Verified</span>
+          <span class="text-success fw-bold blink me-1">Verified</span>
       @endif
-  </span>
+  </span> -->
 </div>
 
 <style>
@@ -784,10 +801,24 @@
 
   <ul class="navbar-nav flex-row align-items-center float-end ms-auto">
           <!-- User -->
+           <span class="fw-bold">Welcome, {{ $customer->name }}</span>
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
               <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                  <div class="avatar avatar-online">
-                      <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
+                  <div class="avatar">
+                      <!-- <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" /> -->
+                      <div class="position-relative d-inline-block">
+                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class=" h-auto rounded-circle" />
+                        @if (!$customer->pin > 0)
+                          <!-- Cross Icon Below the Image with Background -->
+                          <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
+                            style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                      @else
+                          <!-- Check Icon Below the Image with Background -->
+                          <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
+                            style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                      @endif
+                    </div>
+
                   </div>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
