@@ -65,7 +65,7 @@
                                 <td>{{ $transaction->second_no }}</td>
                                 <td>{{ json_decode($transaction->response_data, true)['data']['txnReferenceId'] ?? 'N/A' }}</td>
                                 {{-- <td>{{ $transaction->customer_outlet_id }}</td> --}}
-                                <td>{{ json_decode($transaction->response_data, true)['status'] }}</td>
+                                <td>{{ json_decode($transaction->response_data, true)['status'] ?? ''}}</td>
                                 <td>{{ json_decode($transaction->response_data, true)['data']['txnValue'] ?? 'N/A' }}</td>
                                 <td>₹{{ number_format($transaction->charges, 2) }}</td>
                                 <td>₹{{ number_format($transaction->commission, 2) }}</td>

@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="card shadow-sm">
         <div class="card-header bg-success text-white text-center">
-            <h3>Update Image and Contact Details</h3>
+            <h3 style="color:aliceblue; font-weight: bold;">Update Image and Contact Details</h3>
         </div>
         <div class="card-body">
             {{-- @if(session('success'))

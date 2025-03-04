@@ -32,7 +32,8 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\BinCheckerController;
 
 Route::get('admin', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect()->away('https://zpaypvtltd.com/');
 })->name('admin');
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::get('testing.pal',function(){
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->away('https://zpaypvtltd.com/');
 });
 // user Auth
 
@@ -308,6 +309,8 @@ Route::get('/pan/history', [PanCardController::class, 'panHistory'])->name('pan.
 Route::get('/pan/callback', [PanCardController::class, 'handleCallback'])->name('pan.callback');
 Route::get('/pan/test', [PanCardController::class, 'updateCustomerBalance']);
 
+Route::post('/get-mpin', [CustomerController::class, 'getMpin'])->name('mpin');
+Route::post('/change-mpin', [CustomerController::class, 'changeMpin'])->name('changeMpin');
 
 
 // AEPS API
@@ -467,6 +470,9 @@ Route::get('fund/Qr',[AddBankController::class,'dispalyQr'])->name('dispalyQr1')
 //Mobile Rechage 
 Route::get('mobile/isp',[prePaidRechargeController::class,'getISP'])->name('getISP');
 
+Route::get('page/not/found',function(){
+    return view('user/notFound');
+})->name('pageNotFound');
 
 });
 
@@ -761,6 +767,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     // Add QR
     Route::get('/bankdetails/qr', [AddBankController::class, 'showFormQr'])->name('bankdetails.Qr');
     Route::post('/bankdetails/store/qr', [AddBankController::class, 'storeQr'])->name('bankdetails.storeQr');
+
 
     // Add Other Serves
     Route::get('/other/services/create', [otherServiceController::class, 'showForm'])->name('otherServices.form');
