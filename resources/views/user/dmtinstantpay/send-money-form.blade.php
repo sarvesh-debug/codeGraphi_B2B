@@ -27,7 +27,7 @@
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5>Send Money</h5>
+            <h5 class="card-heading">Send Money</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('generateTransactionOtp') }}" method="POST">

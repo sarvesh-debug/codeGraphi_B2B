@@ -94,8 +94,8 @@
 @include('user.dmtinstantpay.navbar')
 
 <div class="card col-md-6 mx-auto shadow-lg border-0">
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Remitter Profile</h4>
+    <div class="card-header py-3">
+        <h4 class="card-heading mb-0">Remitter Profile</h4>
     </div>
     <div class="card-body p-4">
         <form id="remitterProfileForm" action="{{route('dmt.transaction')}}" method="POST">

@@ -1,11 +1,30 @@
 @extends('user/include.layout')
 
 @section('content')
-<div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+
+
+<div class="container-fluid px-4 mt-3">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light p-3 m-2">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('/user/wallet/index')}}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('wallet.History')}}">History</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <!-- <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item active">Wallet Transaction History</li>
-    </ol>
+    </ol> -->
 
     @if (session('success'))
         <div class="alert alert-success">

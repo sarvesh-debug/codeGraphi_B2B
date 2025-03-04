@@ -15,8 +15,8 @@
         <!-- Remitter Profile Card -->
         <div class="col-md-6">
             <div class="card mt-4">
-                <div class="card-header">
-                    <h5>Remitter Profile</h5>
+                <div class="card-header ">
+                    <h5 class="card-heading">Remitter Profile</h5>
                 </div>
                 <div class="card-body">
                     <p><strong>Mobile Number:</strong> {{ $responseData['data']['mobileNumber'] }}</p>
@@ -31,7 +31,7 @@
         <div class="col-md-6">
             <div class="card mt-4">
                 <div class="card-header">
-                    <h5>Transaction Limits</h5>
+                    <h5 class="card-heading">Transaction Limits</h5>
                 </div>
                 <div class="card-body">
                     <p><strong>Limit Per Transaction:</strong> ₹{{ $responseData['data']['limitPerTransaction'] }}</p>
@@ -46,7 +46,7 @@
     <!-- Beneficiaries Table Card -->
     <div class="card mt-4">
         <div class="card-header">
-            <h5>Beneficiaries <a href="{{ route('dmt-beneficiaryRegistration', ['mobileNumber' => $responseData['data']['mobileNumber']]) }}" class="btn btn-success"> Add Beneficiary</a>
+            <h5 class="card-heading">Beneficiaries <a href="{{ route('dmt-beneficiaryRegistration', ['mobileNumber' => $responseData['data']['mobileNumber']]) }}" class="btn btn-success"> Add Beneficiary</a>
             </h5>
         </div>
         <div class="card-body">
