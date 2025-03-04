@@ -16,13 +16,13 @@
 
     <!-- Existing Filter Form -->
     <form method="GET" action="{{ route('transaction.history') }}" class="row mb-4 m-2">
-        <div class="col-md-6 col-lg-5 mb-3">
+        <div class="col-md-6 col-lg-5">
             <label for="start_date">Start Date</label>
             <input type="datetime-local" id="start_date" name="start_date" 
                    value="{{ request('start_date') }}" 
                    class="form-control">
         </div>
-        <div class="col-md-6 col-lg-5 mb-3">
+        <div class="col-md-6 col-lg-5">
             <label for="end_date">End Date</label>
             <input type="datetime-local" id="end_date" name="end_date" 
                    value="{{ request('end_date') }}" 

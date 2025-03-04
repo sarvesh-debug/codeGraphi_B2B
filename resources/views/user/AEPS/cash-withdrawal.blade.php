@@ -401,7 +401,10 @@
                                     {{ ucfirst($transaction['status']) }}
                                 </span>
                                 <div class="transaction-icon position-absolute end-0 top-50 translate-middle-y me-3">
-                                    <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i>
+                                    <!-- <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i> -->
+                                    <i class="fas fa-{{ $transaction['status'] === 'pending' ? 'hourglass-half' : '' }} 
+                                        text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg">
+                                    </i>
                                 </div>
                             </div>
                         @endforeach

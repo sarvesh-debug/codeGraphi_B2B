@@ -979,7 +979,7 @@
 <script>
     $(document).ready(function () {
         let storedMpin = "{{ session('mpin') }}"; // Fetch MPIN from Laravel session
-        let inactivityTime = 1 * 60 * 1000; // 10 minutes timeout
+        let inactivityTime = 10 * 60 * 1000; // 10 minutes timeout
         let timeout;
         
         // Auto-focus and move to next field
