@@ -110,7 +110,7 @@ class dmtinstantpayController extends Controller
     // Check for a successful response
 
         $responseData = $response->json();
-        $wadh = $responseData['data']['pidOptionWadh'];
+        $wadh = $responseData['data']['pidOptionWadh'] ?? '';
         session(['wadh' => $wadh]);
         // echo session('wadh');
         // die();

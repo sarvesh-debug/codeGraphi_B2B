@@ -35,8 +35,8 @@
 
     <div class="card m-2">
         <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <h3 class="mb-3 mb-md-0 text-center text-md-start">Transaction List</h3>
-            <button id="exportTransactions" class="btn btn-success">Export to Excel</button>
+            <h3 class="card-heading mb-3 mb-md-0 text-center text-md-start">Transaction List</h3>
+            <button id="exportTransactions" class="btn btn-download"> <i class="fa-solid fa-download"></i> Download</button>
         </div>
         <div class="card-body">
             <div class="table-responsive">

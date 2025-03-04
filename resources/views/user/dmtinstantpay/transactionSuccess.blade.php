@@ -91,7 +91,7 @@ else
 @endphp
 <div class="card col-md-8 mx-auto shadow-lg border-0 mt-5" id="transaction-slip">
     <div class="card-header text-center py-3 {{ isset($response['status']) && $response['status'] === 'Transaction Successful' ? 'bg-success text-white' : 'bg-danger text-white' }}">
-        <h4 class="mb-0">{{ isset($response['status']) ? $response['status'] : 'Transaction Error' }}</h4>
+        <h4 class="card-heading mb-0">{{ isset($response['status']) ? $response['status'] : 'Transaction Error' }}</h4>
     </div>
 
     <div class="card-body p-4">

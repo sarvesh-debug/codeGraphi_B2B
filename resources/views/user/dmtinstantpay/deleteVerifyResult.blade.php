@@ -6,8 +6,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-info text-white">
-                    <h5>Beneficiary Delete Verification</h5>
+                <div class="card-header text-white">
+                    <h5 class="card-heading">Beneficiary Delete Verification</h5>
                 </div>
                 <div class="card-body">
                     @if(isset($response))

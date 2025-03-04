@@ -29,7 +29,8 @@ class aepsController extends Controller
                 $statusDisplay = ($status === 'transaction successful') ? 'success' : 'Failed';
 
                 return [
-                    'amount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
+                    'amount' => $transaction->amount,
+                    'transactionAmount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
                     'date' => \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, h:i A'),
                     'status' => $statusDisplay,  // Display Success or Failed
                 ];

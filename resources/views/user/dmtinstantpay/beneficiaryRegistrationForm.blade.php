@@ -2,8 +2,8 @@
 @extends('user/include.layout')
 @section('content')
 <div class="card col-md-6 mx-auto shadow-lg border-0 mt-5">
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Register Beneficiary</h4>
+    <div class="card-header">
+        <h4 class="card-heading mb-0">Register Beneficiary</h4>
     </div>
     @if ($errors->any())
     <div class="alert alert-danger">
@@ -19,19 +19,19 @@
             @csrf
             <input type="text" name="mobile" hidden id="mobile" value="{{ $mobileNumber }}" class="form-control" placeholder="Enter mobile number" required>
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label for="benename" class="form-label">Beneficiary Name</label>
                 <input type="text" name="benename" id="benename" class="form-control" placeholder="Enter beneficiary name" required>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label for="beneMobile" class="form-label">Beneficiary Mobile No</label>
                 <input type="text" name="beneMobile" id="beneMobile" class="form-control" placeholder="Enter Mobile No" required>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label for="accno" class="form-label">Account Number</label>
                 <input type="text" name="accno" id="accno" class="form-control" placeholder="Enter account number" required>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="bank">Select Bank</label>
                 <select class="form-control" id="bank" name="bankId">
                     <option value="">Select Bank</option>
@@ -42,7 +42,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label for="ifsc">IFSC Code</label>
                 <input type="text" class="form-control" id="ifsc" name="ifsc"  />
             </div>
@@ -52,8 +52,9 @@
         
                 <input type="text" hidden name="longitude" id="longitude" class="form-control" placeholder="Fetching..." readonly required> 
            
-            
-            <button type="submit" class="btn btn-success w-100 py-2">Register Beneficiary</button>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success  py-2">Register Beneficiary</button>
+            </div>
         </form>
     </div>
 </div>

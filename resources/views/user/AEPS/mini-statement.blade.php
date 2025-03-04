@@ -48,16 +48,19 @@
         <div id="kt_app_content" class="app-content flex-column-fluid my-5">
             {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
                 <div class="card  col-lg-6 col-md-8 col-12 mx-auto shadow-lg border-0">
-                    <div class="card-header bg-success text-white text-center py-3">
+                    <!-- <div class="card-header bg-success text-white text-center py-3">
                         <h4 class="mb-0"><span class="text-success1">AEPS</span> <span class="text-info1">Mini Statement</span></h4>
-                    </div>
+                    </div> -->
 
+                    <div class="card-header">
+                        <h4 class="mb-0"><span class="card-heading"> AEPS Mini Statement </h4>
+                    </div>
                     <div class="card-body p-4">
                         <form id="aeps-balance-enquiry-form" action="{{ route('balance.statementAPI') }}" method="post">
                             @csrf
 
                             <!-- Aadhaar Number Field -->
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-2">
                                 <label for="aadhaar" class="form-label">Aadhaar Number</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person"></i></span>
@@ -69,7 +72,7 @@
                             </div>
 
                             <!-- Bank IIN (Institution Identification Number) Field -->
-                            <div class="form-group">
+                            <div class="form-group mb-2">
                                 <label for="bankCode">Select Bank</label>
                                 <select class="form-control" id="bankCode" name="bankiin">
                                     <option value="">-- Select a Bank --</option>
@@ -338,10 +341,10 @@
                             <input type="hidden" id="pidDataType" name="biometricData[pidDataType]"/> --}}
                             <textarea id="txtBiometricData" hidden name="biometricData" rows="10" cols="50" placeholder="Biometric Data will appear here"></textarea>
                             <!-- Submit and Reset Buttons -->
-                            <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
-                            <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
-                            <div class="d-flex justify-content-between">
-                                <button type="submit" class="btn btn-success w-45">Submit</button>
+                            <div class="d-flex justify-content-end gap-3">
+                                <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
+                                <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
+                                <!-- <button type="submit" class="btn btn-success w-45">Submit</button> -->
                                 <button type="reset" class="btn btn-warning w-45">Reset</button>
                             </div>
                         </form>
