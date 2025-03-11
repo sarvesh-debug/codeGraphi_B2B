@@ -98,7 +98,7 @@ class aepsController extends Controller
     //   return $request;
     //   die();
         // Generate a unique transaction ID for externalRef
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -145,7 +145,7 @@ class aepsController extends Controller
     public function balanceInquiry(Request $request)
     {
        
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -193,7 +193,7 @@ class aepsController extends Controller
 
     public function balanceStatement(Request $request)
     {
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -250,7 +250,7 @@ class aepsController extends Controller
         $role = session('role');
 
         
-            $externalRef = uniqid('ZPAY_', true);
+            $externalRef = uniqid('TXN', true);
 
             // Prepare headers for the API request
             $customerOutletId = intval(session('outlet'));
@@ -453,9 +453,9 @@ class aepsController extends Controller
         $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
         session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
 
-        DB::table('business')
-        ->where('business_id', session('business_id'))
-        ->increment('balance', $payableValue + ($commissionAmount - $tds));    
+        // DB::table('business')
+        // ->where('business_id', session('business_id'))
+        // ->increment('balance', $payableValue + ($commissionAmount - $tds));    
    
    $balanceAd = DB::table('business')
    ->where('business_id', session('business_id'))

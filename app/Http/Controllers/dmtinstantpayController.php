@@ -809,9 +809,9 @@ if ($latestTransaction) {
      session(['balance'=> $balance]);
 
      
-     DB::table('business')
-     ->where('business_id', session('business_id'))
-     ->decrement('balance', $newpayableValue-($comA-$tds));    
+    //  DB::table('business')
+    //  ->where('business_id', session('business_id'))
+    //  ->decrement('balance', $newpayableValue-($comA-$tds));    
 
 $balanceAd = DB::table('business')
 ->where('business_id', session('business_id'))

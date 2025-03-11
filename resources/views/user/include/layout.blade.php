@@ -740,7 +740,7 @@
       <div class="d-flex align-items-center gap-2">
         <i class="bx bx-wallet bx-sm text-primary"></i>
         <span class="fw-bold text-dark">₹</span>
-        <span class="fw-bold text-dark">{{ session('balance') }}</span>
+        <span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
     </div>
 
   
@@ -915,7 +915,7 @@
           <h5><b>Name:</b>{{ $customer->name }}</h5>
           <h5><b>ID:</b>{{ $customer->username }}</h5>
           <h6 class=""style="text-transform: capitalize">{{ $customer->role }}</h6>
-          <p><b>Balance:</b>{{ session('balance') }}</p>
+          {{-- <p><b>Balance:</b>{{ session('balance') }}</p> --}}
           <p><b>Email:</b>{{ $customer->email }}</p>
           <p><b>Phone:</b>{{ $customer->phone }}</p>
           <p><b>Shop Name:</b>{{ $customer->owner }}</p>

@@ -91,7 +91,7 @@ DB::table('add_bank')->insert([
     public function getBankDetails()
 {
     // Fetch all bank details from the 'add_Bank' table
-    $bankDetails = \DB::table('add_Bank')->where('status',1)->get(['id', 'bank_name', 'ifsc', 'account_no']);
+    $bankDetails = \DB::table('add_bank')->where('status',1)->get(['id', 'bank_name', 'ifsc', 'account_no']);
     return view('user.fund-transfer.bank-account',compact('bankDetails'));
 }
 
@@ -132,8 +132,9 @@ public function storeQr(Request $request)
 
 
  public function showBank()
+
  {
-    $bankDetails = \DB::table('add_Bank')->get(['id', 'bank_name', 'ifsc', 'account_no','status']);
+    $bankDetails = \DB::table('add_bank')->get(['id', 'bank_name', 'ifsc', 'account_no','status']);
     //return $bankDetails;
     $services=$bankDetails;
     return view('admin.addBank.index',compact('services'));

@@ -176,6 +176,7 @@ public function adminVerifyOtp(Request $request)
         session(['role'=> $customer->role]);
         session(['balance'=> $customer->balance]);
         session(['dis_phone'=> $customer->dis_phone]);
+        session(['lockBalance'=> $customer->LockBalance]);
 
 
             // Redirect to the customer dashboard
