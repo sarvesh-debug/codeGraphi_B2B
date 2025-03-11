@@ -8,7 +8,8 @@
     $userTotalAmt=$amtDistributor+$amtRetailer;
     //PaymentRequest
     use Illuminate\Support\Facades\DB;
-
+  //  use Illuminate\Support\Facades\Session;
+    use Carbon\Carbon;
 $acceptAmt = DB::table('add_moneys')->where('status', 1)->where('date',today())->sum('amount');
 $rejectAmt = DB::table('add_moneys')->where('status', -1)->where('date',today())->sum('amount');
 $pendingAmt = DB::table('add_moneys')->where('status', 0)->where('date',today())->sum('amount');
@@ -23,7 +24,7 @@ $payAmtTotal=$acceptAmt+$pendingAmt+$rejectAmt;
     $DMTvalueAll=0;
     $countDMT=0;
             // Fetch data from 'cash_withdrawals'
-    $transactionsDMTInstantPay  = DB::table('transactions_dmt_instant_pay')->get();
+    $transactionsDMTInstantPay  = DB::table('transactions_dmt_instant_pay')->whereDate('created_at', Carbon::today())->get();
    
     foreach ($transactionsDMTInstantPay  as $transaction)  {
         $responseData = json_decode($transaction->response_data, true);
@@ -41,7 +42,7 @@ $payAmtTotal=$acceptAmt+$pendingAmt+$rejectAmt;
     $valueAll=0;
     $countAEPS=0;
             // Fetch data from 'cash_withdrawals'
-    $cashWithdrawals = DB::table('cash_withdrawals')->get();
+    $cashWithdrawals = DB::table('cash_withdrawals')->whereDate('created_at', Carbon::today())->get();
     foreach ($cashWithdrawals as $withdrawal) {
         $responseData = json_decode($withdrawal->response_data, true);
         $payableValue=0;

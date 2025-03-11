@@ -467,8 +467,14 @@ Route::get('/ladger/statement',[infoController::class,'index'])->name('laser.sta
 
 Route::get('fund/Qr',[AddBankController::class,'dispalyQr'])->name('dispalyQr1');
 
+
 //Mobile Rechage 
+Route::get('mobile/test',[prePaidRechargeController::class,'mobiletest']);
+
 Route::get('mobile/isp',[prePaidRechargeController::class,'getISP'])->name('getISP');
+Route::get('mobile/mobileRecharge',[prePaidRechargeController::class,'mobileRecharge'])->name('mobileRecharge');
+Route::post('mobile/recharge',[prePaidRechargeController::class,'mobileRechargePay'])->name('mobileRechargePay');
+
 
 Route::get('page/not/found',function(){
     return view('user/notFound');
@@ -653,6 +659,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
 
     // web.php
+    Route::get('/admin/add/balance', [CustomerController::class, 'adminBalanceAddForm'])->name('adminBalanceAddForm');
+    Route::post('/admin/add/balance', [CustomerController::class, 'adminBalanceAdd'])->name('adminBalanceAdd');
+
     Route::get('/admin/users/{id}/edit', [CustomerController::class, 'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [CustomerController::class, 'update'])->name('admin.users.update');
 

@@ -425,7 +425,7 @@ $pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
               <div class="navbar-nav align-items-center">
                 <div class="nav-item d-flex align-items-center">
                 
-                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b></li>
+                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b> <a href="{{route('adminBalanceAddForm')}}" class="btn btn-sm btn-success">+</a> </li>
                 </div>
               </div>
 

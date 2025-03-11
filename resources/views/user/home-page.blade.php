@@ -502,7 +502,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
             <div class="card  gradient-rechargee fixed-card">
                 <div class="card-body">
                     @if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
-                        <a href="{{route('pageNotFound')}}">
+                        <a href="{{route('mobileRecharge')}}">
                             <!-- <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="card-img">
                                     <img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />

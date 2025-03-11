@@ -640,6 +640,8 @@ public function login(Request $request)
         session(['email'=> $customer->email]);
         session(['mpin'=> $customer->mpin]);
         session(['txnpin'=> $customer->txnpin]);
+        session(['lockBalance'=> $customer->LockBalance]);
+        
 
         $deviceId=md5(string: request()->ip() . request()->header('User-Agent'));
         $today = Carbon::today();
@@ -1189,4 +1191,38 @@ public function changeMpin(Request $request)
     return back()->with('success', 'MPIN updated successfully.');
 }
 
+
+    public function adminBalanceAddForm()
+    {
+        return view('admin.loadBalance');
+    }
+    public function adminBalanceAdd(Request $request)
+    {
+       
+
+        $balance=$request->balance;
+        $update=DB::table('business')->where('id',1)
+        ->increment('balance',$balance);
+
+        if($update)
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('success', 'Balance Loaded  successfully.');
+           
+        }
+        else
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('error', 'Balance Loaded Failled.');
+        }
+       // return view('admin.loadBalance');
+    }
 }

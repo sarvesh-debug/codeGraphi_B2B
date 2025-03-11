@@ -312,7 +312,7 @@ foreach ($getCommission as $commission) {
         ->get();
     foreach ($utilityPayments as $payment) {
         $responseData = json_decode($payment->response_body, true);
-        $txnValue = (float)($responseData['data']['txnValue'] ?? 0);
+        $txnValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
         $individualTotals['BBPS'] += $txnValue;
         $totalAmount += $txnValue;
         
@@ -656,7 +656,7 @@ $allTransactions[] = [
     $utilityPayments = DB::table('utility_payments')->get();
     foreach ($utilityPayments as $payment) {
         $responseData = json_decode($payment->response_body, true);
-        $txnValue = (float)($responseData['data']['txnValue'] ?? 0);
+        $txnValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
         $individualTotals['BBPS'] += $txnValue;
         $totalAmount += $txnValue;
         
