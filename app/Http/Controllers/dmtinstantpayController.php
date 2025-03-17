@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\VeriidyAccount;
+use App\Helpers\ApiHelper;
 
 class dmtinstantpayController extends Controller
 {
@@ -526,82 +527,89 @@ public function transaction(Request $request)
     $getAmount-=50;
 // return $getAmount;
 // die();
-    if($getAmount > $amountTr)  //450 > 400
-    {
 
+    // Fetch balance from the API
+    $balance = ApiHelper::getBalance(env('Business_Email'));
+        // if($getAmount > $amountTr)  //450 > 400
+        // {
+        // Check if balance is sufficient
+        if ($balance >= $getAmount && $getAmount > $amountTr) {
+   
+            $externalRef = 'ZPAY' . date('Y') . '' . round(microtime(true) * 1000);
+
+            // Define API endpoint and headers
+            $url = env('liveUrl').'v1/dmt/dmtTransaction';
+            $headers = [
         
-        $externalRef = 'ZPAY' . date('Y') . '' . round(microtime(true) * 1000);
-
-        // Define API endpoint and headers
-        $url = env('liveUrl').'v1/dmt/dmtTransaction';
-        $headers = [
-     
-            'Content-Type' => 'application/json',
-        ];
-    
-        // Prepare the request body with user input
-        $body = [
-            'outlet' =>$customerOutletId,
-            'remitterMobileNumber' => $mobile,
-            'accountNumber' => $request->input('account'),
-            'ifsc' => $request->input('ifsc'),
-            'transferMode' => $request->input('transferMode'),
-            'transferAmount' => $request->input('amount'),
-            'latitude' => $request->input('latitude'),
-            'longitude' => $request->input('longitude'),
-            'otp' => $request->input('otp'),
-            'referenceKey' => $request->input('referenceKey'),
-             'externalRef' => $externalRef,  // Add externalRef here
-        ];
-        $mode=$request->input('transferMode');
-        try {
-            $response = Http::withHeaders($headers)->post($url, $body);
-            $data = $response->json();
-     
-            // Store the transaction data, including customerOutletId
-            DB::table('transactions_dmt_instant_pay')->insert([
-                'remitter_mobile_number' => $pry_mobile,
-                'second_no'=>$mobile,
-                'reference_key' => $request->input('transferMode'),
-                'customer_outlet_id' => $customerOutletId,  // Store customerOutletId
-                'response_data' => json_encode($data),
-                'opening_balance' =>$opb,
-                'closing_balance' =>$opb,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                'Content-Type' => 'application/json',
+            ];
+        
+            // Prepare the request body with user input
+            $body = [
+                'outlet' =>$customerOutletId,
+                'remitterMobileNumber' => $mobile,
+                'accountNumber' => $request->input('account'),
+                'ifsc' => $request->input('ifsc'),
+                'transferMode' => $request->input('transferMode'),
+                'transferAmount' => $request->input('amount'),
+                'latitude' => $request->input('latitude'),
+                'longitude' => $request->input('longitude'),
+                'otp' => $request->input('otp'),
+                'referenceKey' => $request->input('referenceKey'),
+                'externalRef' => $externalRef,  // Add externalRef here
+            ];
             $mode=$request->input('transferMode');
-            if($data['statuscode']=="TXN")
-            {
-                //$this->updateCustomerBalance(session('mobile'),'mode');
-                $this->updateCustomerBalance(session('mobile'), $mode,$role,$externalRef);
+            try {
+                $response = Http::withHeaders($headers)->post($url, $body);
+                $data = $response->json();
+        
+                // Store the transaction data, including customerOutletId
+                DB::table('transactions_dmt_instant_pay')->insert([
+                    'remitter_mobile_number' => $pry_mobile,
+                    'second_no'=>$mobile,
+                    'reference_key' => $request->input('transferMode'),
+                    'customer_outlet_id' => $customerOutletId,  // Store customerOutletId
+                    'response_data' => json_encode($data),
+                    'opening_balance' =>$opb,
+                    'closing_balance' =>$opb,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                $mode=$request->input('transferMode');
+                if($data['statuscode']=="TXN")
+                {
+                    //$this->updateCustomerBalance(session('mobile'),'mode');
+                    $this->updateCustomerBalance(session('mobile'), $mode,$role,$externalRef);
+                }
+        
+                return view('user.dmtinstantpay.transactionSuccess', [
+                    'response' => $data,
+                ]);
+            } catch (\Exception $e) {
+                return view('user.dmtinstantpay.transactionSuccess', [
+                    'response' => null,
+                    'error' => 'Transaction failed: ' . $e->getMessage(),
+                ]);
             }
-    
-            return view('user.dmtinstantpay.transactionSuccess', [
-                'response' => $data,
-            ]);
-        } catch (\Exception $e) {
-            return view('user.dmtinstantpay.transactionSuccess', [
-                'response' => null,
-                'error' => 'Transaction failed: ' . $e->getMessage(),
-            ]);
+        
+
         }
-    
+        else
+        {
+            return view('user.dmtinstantpay.transation-error');
+            // Set flash message for insufficient balance
+            //   session()->flash('error', 'Your balance is not sufficient.');
 
-    }
-    else
-    {
-        return view('user.dmtinstantpay.transation-error');
-          // Set flash message for insufficient balance
-        //   session()->flash('error', 'Your balance is not sufficient.');
-
-        //   // Redirect back with the error message
-        //   return redirect()->back();
-    }
+            //   // Redirect back with the error message
+            //   return redirect()->back();
+        }
 }
 
 public function demotest()
 {
+    // 🔹 Fetch Balance Using Global API Helper
+    // $balance = ApiHelper::getBalance(env('Business_Email'));
+    // $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newpayableValue-($comA-$tds), 'DMT');
     $mobile=session('mobile');
     $role=session('role');
     $mode='IMPS';
@@ -615,8 +623,7 @@ public function demotest()
 
 }
 private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
-{ //dd('hello');
-    //die()
+{ 
     $closing_bl = 0;;
     $getDisComm=0;
     $ff=0;
@@ -808,7 +815,8 @@ if ($latestTransaction) {
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     
+    $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), 100, 'DMT');
+    
     //  DB::table('business')
     //  ->where('business_id', session('business_id'))
     //  ->decrement('balance', $newpayableValue-($comA-$tds));    

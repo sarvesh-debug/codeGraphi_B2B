@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\ApiHelper;
+
 
 class aepsController extends Controller
 {
@@ -452,6 +454,10 @@ class aepsController extends Controller
         // Update session balance
         $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
         session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
+
+        $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $payableValue + ($commissionAmount - $tds), 'AEPS');
+        dd('ok', $apiBalance);
+        die();
 
         // DB::table('business')
         // ->where('business_id', session('business_id'))
