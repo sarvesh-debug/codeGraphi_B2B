@@ -4,7 +4,7 @@
 <div class="container-fluid px-4">
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item active">Ledger Statement</li>
+        <li class="breadcrumb-item active">Ladger</li>
     </ol>
 
     <!-- Transaction Summary Section -->

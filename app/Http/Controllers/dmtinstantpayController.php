@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\VeriidyAccount;
-
+use App\Helpers\ApiHelper;
 class dmtinstantpayController extends Controller
 {
 
@@ -86,6 +86,8 @@ class dmtinstantpayController extends Controller
     
     public function remitterProfile(Request $request)
 {
+    // return $request;
+    // die();
     // Validate the user input
     $request->validate([
         'mobileNumber' => 'required|digits:10',
@@ -444,13 +446,24 @@ public function generateTransactionOtp(Request $request)
 
     $amountTr=$request->input('amount');
     $getAmount=session('balance');
+    $totalAmount=$getAmount;
+    $lockAmount=session('lockBalance');
     $getAmount-=50;
-// return $getAmount;
+ 
+// dd($totalAmount,$getAmount);
 // die();
+
+if ($totalAmount < $amountTr)
+{
+    
+    return back()->with('alert', 'Unable to proceed. Please connect your Admin.');
+}
+else
+{
     if($getAmount > $amountTr)  //450 > 400
     {
-        $mobile = $request->input('mobile');
-
+       
+        $mobile = $request->input('mobile');    
     // Define API endpoint and headers
     $url = env('liveUrl').'v1/dmt/generateTransactionOtp';
     $headers = [
@@ -509,6 +522,9 @@ public function generateTransactionOtp(Request $request)
 
 
     }
+}
+
+    
 
     
 }
@@ -526,11 +542,14 @@ public function transaction(Request $request)
     $getAmount-=50;
 // return $getAmount;
 // die();
+
+$balance = ApiHelper::getBalance(env('Business_Email'));
+if ($balance >= $getAmount && $getAmount > $amountTr) 
     if($getAmount > $amountTr)  //450 > 400
     {
 
         
-        $externalRef = 'ZPAY' . date('Y') . '' . round(microtime(true) * 1000);
+        $externalRef = 'TXN' . date('Y') . '' . round(microtime(true) * 1000);
 
         // Define API endpoint and headers
         $url = env('liveUrl').'v1/dmt/dmtTransaction';
@@ -605,7 +624,7 @@ public function demotest()
     $mobile=session('mobile');
     $role=session('role');
     $mode='IMPS';
-    $externalRef = 'ZPAY-' . strtoupper(uniqid(date('YmdHis')));
+    $externalRef = 'TXN-' . strtoupper(uniqid(date('YmdHis')));
    // dd($externalRef);
     $this->updateCustomerBalance($mobile,$mode,$role,$externalRef);
 
@@ -808,6 +827,7 @@ if ($latestTransaction) {
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newpayableValue-($comA-$tds), 'DMT');
      
     //  DB::table('business')
     //  ->where('business_id', session('business_id'))
@@ -830,7 +850,7 @@ session(['adminBalance'=> $balanceAd]);
     
    
    //dd('ok');
-   
+   //dd($apiBalance);
    // dd($opB,$clB,$dis_no,$ret_no,$comm,$service,$disData,$disPhone,$getDis->dis_phone,$ff,$payableValue,$newpayableValue,$commission->charge,$commission->charge_in,$mode,$commissionAmount,$commissionAmount,$comA,$tds,$getDis,$getDisComm);
 }
 

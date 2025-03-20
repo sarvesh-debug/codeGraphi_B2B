@@ -87,7 +87,7 @@ else
     }
 }
 
-    $amountInWords = numberToWords($response['data']['txnValue']);
+    $amountInWords = numberToWords($response['data']['txnValue']) ?? 0;
 @endphp
 <div class="card col-md-8 mx-auto shadow-lg border-0 mt-5" id="transaction-slip">
     <div class="card-header text-center py-3 {{ isset($response['status']) && $response['status'] === 'Transaction Successful' ? 'bg-success text-white' : 'bg-danger text-white' }}">
