@@ -545,7 +545,7 @@ public function transaction(Request $request)
 
 $balance = ApiHelper::getBalance(env('Business_Email'));
 if ($balance >= $getAmount && $getAmount > $amountTr) 
-    if($getAmount > $amountTr)  //450 > 400
+    //if($getAmount > $amountTr)  //450 > 400
     {
 
         
