@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh; padding-top: 20px;">
-    <div class="col-md-6">
+    <div class="col-11 col-md-6">
         <div class="card shadow-lg border-0 rounded-lg">
             <div class="card-header bg-primary text-white text-center">
                 <h3 class="mb-0"> New Member</h3>

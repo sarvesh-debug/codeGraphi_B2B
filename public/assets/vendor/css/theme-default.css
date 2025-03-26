@@ -205,6 +205,16 @@ button.list-group-item-primary.active {
   color: #435971;
 }
 
+
+/* for mobile  */
+/* Apply styles for screens smaller than 768px */
+/* @media (max-width: 768px) {
+  .btn-primary{
+
+  }
+} */
+
+
 .btn-primary {
   color: #fff;
   background-color: #696cff;

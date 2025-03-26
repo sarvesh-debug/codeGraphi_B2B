@@ -38,7 +38,7 @@
   
         <!-- Form Section -->
         <div class="row change">
-            <div class="col-lg-6 mx-auto">
+            <div class="col-11  col-lg-6 mx-auto">
                 <div class="card shadow">
                     <div class="card-header bg-success text-white text-center py-4 px-5">
                         <h4 class="mb-0"><span class="text-success1">Wallet To Wallet</span> <span class="text-info1">Transfer</span></h4>

@@ -200,7 +200,7 @@ strong {
 }
 
 small, .small {
-  font-size: 85%;
+  font-size: 71%;
 }
 
 mark, .mark {
@@ -661,6 +661,9 @@ progress {
   margin-right: calc(-0.5 * var(--bs-gutter-x));
   margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
+
+
+
 .row > * {
   flex-shrink: 0;
   width: 100%;
@@ -830,12 +833,12 @@ progress {
 
 .g-1,
 .gx-1 {
-  --bs-gutter-x: 0.25rem;
+  --bs-gutter-x: -1rem;
 }
 
 .g-1,
 .gy-1 {
-  --bs-gutter-y: 0.25rem;
+  --bs-gutter-y: 0.5rem;
 }
 
 .g-2,

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+    <ol class="breadcrumb mb-4 mt-3">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item active">Wallet Transaction History</li>
     </ol>
@@ -36,7 +36,7 @@
              class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID3</th>
+                        <th>ID</th>
                         <th>Sender ID</th>
                         <th>Receiver ID</th>
                         <th>Amount</th>

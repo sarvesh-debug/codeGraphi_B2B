@@ -19,7 +19,7 @@
                             <input type="text" class="form-control"  id="mobile" name="mobileNumber" placeholder="Enter mobile number" required>
                         </div>
                         <button type="submit" class="btn btn-success w-100">
-                            <i class="fas fa-check-circle me-2"></i>Submit
+                            Submit
                         </button>
                     </form>
                 </div>
@@ -28,12 +28,12 @@
 
         <!-- Latest Transactions Section -->
         @if($latestTransactions && count($latestTransactions) > 0)
-            <div class="col-md-6">
-                <div class="card shadow-lg border-0 h-100">
+            <div class="col-md-6 mb-5">
+                <div class=" shadow-lg border-0">
                     <div class="card-header bg-gradient-success text-white text-center py-3">
                         <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 mb-5">
                         @foreach($latestTransactions as $transaction)
                             <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
                                 <div class="transaction-details">
@@ -45,7 +45,7 @@
                                     {{ ucfirst($transaction['status']) }}
                                 </span>
                                 <div class="transaction-icon position-absolute end-0 top-50 translate-middle-y me-3">
-                                    <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i>
+                                    {{-- <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i> --}}
                                 </div>
                             </div>
                         @endforeach

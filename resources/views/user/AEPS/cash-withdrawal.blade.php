@@ -54,14 +54,14 @@
         pointer-events: none;
     }
 </style>
-<div class="controller mt-3 mx-3 loading">
+<div class="controller mt-3 mx-3 mb-5 loading">
    <div id="loadingOverlay">
     <div class="loader"></div>
 </div>
 
     @include('user.AEPS.navbar')
     <div class="row">
-        <div id="kt_app_content" class="app-content flex-column-fluid mt-4 col-md-9">
+        <div id="kt_app_content" class="app-content flex-column-fluid mt-4   col-md-9">
             {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
                 <div class="card col-lg-6 col-md-8 col-12 mx-auto shadow-lg border-0 sm:p-4">
                     <div class="card-header bg-success text-white text-center py-3">
@@ -382,11 +382,11 @@
 
          <!-- Latest Transactions Section -->
          <div class="col-md-3">
-            <div class="border-0 h-100">
+            <div class="mb-5">
                 <div class="card-header bg-gradient-success text-white text-center py-3">
                     <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 mb-5">
                     @if($latestTransactions && count($latestTransactions) > 0)
                         @foreach($latestTransactions as $transaction)
                             <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
@@ -399,7 +399,7 @@
                                     {{ ucfirst($transaction['status']) }}
                                 </span>
                                 <div class="transaction-icon position-absolute end-0 top-50 translate-middle-y me-3">
-                                    <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i>
+                                    {{-- <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i> --}}
                                 </div>
                             </div>
                         @endforeach

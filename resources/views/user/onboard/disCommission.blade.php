@@ -2,14 +2,14 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+    <ol class="breadcrumb mb-4 mt-3">
         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
         <li class="breadcrumb-item active">All User</li>
     </ol>
-    <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
-        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
+    <button type="button" class="btn btn-success w-100 p-2" onclick="downloadExcel()">
+        {{-- <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
              alt="Download Icon" 
-             style="width: 16px; height: 16px; margin-right: 5px;">
+             style="width: 16px; height: 16px; margin-right: 5px;"> --}}
         Export
     </button>
     @if (session('success'))
@@ -75,5 +75,6 @@
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 @endsection

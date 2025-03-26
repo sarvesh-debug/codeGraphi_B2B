@@ -339,7 +339,7 @@
                             <textarea id="txtBiometricData" hidden name="biometricData" rows="10" cols="50" placeholder="Biometric Data will appear here"></textarea>
                             <!-- Submit and Reset Buttons -->
                             <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
-                            <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
+                            <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger mb-3">Capture</button>
                             <div class="d-flex justify-content-between">
                                 <button type="submit" class="btn btn-success w-45">Submit</button>
                                 <button type="reset" class="btn btn-warning w-45">Reset</button>
