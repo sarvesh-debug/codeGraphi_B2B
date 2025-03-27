@@ -191,10 +191,8 @@ class infoController extends Controller
     $totalAmount = 0;
     $individualTotals = [
         'AEPS' => 0,
-        'DMT1' => 0,
-        'DMT2' => 0,
+        'DMT' => 0,
         'BBPS' => 0,
-        'PAN' =>0,
         'Commission' =>0,
         'Fund' =>0,
     ];
@@ -312,7 +310,7 @@ foreach ($getCommission as $commission) {
         ->get();
     foreach ($utilityPayments as $payment) {
         $responseData = json_decode($payment->response_body, true);
-        $txnValue = (float)($responseData['data']['txnValue'] ?? 0);
+        $txnValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
         $individualTotals['BBPS'] += $txnValue;
         $totalAmount += $txnValue;
         
@@ -369,37 +367,37 @@ foreach ($getCommission as $commission) {
         ];
     }
 
-    // Fetch data from 'transactions_dmt_instant_pay'
-    $transactionsDMTInstantPay = DB::table('transactions_dmt_instant_pay')
-        ->where('remitter_mobile_number', $mobile)
-        ->get();
-    foreach ($transactionsDMTInstantPay as $transaction) {
-        $responseData = json_decode($transaction->response_data, true);
-        $amount = (float)($responseData['data']['txnValue'] ?? 0);
-        $individualTotals['DMT1'] += $amount;
-        $totalAmount += $amount;
-        $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
+    // // Fetch data from 'transactions_dmt_instant_pay'
+    // $transactionsDMTInstantPay = DB::table('transactions_dmt_instant_pay')
+    //     ->where('remitter_mobile_number', $mobile)
+    //     ->get();
+    // foreach ($transactionsDMTInstantPay as $transaction) {
+    //     $responseData = json_decode($transaction->response_data, true);
+    //     $amount = (float)($responseData['data']['txnValue'] ?? 0);
+    //     $individualTotals['DMT1'] += $amount;
+    //     $totalAmount += $amount;
+    //     $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
 
-        $allTransactions[] = [
-            'source' => 'DMT1',
-            'credit'=>'',
-            'debit' => ($amount+$transaction->charges),
-            'commission'=>$transaction->commission?? 0,
-            'tds'=>$transaction->tds ?? 0,
-            'charges' =>$transaction->charges ?? 0,
-            'status' => $status,
-            'timestamp' => $responseData['timestamp'] ?? "N/A",
-            'type'=>'Deposit',
-            'desc'=>'Money Transfer to '.($responseData['data']['beneficiaryName']??'N/A').' ₹'.($amount ?? 0).' and Charges '.($transaction->charges ?? 0),
-            'trans_id'=>$responseData['data']['txnReferenceId']?? 'Null',
-            'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
-            'ext_ref'=>$responseData['data']['externalRef'] ??0,
-            'openingB'=>$transaction->opening_balance ?? 0,
-            'clsoingB'=>$transaction->closing_balance ?? 0,
+    //     $allTransactions[] = [
+    //         'source' => 'DMT1',
+    //         'credit'=>'',
+    //         'debit' => ($amount+$transaction->charges),
+    //         'commission'=>$transaction->commission?? 0,
+    //         'tds'=>$transaction->tds ?? 0,
+    //         'charges' =>$transaction->charges ?? 0,
+    //         'status' => $status,
+    //         'timestamp' => $responseData['timestamp'] ?? "N/A",
+    //         'type'=>'Deposit',
+    //         'desc'=>'Money Transfer to '.($responseData['data']['beneficiaryName']??'N/A').' ₹'.($amount ?? 0).' and Charges '.($transaction->charges ?? 0),
+    //         'trans_id'=>$responseData['data']['txnReferenceId']?? 'Null',
+    //         'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+    //         'ext_ref'=>$responseData['data']['externalRef'] ??0,
+    //         'openingB'=>$transaction->opening_balance ?? 0,
+    //         'clsoingB'=>$transaction->closing_balance ?? 0,
 
 
-        ];
-    }
+    //     ];
+    // }
 
     //Fatch data from 'commission'
 //     $getCommission = DB::table('getcommission')
@@ -434,41 +432,41 @@ foreach ($getCommission as $commission) {
 // }
         
     // Fetch data from 'pancard'
-    $pancards = DB::table('pancard')
-            ->where('number', $mobile)
-            ->get();
-        foreach ($pancards as $pancard) {
-            $responseData = json_decode($pancard->response_body, true);
-            $txnAmount = $pancard->balance;
-            $individualTotals['PAN'] += $txnAmount;
-            $totalAmount += $txnAmount;
+    // $pancards = DB::table('pancard')
+    //         ->where('number', $mobile)
+    //         ->get();
+    //     foreach ($pancards as $pancard) {
+    //         $responseData = json_decode($pancard->response_body, true);
+    //         $txnAmount = $pancard->balance;
+    //         $individualTotals['PAN'] += $txnAmount;
+    //         $totalAmount += $txnAmount;
 
-                $debitAmount = ($pancard->status == 'pending'||$pancard->status =='Success') ? ($pancard->balance ?? 0) : '';
-             $creditAmount = ($pancard->status == 'Failled') ? ($pancard->balance ?? 0) : '';
+    //             $debitAmount = ($pancard->status == 'pending'||$pancard->status =='Success') ? ($pancard->balance ?? 0) : '';
+    //          $creditAmount = ($pancard->status == 'Failled') ? ($pancard->balance ?? 0) : '';
 
-             $creditDes = ($pancard->status == 'pending'||$pancard->status =='success') ? 'Apply for pan Card charges'.($pancard->balance ?? 0) : '';
-             $debitDes = ($pancard->status == 'Failled') ? 'Refund due to pan card apply failled'.($pancard->balance ?? 0) : '';
+    //          $creditDes = ($pancard->status == 'pending'||$pancard->status =='success') ? 'Apply for pan Card charges'.($pancard->balance ?? 0) : '';
+    //          $debitDes = ($pancard->status == 'Failled') ? 'Refund due to pan card apply failled'.($pancard->balance ?? 0) : '';
 
 
-             $allTransactions[] = [
-                        'source' => 'pancard',
-                        'credit'=>$creditAmount,
-                        'debit' =>$debitAmount ,
-                        'commission'=>$pancard->commissions ?? 0,
-                        'tds'=>$pancard->tds ?? 0,
-                        'charges' =>$pancard->charges ?? 0,
-                        'status' => $pancard->status ?? "Success",
-                        'timestamp' => $pancard->created_at ?? "N/A",
-                        'type'=>'Deposit',
-                        'desc'=>($creditDes?? '') . ' ' . ($debitDes ?? ''),
-                        'trans_id'=>$pancard->order_id,
-                        'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
-                        'ext_ref'=>$pancard->order_id ??0,
-                        'openingB'=>$pancard->opening_balance ?? 0,
-                        'clsoingB'=>$pancard->closing_balance ?? 0,
+    //          $allTransactions[] = [
+    //                     'source' => 'pancard',
+    //                     'credit'=>$creditAmount,
+    //                     'debit' =>$debitAmount ,
+    //                     'commission'=>$pancard->commissions ?? 0,
+    //                     'tds'=>$pancard->tds ?? 0,
+    //                     'charges' =>$pancard->charges ?? 0,
+    //                     'status' => $pancard->status ?? "Success",
+    //                     'timestamp' => $pancard->created_at ?? "N/A",
+    //                     'type'=>'Deposit',
+    //                     'desc'=>($creditDes?? '') . ' ' . ($debitDes ?? ''),
+    //                     'trans_id'=>$pancard->order_id,
+    //                     'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+    //                     'ext_ref'=>$pancard->order_id ??0,
+    //                     'openingB'=>$pancard->opening_balance ?? 0,
+    //                     'clsoingB'=>$pancard->closing_balance ?? 0,
     
     
-                    ];
+    //                 ];
 
             // if (isset($responseData['status'])==='FAILED') 
             // {
@@ -515,7 +513,7 @@ foreach ($getCommission as $commission) {
             //     ];
 
             // }
-        }
+       // }
 
     // Sort transactions by timestamp (date)
     usort($allTransactions, function ($a, $b) {
@@ -656,7 +654,7 @@ $allTransactions[] = [
     $utilityPayments = DB::table('utility_payments')->get();
     foreach ($utilityPayments as $payment) {
         $responseData = json_decode($payment->response_body, true);
-        $txnValue = (float)($responseData['data']['txnValue'] ?? 0);
+        $txnValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
         $individualTotals['BBPS'] += $txnValue;
         $totalAmount += $txnValue;
         
@@ -789,7 +787,197 @@ $allTransactions[] = [
         'transactions' => $allTransactions,
     ]);
 }
+public function indexAdminAPI()
+{
+    //$mobile = session('mobile'); // Retrieve mobile from session
+    // Initialize variables to store totals
+    $totalAmount = 0;
+    $individualTotals = [
+        'AEPS' => 0,
+        'DMT1' => 0,
+        'DMT2' => 0,
+        'BBPS' => 0,
+        'PAN' =>0,
+        'Commission' =>0,
+        'Fund' =>0,
+    ];
+    $allTransactions = []; // To store all transaction data
 
+ 
+   
+
+    // Fetch data from 'cash_withdrawals'
+    $cashWithdrawals = DB::table('cash_withdrawals')->get();
+    foreach ($cashWithdrawals as $withdrawal) {
+        $responseData = json_decode($withdrawal->response_data, true);
+        $payableValue=0;
+
+        if(isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN')
+        {
+            $payableValue = (float)($responseData['data']['transactionValue'] ?? 0);
+            $individualTotals['AEPS'] += $payableValue;
+            $totalAmount += $payableValue;
+        }
+        // $payableValue = (float)($responseData['data']['payableValue'] ?? 0);
+        // $individualTotals['AEPS'] += $payableValue;
+        // $totalAmount += $payableValue;
+        $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
+        $allTransactions[] = [
+           'source' => 'AEPS',
+            'credit' => $payableValue,
+            'debit'=>'',
+            'mobile'=>$withdrawal->mobile,
+            'status' => $status,
+            'timestamp' => $responseData['timestamp'] ?? "N/A",
+            'type' => 'Withdrawal',
+            'desc' => 'AePS Withdrawal form ' . ($responseData['data']['accountNumber'] ?? 'N/A').' and Commission '.($withdrawal->commissions ?? 0),
+            
+            'trans_id'=>$responseData['data']['ipayId'] ?? 'N/A',
+            'ext_ref'=>$withdrawal->external_ref,
+            'openingB'=>$withdrawal->opening_balance ?? 0,
+            'rrn'=>$responseData['data']['ipayId'] ?? 0,
+            'clsoingB'=>$withdrawal->closing_balance ?? 0,
+        ];
+    }
+
+    // Fetch data from 'utility_payments'
+    // $utilityPayments = DB::table('utility_payments')->get();
+    // foreach ($utilityPayments as $payment) {
+    //     $responseData = json_decode($payment->response_body, true);
+    //     $txnValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
+    //     $individualTotals['BBPS'] += $txnValue;
+    //     $totalAmount += $txnValue;
+        
+    //     $allTransactions[] = [
+    //        'source' => 'BBPS',
+    //         'credit' => '',
+    //         'debit'=>$txnValue,
+    //         'mobile'=>$payment->mobile,
+    //         'status' => $responseData['status'] ?? "Unknown",
+    //         'timestamp' => $responseData['timestamp'] ?? "N/A",
+    //         'type'=>'Deposit',
+    //         'desc'=>'Utility Payments for'.($responseData['billerDetails']['name'] ?? 0),
+    //         'trans_id'=>$responseData['data']['poolReferenceId'] ?? 0,
+    //         // 'rrn'=>$responseData['data']['poolReferenceId'] ?? 0,
+    //         'ext_ref'=>$responseData['data']['externalRef']?? 0,
+    //         'openingB'=>$payment->opening_balance ?? 0,
+    //         'rrn'=>$responseData['data']['ipayId'] ?? 0,
+    //         'clsoingB'=>$payment->closing_balance ?? 0,
+    //     ];
+    // }
+
+    // Fetch data from 'transactions_d_m_t1'
+    // $transactionsDMT1 = DB::table('transactions_d_m_t1')->get();
+    // foreach ($transactionsDMT1 as $transaction) {
+    //     $responseData = json_decode($transaction->response_data, true);
+    //     $txnAmount = (float)($responseData['txn_amount'] ?? 0);
+    //     $individualTotals['DMT2'] += $txnAmount;
+    //     $totalAmount += $txnAmount;
+    //     $status = isset($responseData['status']) && $responseData['status'] == 'true' ? 'Success' : 'Failed';
+
+    //     $allTransactions[] = [
+    //        'source' => 'DMT2',
+    //         'credit'=>'',
+    //         'debit' => $txnAmount,
+    //         'mobile'=>$transaction->mobile,
+    //         'status' => $status,
+    //         'timestamp' => $transaction->created_at ?? "N/A",
+    //          'type'=>'Deposit',
+    //          'desc'=>'Transaction to '.($responseData['benename'] ?? 'N/A'),
+    //         'trans_id'=>$responseData['benename'] ?? 0,
+    //         'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+    //         'ext_ref'=>$responseData['data']['externalRef'] ??0,
+    //         'openingB'=>$transaction->opening_balance ?? 0,
+    //         'clsoingB'=>$transaction->closing_balance ?? 0,
+    //     ];
+    // }
+
+    // Fetch data from 'transactions_dmt_instant_pay'
+    $transactionsDMTInstantPay = DB::table('transactions_dmt_instant_pay')->get();
+    foreach ($transactionsDMTInstantPay as $transaction) {
+        $responseData = json_decode($transaction->response_data, true);
+        $amount = (float)($responseData['data']['txnValue'] ?? 0);
+        $individualTotals['DMT1'] += $amount;
+        $totalAmount += $amount;
+        $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
+
+        $allTransactions[] = [
+            'source' => 'DMT',
+            'credit'=>'',
+            'debit' => ($amount+$transaction->charges),
+            'status' => $status,
+            'mobile'=>$transaction->second_no,
+            'timestamp' => $responseData['timestamp'] ?? "N/A",
+            'type'=>'Deposit',
+             'desc'=>'Money Transfer to '.($responseData['data']['beneficiaryName']??'N/A').' ₹'.($amount ?? 0).' and Charges '.($transaction->charges ?? 0),
+            'trans_id'=>$responseData['data']['txnReferenceId']?? 'Null',
+            'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+            'ext_ref'=>$responseData['data']['externalRef'] ??0,
+            'openingB'=>$transaction->opening_balance ?? 0,
+            'clsoingB'=>$transaction->closing_balance ?? 0,
+        ];
+    }
+// Fetch data from 'pancard'
+    $pancards = DB::table('pancard')
+            ->get();
+        foreach ($pancards as $pancard) {
+            $responseData = json_decode($pancard->response_body, true);
+
+            if (isset($responseData['status'])==='FAILED') 
+            {
+                $allTransactions[] = [
+                    'source' => 'pancard',
+                    'credit'=>'',
+                    'debit' => '107',
+                    'mobile'=>$pancard->username,
+                    'status' => $responseData['status'] ?? "Success",
+                    'timestamp' => $pancard->created_at ?? "N/A",
+                    'type'=>'Deposit',
+                    'desc'=>'Apply For Pan Card',
+                    'trans_id'=>$pancard->order_id,
+                    'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+                    'ext_ref'=>$pancard->order_id ??0,
+                    'openingB'=>$pancard->opening_balance ?? 0,
+                    'clsoingB'=>$pancard->closing_balance ?? 0,
+
+
+                ];
+            }
+            else
+            {
+                $allTransactions[] = [
+                     'source' => 'pancard',
+                    'credit'=>'',
+                    'debit' => '107',
+                    'mobile'=>$pancard->username,
+                    'status' => $responseData['status'] ?? "Unknown",
+                    'timestamp' => $pancard->created_at ?? "N/A",
+                    'type'=>'Deposit',
+                    'desc'=>'Apply For Pan Card',
+                    'trans_id'=>$pancard->order_id,
+                    'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+                    'ext_ref'=>$pancard->order_id ??0,
+                    'openingB'=>$pancard->opening_balance ?? 0,
+                    'clsoingB'=>$pancard->closing_balance ?? 0,
+
+
+                ];
+
+            }
+        }
+        // }
+
+    // Sort transactions by timestamp (date)
+    usort($allTransactions, function ($a, $b) {
+        return strtotime($b['timestamp']) - strtotime($a['timestamp']); // Descending order
+    });    // Return the view with transaction data
+    return response()->json([
+        'totalAmount' => $totalAmount,
+        'individualTotals' => $individualTotals,
+        'transactions' => $allTransactions,
+    ]);
+    
+}
 
 }
 

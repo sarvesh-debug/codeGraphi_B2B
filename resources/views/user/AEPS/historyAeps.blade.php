@@ -66,7 +66,7 @@
                                     <td class="px-2 py-2">{{ $withdrawal->id }}</td>
                                     <td class="px-2 py-2">{{ $withdrawal->mobile }}</td>
                                     <td class="px-2 py-2">{{ $data['data']['ipayId'] ?? "0" }}</td>
-                                    <td class="px-2 py-2">{{ json_decode($withdrawal->response_data)->status }}</td>
+                                    <td class="px-2 py-2">{{ json_decode($withdrawal->response_data)->status ?? ''}}</td>
                                     <td class="px-2 py-2">{{ $data['data']['transactionValue'] ?? "0" }}</td>
                                     <td class="px-2 py-2">₹{{ number_format($withdrawal->commissions, 2) }}</td>
                                     <td class="px-2 py-2">₹{{ number_format($withdrawal->opening_balance, 2) }}</td>

@@ -3262,6 +3262,35 @@ textarea.form-control-lg {
   border-top-right-radius: 0;
 }
 
+.nav-item {
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover {
+  transform: translateY(-3px);
+}
+
+/* Active link styling */
+.nav-item.active .nav-link {
+  background-color: #696CFF; 
+  padding: 6px 10px;
+  color: white !important;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.nav-item .nav-link {
+  padding: 8px 15px;
+  font-size: 1rem;
+  color: #000 !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-item .nav-link:hover {
+  color: white;
+  border-radius: 5px;
+}
+
 .nav {
   display: flex;
   flex-wrap: wrap;
@@ -3892,12 +3921,26 @@ textarea.form-control-lg {
   margin-left: 1.5rem;
 }
 
-.card-header {
-  padding: 1.5rem 1.5rem;
+/* .card-header {
+  padding: 1rem 1rem;
   margin-bottom: 0;
   background-color: transparent;
   border-bottom: 0 solid #d9dee3;
+} */
+.card-header {
+  /* background-color: #696CFF; */
+  background-color: #3f9700eb;
+  text-align: center;
+
 }
+
+.card-heading{
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+
 .card-header:first-child {
   border-radius: 0.5rem 0.5rem 0 0;
 }
@@ -6382,10 +6425,52 @@ label.btn {
   color: #8592a3;
 }
 
+.btn {
+  font-size: 1rem;
+  /* font-weight: 600; */
+  padding: 8px 20px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-download {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+.btn-add {
+  color: #fff;
+  background-color: #3f9700eb;
+  border-color: #d1d1d1eb;
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(113, 221, 55, 0.4);
+}
+.btn-add:hover {
+  color: #fff;
+  background-color: #66c732;
+  border-color: #66c732;
+  transform: translateY(-1px);
+}
+
 .btn-success {
   color: #fff;
-  background-color: #71dd37;
-  border-color: #71dd37;
+  background-color: #3f9700eb;
+  border-color: #d1d1d1eb;
   box-shadow: 0 0.125rem 0.25rem 0 rgba(113, 221, 55, 0.4);
 }
 .btn-success:hover {

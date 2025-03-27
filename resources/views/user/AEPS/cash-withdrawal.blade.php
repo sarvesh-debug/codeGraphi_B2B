@@ -60,12 +60,13 @@
 </div>
 
     @include('user.AEPS.navbar')
+<div class="container mt-3 ">
     <div class="row">
         <div id="kt_app_content" class="app-content flex-column-fluid mt-4   col-md-9">
             {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
-                <div class="card col-lg-6 col-md-8 col-12 mx-auto shadow-lg border-0 sm:p-4">
-                    <div class="card-header bg-success text-white text-center py-3">
-                        <h4 class="mb-0"><span class="text-success1">AEPS</span> <span class="text-info1">Cash Withdrawal</span></h4>
+                <div class="card  col-lg-6 col-md-8 col-12 gap-3">
+                    <div class="card-header">
+                        <h4 class="mb-0"><span class="card-heading"> AEPS Cash Withdrawal </h4>
                     </div>
 
                     <div class="card-body p-4">
@@ -363,22 +364,22 @@
                             <textarea id="txtBiometricData" hidden name="biometricData" rows="10" cols="50" placeholder="Biometric Data will appear here"></textarea>
                             <!-- Submit and Reset Buttons -->
                             <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
-                            <div class="d-flex flex-column flex-sm-row justify-content-between gap-3">
+                            <div class="d-flex justify-content-end gap-3">
                                 <!-- Capture Button -->
                                 <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
                             
                                 <!-- Submit Button -->
-                                <button type="submit" class="btn btn-success w-100 mb-2 mb-sm-0">Submit</button>
+                                <!-- <button type="submit" class="btn btn-success w-100 mb-2 mb-sm-0">Submit</button> -->
                             
                                 <!-- Reset Button -->
-                                <button type="reset" class="btn btn-warning w-100">Reset</button>
+                                <button type="reset" class="btn btn-warning">Reset</button>
                             </div>
                             
                         </form>
                     </div>
                 </div>
             {{-- </div> --}}
-        </div>
+        <!-- </div> -->
 
          <!-- Latest Transactions Section -->
          <div class="col-md-3">
@@ -391,7 +392,8 @@
                         @foreach($latestTransactions as $transaction)
                             <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
                                 <div class="transaction-details">
-                                    <strong class="text-primary">₹{{ $transaction['amount'] ?? "N/A" }}</strong>
+                                    <strong class="text-primary">₹{{ $transaction['status'] === 'success' ? $transaction['transactionAmount'] : $transaction['amount'] }}
+                                    </strong>
                                     <div class="small text-muted">{{ $transaction['date'] ?? "N/A" }}</div>
                                 </div>
                                 <span 
@@ -412,6 +414,7 @@
         
 
     </div>
+
     {{-- </div> --}}
 </div>
 

@@ -4,8 +4,8 @@
     <div class="alert alert-danger">
         <strong>{{ $status }}</strong>
     </div>
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Remitter Registration Verify</h4>
+    <div class="card-header py-3">
+        <h4 class="card-heading mb-0">Remitter Registration Verify</h4>
     </div>
     <div class="card-body p-4">
         <form action="{{ route('remitterRegistrationVerify') }}" method="POST">

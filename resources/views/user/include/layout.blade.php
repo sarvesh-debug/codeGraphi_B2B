@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 	  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
       .nav-item span {
         margin-right: 150px; /* Adjust the value as needed */
@@ -580,14 +580,14 @@
         <ul class="menu-sub">
           <li class="menu-item">
             <a href="{{route('transaction.history')}}" class="menu-link">
-              <div data-i18n="Without menu">DMT S1</div>
+              <div data-i18n="Without menu">DMT</div>
             </a>
           </li>
-          <li class="menu-item">
+          {{-- <li class="menu-item">
             <a href="{{route('dmtps.history')}}" class="menu-link">
               <div data-i18n="Without navbar">DMT S2</div>
             </a>
-          </li>
+          </li> --}}
           <li class="menu-item">
             <a href="{{route('aeps.history')}}" class="menu-link">
               <div data-i18n="Without navbar">Aeps</div>
@@ -721,7 +721,7 @@
           <div class="d-flex align-items-center gap-2">
               <i class="bx bx-wallet bx-sm text-primary"></i>
               <span class="fw-bold text-dark">₹</span>
-              <span class="fw-bold text-dark">{{ session('balance') }}</span>
+              <span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
           </div>
 
           <!-- Account Section (Visible on Desktop) -->
@@ -801,17 +801,25 @@
                   </li> --}}
                   <li><div class="dropdown-divider"></div></li>
                   <li>
-                      <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
+                      <a class="dropdown-item" href="{{ route('get.profile') }}">
                           <i class="bx bx-power-off me-2"></i>
-                          <span class="align-middle">Log Out</span>
+                          <span class="align-middle">Profile</span>
                       </a>
                   </li>
+                  
                   <li>
-                      <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
-                          <i class="bx bx-file me-2"></i>
-                          <span class="align-middle">Certificate</span>
-                      </a>
-                  </li>
+                    <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
+                        <i class="bx bx-file me-2"></i>
+                        <span class="align-middle">Certificate</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Logout</span>
+                    </a>
+                   
+                </li>
               </ul>
           </li>
       </ul>
@@ -867,7 +875,7 @@
           <h5><b>Name:</b>{{ $customer->name }}</h5>
           <h5><b>ID:</b>{{ $customer->username }}</h5>
           <h6 class=""style="text-transform: capitalize">{{ $customer->role }}</h6>
-          <p><b>Balance:</b>{{ session('balance') }}</p>
+          {{-- <p><b>Balance:</b>{{ session('balance') }}</p> --}}
           <p><b>Email:</b>{{ $customer->email }}</p>
           <p><b>Phone:</b>{{ $customer->phone }}</p>
           <p><b>Shop Name:</b>{{ $customer->owner }}</p>
@@ -879,6 +887,126 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="mpinModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Enter MPIN</h5>
+          </div>
+          <form id="mpinForm">
+              <div class="modal-body text-center mb-2">
+                  <p>Please enter your MPIN to continue.</p>
+                  <div class="d-flex justify-content-center">
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin1" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin2" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin3" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin4" required>
+                  </div>
+                  <div class="text-danger mt-2" id="mpinError" style="display:none;">Incorrect MPIN</div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<style>
+    .otp-input {
+        width: 45px;
+        height: 50px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        border: 3px solid #007bff;
+        border-radius: 8px;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .otp-input:focus {
+        border-color: #ff5722;
+        box-shadow: 0 0 8px rgba(255, 87, 34, 0.5);
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        let storedMpin = "{{ session('mpin') }}"; // Fetch MPIN from Laravel session
+        let inactivityTime = 10 * 60 * 1000; // 10 minutes timeout
+        let timeout;
+        
+        // Auto-focus and move to next field
+        $(".otp-input").on("input", function () {
+            if ($(this).val().length === 1) {
+                $(this).next('.otp-input').focus();
+            }
+            checkAndSubmit();
+        });
+
+        // Move back on backspace
+        $(".otp-input").on("keydown", function (e) {
+            if (e.key === "Backspace" && $(this).val().length === 0) {
+                $(this).prev('.otp-input').focus();
+            }
+        });
+
+        // Auto-submit when 4 digits are entered
+        function checkAndSubmit() {
+            let enteredMpin = $('#mpin1').val() + $('#mpin2').val() + $('#mpin3').val() + $('#mpin4').val();
+            if (enteredMpin.length === 4) {
+                validateMpin(enteredMpin);
+            }
+        }
+
+        function validateMpin(enteredMpin) {
+            if (enteredMpin !== storedMpin) {
+                $('#mpinError').text("Incorrect MPIN").show();
+                $('.otp-input').val(''); // Clear input fields
+                $('#mpin1').focus(); // Focus back on first input
+            } else {
+                $('#mpinError').hide();
+                $('#mpinModal').modal('hide'); // Hide modal on correct MPIN
+                sessionStorage.setItem("mpinLocked", "false"); // Unlock
+                resetTimer(); // Restart inactivity timer
+            }
+        }
+
+        // Lock the page if inactive
+        function lockPage() {
+            sessionStorage.setItem("mpinLocked", "true");
+            $('#mpinModal').modal('show');
+        }
+
+        // Reset inactivity timer
+        function resetTimer() {
+            clearTimeout(timeout);
+            timeout = setTimeout(lockPage, inactivityTime);
+        }
+
+        // Detect user activity to reset timer
+        $(document).on("mousemove keypress click", function () {
+            if (sessionStorage.getItem("mpinLocked") !== "true") {
+                resetTimer();
+            }
+        });
+
+        // Lock page if it was locked before
+        if (sessionStorage.getItem("mpinLocked") === "true") {
+            lockPage();
+        } else {
+            resetTimer();
+        }
+    });
+</script>
+
+
 
     <!-- /Layout wrapper -->
 {{-- pin --}}

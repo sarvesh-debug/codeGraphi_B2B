@@ -8,8 +8,8 @@
         <p class="text-muted">You will be redirected to the <b>Remitter Profile</b> page in <span id="countdown" class="fw-bold text-danger">5</span> seconds...</p>
     </div>
     <div class="card shadow-lg mt-4">
-        <div class="card-header bg-success text-white">
-            <h3 class="mb-0">Response Details</h3>
+        <div class="card-header">
+            <h3 class="card-heading mb-0">Response Details</h3>
         </div>
         <div class="card-body">
             {{-- <h5 class="text-secondary">Response Data:</h5> --}}

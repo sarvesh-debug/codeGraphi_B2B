@@ -1,15 +1,15 @@
 @extends('user/include.layout')
 
 @section('content')
-@include('user.dmtinstantpay.navbar')
 
-<div class="container">
-    <div class="row justify-content-center">
+<div class="container py-4">
+    @include('user.dmtinstantpay.navbar')
+    <div class="row justify-content-center mt-3">
         <!-- Remitter Profile Section -->
-        <div class="col-md-6  mb-5">
+        <div class="col-md-6 ">
             <div class="card shadow-lg border-0">
-                <div class="card-header bg-success text-white text-center py-3">
-                    <h4 class="mb-0"><i class="fas fa-user-circle me-2"></i>Remitter Profile</h4>
+                <div class="card-header py-3">
+                    <h4 class="card-heading mb-0"><i class="fas fa-user-circle me-2"></i>Remitter Profile</h4>
                 </div>
                 <div class="card-body p-4">
                     <form action="{{ route('dmt.remitter-profile_chk') }}" method="POST">
@@ -31,7 +31,7 @@
             <div class="col-md-6 mb-5">
                 <div class=" shadow-lg border-0">
                     <div class="card-header bg-gradient-success text-white text-center py-3">
-                        <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
+                        <h5 class="card-heading"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                     </div>
                     <div class="card-body p-4 mb-5">
                         @foreach($latestTransactions as $transaction)

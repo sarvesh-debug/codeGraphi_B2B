@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Helpers\MailHelper;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use Illuminate\Support\Facades\Auth;
@@ -421,6 +421,17 @@ public function veryfyRetailer(Request $request)
             //    'pan_image' => $panImageUrl,
             //    'bank_document' => $bankImageUrl,
            ]);
+
+			$templateData = [
+				'user_id' => $username,
+				'phone' => $request->phone,
+				'name' =>  $request->name,
+				'password' => $request->password,
+				'role' => $request->role
+			];
+		
+			$emailSent = MailHelper::sendEmail('add_member_by_admin', $templateData, $request->email);
+	
    
            return redirect()->back()->with('success', 'Add '.$role.' completed successfully!');
        } catch (Exception $e) {
@@ -627,6 +638,10 @@ public function login(Request $request)
         session(['dis_phone'=> $customer->dis_phone]);
         session(['adhar_no'=> $customer->aadhar_no]);
         session(['email'=> $customer->email]);
+        session(['mpin'=> $customer->mpin]);
+        session(['txnpin'=> $customer->txnpin]);
+        session(['lockBalance'=> $customer->LockBalance]);
+        
 
         $deviceId=md5(string: request()->ip() . request()->header('User-Agent'));
         $today = Carbon::today();
@@ -1150,6 +1165,64 @@ public function getProfile()
 //     return view('user.services', compact('activeServices', 'customer'));
 // }
 
+public function getMpin(Request $request)
+{
+    $mpin = CustomerModel::getMpin();
+    return response()->json(['mpin' => $mpin]);
+}
+public function changeMpin(Request $request)
+{
+    
+    $request->validate([
+        'mobile' => 'required',
+        'old_mpin' => 'required',
+        'new_mpin' => 'required|min:4|max:4',
+    ]);
+
+    $user = CustomerModel::where('phone', $request->mobile)->first();
+
+    if (!$user || $user->mpin !== $request->old_mpin) {
+        return back()->with('error', 'Old MPIN is incorrect.');
+    }
+
+    // Update MPIN
+    $user->update(['mpin' => $request->new_mpin]);
+    session(['mpin'=> $request->new_mpin]);
+    return back()->with('success', 'MPIN updated successfully.');
+}
 
 
+    public function adminBalanceAddForm()
+    {
+        return view('admin.loadBalance');
+    }
+    public function adminBalanceAdd(Request $request)
+    {
+       
+
+        $balance=$request->balance;
+        $update=DB::table('business')->where('id',1)
+        ->increment('balance',$balance);
+
+        if($update)
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('success', 'Balance Loaded  successfully.');
+           
+        }
+        else
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('error', 'Balance Loaded Failled.');
+        }
+       // return view('admin.loadBalance');
+    }
 }

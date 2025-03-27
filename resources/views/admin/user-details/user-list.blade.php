@@ -31,9 +31,6 @@
 
 
     <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
-        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-             alt="Download Icon" 
-             style="width: 16px; height: 16px; margin-right: 5px;">
         Export
     </button>
     {{-- @if (session('success'))
