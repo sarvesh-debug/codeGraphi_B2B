@@ -51,9 +51,9 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
 {
-    if ($exception instanceof HttpException && $exception->getStatusCode() == 500) {
-        return response()->view('errors.500', [], 500);
-    }
+    // if ($exception->getStatusCode() == 500) {
+    //     return response()->view('errors.500', [], 500);
+    // }
     // Check for duplicate entry exception
     if ($exception instanceof QueryException && $exception->getCode() == 23000) {
         // Return a custom message

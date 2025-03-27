@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+use App\Helpers\ApiHelper;
 class aepsController extends Controller
 {
     public function showForm()
@@ -29,7 +29,8 @@ class aepsController extends Controller
                 $statusDisplay = ($status === 'transaction successful') ? 'success' : 'Failed';
 
                 return [
-                    'amount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
+                    'amount' => $transaction->amount,
+                    'transactionAmount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
                     'date' => \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, h:i A'),
                     'status' => $statusDisplay,  // Display Success or Failed
                 ];
@@ -97,7 +98,7 @@ class aepsController extends Controller
     //   return $request;
     //   die();
         // Generate a unique transaction ID for externalRef
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -144,7 +145,7 @@ class aepsController extends Controller
     public function balanceInquiry(Request $request)
     {
        
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -192,7 +193,7 @@ class aepsController extends Controller
 
     public function balanceStatement(Request $request)
     {
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -249,7 +250,7 @@ class aepsController extends Controller
         $role = session('role');
 
         
-            $externalRef = uniqid('ZPAY_', true);
+            $externalRef = uniqid('TXN', true);
 
             // Prepare headers for the API request
             $customerOutletId = intval(session('outlet'));
@@ -319,6 +320,8 @@ class aepsController extends Controller
      */
     public function testDemo()
     {
+        // return "Hello";
+        // die();
         $mobile = session('mibile');
         $role = session('role');
         $externalRef = 'APAePS-' . strtoupper(uniqid(date('YmdHis')));
@@ -451,16 +454,20 @@ class aepsController extends Controller
         // Update session balance
         $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
         session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
-
-        DB::table('business')
-        ->where('business_id', session('business_id'))
-        ->increment('balance', $payableValue + ($commissionAmount - $tds));    
+        $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $payableValue + ($commissionAmount - $tds), 'AEPS');
+      
+       
+        // DB::table('business')
+        // ->where('business_id', session('business_id'))
+        // ->increment('balance', $payableValue + ($commissionAmount - $tds));    
    
    $balanceAd = DB::table('business')
    ->where('business_id', session('business_id'))
    ->value('balance');
    // Store the retrieved balance in the session
    session(['adminBalance'=> $balanceAd]);
+//dd('ok');
+//dd($apiBalance);
     }
     
 

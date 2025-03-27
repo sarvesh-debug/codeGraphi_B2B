@@ -80,10 +80,9 @@
                     <!-- Filter Button -->
                     <button type="submit" class="btn btn-primary me-2 w-100">Filter</button>
                     <!-- Export Button -->
+                
+                    <!-- Export Button -->
                     <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
-                        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-                             alt="Download Icon" 
-                             style="width: 16px; height: 16px; margin-right: 5px;">
                         Export
                     </button>
                 </div>
@@ -176,11 +175,19 @@
                         <p><strong>Reference ID:</strong> {{ $responseData['data']['ipayId'] ?? "N/A" }}</p>
                         <p><strong>Transaction Amount:</strong> ₹{{ $responseData['data']['transactionValue'] ?? "0" }}</p>
                         <p><strong>Status:</strong> 
-                            @if($responseData['status'] == "Transaction Successful")
-                                <span class="badge bg-success">Success</span>
-                            @else
-                                <span class="badge bg-danger">Failed</span>
-                            @endif
+                            @php
+                            $responseData = json_decode($transaction->response_data);
+                            $status = $responseData->status ?? 'Failed';
+                        @endphp
+                        @if($status === 'Transaction Successful')
+                            <span style="background-color: green; color: white; animation: blink 1s infinite;">
+                                Success
+                            </span>
+                        @else
+                            <span style="color: red;">
+                                Failed
+                            </span>
+                        @endif
                         </p>
                     </div>
                 </div>

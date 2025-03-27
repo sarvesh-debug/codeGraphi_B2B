@@ -16,13 +16,13 @@
 
     <!-- Existing Filter Form -->
     <form method="GET" action="{{ route('transaction.history') }}" class="row mb-4 m-2">
-        <div class="col-md-6 col-lg-5 mb-3">
+        <div class="col-md-6 col-lg-5">
             <label for="start_date">Start Date</label>
             <input type="datetime-local" id="start_date" name="start_date" 
                    value="{{ request('start_date') }}" 
                    class="form-control">
         </div>
-        <div class="col-md-6 col-lg-5 mb-3">
+        <div class="col-md-6 col-lg-5">
             <label for="end_date">End Date</label>
             <input type="datetime-local" id="end_date" name="end_date" 
                    value="{{ request('end_date') }}" 
@@ -35,8 +35,8 @@
 
     <div class="card m-2">
         <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <h3 class="mb-3 mb-md-0 text-center text-md-start">Transaction List</h3>
-            <button id="exportTransactions" class="btn btn-success">Export to Excel</button>
+            <h3 class="card-heading mb-3 mb-md-0 text-center text-md-start">Transaction List</h3>
+            <button id="exportTransactions" class="btn btn-download"> <i class="fa-solid fa-download"></i> Download</button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -65,7 +65,7 @@
                                 <td>{{ $transaction->second_no }}</td>
                                 <td>{{ json_decode($transaction->response_data, true)['data']['txnReferenceId'] ?? 'N/A' }}</td>
                                 {{-- <td>{{ $transaction->customer_outlet_id }}</td> --}}
-                                <td>{{ json_decode($transaction->response_data, true)['status'] }}</td>
+                                <td>{{ json_decode($transaction->response_data, true)['status'] ?? ''}}</td>
                                 <td>{{ json_decode($transaction->response_data, true)['data']['txnValue'] ?? 'N/A' }}</td>
                                 <td>₹{{ number_format($transaction->charges, 2) }}</td>
                                 <td>₹{{ number_format($transaction->commission, 2) }}</td>

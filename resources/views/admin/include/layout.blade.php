@@ -350,7 +350,11 @@ $pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
                       <div data-i18n="Without menu">Latest News </div>
                     </a>
                   </li>
-                 
+                  <li class="menu-item">
+                    <a href="{{route('otherServices.form')}}" class="menu-link">
+                      <div data-i18n="Without menu">Logo & Mobile</div>
+                    </a>
+                  </li>
                   <li class="menu-item">
                     <a href="{{route('otherServices.index')}}" class="menu-link">
                       <div data-i18n="Without menu">Services</div>
@@ -421,7 +425,7 @@ $pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
               <div class="navbar-nav align-items-center">
                 <div class="nav-item d-flex align-items-center">
                 
-                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b></li>
+                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b> <a href="{{route('adminBalanceAddForm')}}" class="btn btn-sm btn-success">+</a> </li>
                 </div>
               </div>
 

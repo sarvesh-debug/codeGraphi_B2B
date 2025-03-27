@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 	  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
       .nav-item span {
         margin-right: 150px; /* Adjust the value as needed */
@@ -580,14 +580,14 @@
         <ul class="menu-sub">
           <li class="menu-item">
             <a href="{{route('transaction.history')}}" class="menu-link">
-              <div data-i18n="Without menu">DMT S1</div>
+              <div data-i18n="Without menu">DMT</div>
             </a>
           </li>
-          <li class="menu-item">
+          {{-- <li class="menu-item">
             <a href="{{route('dmtps.history')}}" class="menu-link">
               <div data-i18n="Without navbar">DMT S2</div>
             </a>
-          </li>
+          </li> --}}
           <li class="menu-item">
             <a href="{{route('aeps.history')}}" class="menu-link">
               <div data-i18n="Without navbar">Aeps</div>
@@ -699,30 +699,75 @@
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center fixed-top mt-0 mt-lg-3" id="layout-navbar">
 
 
-  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-1 d-xl-none">
-    <a class="nav-item nav-link px-0" href="javascript:void(0)">
-        <i class="bx bx-menu bx-sm"></i>
-    </a>
-</div>
+	<div class="layout-menu-toggle navbar-nav align-items-xl-center me-1 d-xl-none">
+		<a class="nav-item nav-link px-0" href="javascript:void(0)">
+			<i class="bx bx-menu bx-sm"></i>
+		</a>
+	</div>
 
 
 
   <div class="navbar-nav-right d-flex align-items-center" id="navbar-collaps">
- 
+    {{-- <div class="navbar-nav align-items-center  py-2 px-3 rounded"> --}}
+      {{-- <div class="nav-item d-flex flex-row flex-md-row justify-content-between align-items-start align-items-md-center w-100"> --}}
+          <!-- Balance Section -->
+          {{-- <div class="d-flex flex-md-row align-items-start align-items-md-center"> --}}
+            {{-- <div class="flex flex-row items-center justify-start gap-6 bg-red"> --}}
+              <!-- Add Fund Button -->
+              <div class=" rounded ">
+                <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold ">
+                 +
+                </a>
+              </div>
+            
 
-     <!-- Add Fund Button -->
-     <div class=" rounded ">
-      <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold fa fa-plus">
-       
-      </a>
-    </div>
+
+    <style>
+        /* Default: Hidden */
+		.bx-wallet {
+			display: none;
+		}
+
+		/* Show in desktop view */
+		@media (min-width: 768px) {
+			.bx-wallet {
+				display: inline-block;
+			}
+		}
+
+		.bx-barcode {
+			display: none;
+		}
+
+		/* Show in desktop view */
+		@media (min-width: 768px) {
+			.bx-barcode {
+				display: inline-block;
+			}
+		}
+
+
+    </style>
+	<div class="d-flex justify-content-between align-items-center gap-3">
+		<!-- Wallet Icon and Balance -->
+		<!-- <div class="flex flex-row items-center gap-2">
+			<i class="bx bx-wallet bx-sm icon mb-1"></i>
+			<span class="text-gray-900 fw-bold bal">₹: </span>
+			<span class="text-dark rup fw-bold">{{ session('balance') }}</span>
+		</div> -->
+		<!-- Wallet Icon and Balance -->
+		<div class="d-flex align-items-center gap-2">
+			<i class="bx bx-wallet bx-sm text-primary"></i>
+			<span class="fw-bold text-dark">₹</span>
+			<span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
+		</div>
     
       <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center gap-2">
+          <!-- <div class="d-flex align-items-center gap-2">
               <i class="bx bx-wallet bx-sm text-primary"></i>
               <span class="fw-bold text-dark">₹</span>
               <span class="fw-bold text-dark">{{ session('balance') }}</span>
-          </div>
+          </div> -->
 
           <!-- Account Section (Visible on Desktop) -->
           <div class="d-none d-md-flex flex-column flex-md-row ms-3">
@@ -739,82 +784,53 @@
           </div>
       </div>
   
-      <ul class="navbar-nav flex-row align-items-center float-end ms-auto gap-1">
-        <span class="fw-bold d-none d-md-inline">Welcome, {{ $customer->name }} </span>
-        <span class="fw-bold small d-inline d-md-none">Welcome, {{ $customer->name }} </span>
-        
-          <li class="nav-item navbar-dropdown dropdown-user dropdown">
-              <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                  <div class="avatar">
-                      <div class="position-relative d-inline-block">
-                          <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="h-auto rounded-circle" />
-                          @if (!$customer->pin > 0)
-                              <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
-                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                          @else
-                              <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
-                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                          @endif
-                      </div>
-                  </div>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end">
-                  <li>
-                      <a class="dropdown-item" href="#">
-                          <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                  <div class="avatar avatar-online">
-                                      <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
-                                  </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                  <span class="fw-semibold d-block">{{ $customer->name }}</span>
-                                  <small class="text-muted" style="text-transform: capitalize">
-                                    @if (trim(strtolower($role)) === 'distibuter')
-                                        Distributor
-                                    @else
-                                        Retailer
-                                    @endif
-                                  </small>
-                              </div>
-                          </div>
-                      </a>
-                  </li>
-                  {{-- <li><div class="dropdown-divider"></div></li> --}}
+	  <ul class="navbar-nav flex-row align-items-center ms-auto gap-2">
+    <!-- Welcome Message -->
+    <span class="fw-bold d-none d-md-inline">Welcome, {{ $customer->name }} </span>
+    
+    <!-- Profile Image Dropdown -->
+    <li class="nav-item navbar-dropdown dropdown-user dropdown">
+        <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown">
+            <div class="avatar position-relative">
+                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="h-auto rounded-circle" />
+                @if (!$customer->pin > 0)
+                    <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
+                        style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                @else
+                    <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
+                        style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                @endif
+            </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item" href="#">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <span class="fw-semibold d-block">{{ $customer->name }}</span>
+                            <small class="text-muted">
+                                @if (trim(strtolower($role)) === 'distibuter')
+                                    Distributor
+                                @else
+                                    Retailer
+                                @endif
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            <li><a class="dropdown-item" href="{{ route('get.profile') }}"><i class="bx bx-user me-2"></i>Profile</a></li>
+            <li><a class="dropdown-item" href="{{ route('remitter.certificate') }}"><i class="bx bx-file me-2"></i>Certificate</a></li>
+            <li><a class="dropdown-item" href="{{ route('coustomer.logout') }}"><i class="bx bx-power-off me-2"></i>Logout</a></li>
+        </ul>
+    </li>
+</ul>
 
-                  {{-- <!-- Account Section (Visible in Mobile Dropdown) -->
-                  <li class="d-flex d-md-none">
-                      <a class="dropdown-item" href="javascript:void(0);">
-                          <div class="d-flex flex-row flex-md-row">
-                              <span class="role btn d-inline-flex align-items-center px-3 lg:py-1 py-0 rounded-pill">
-                                  <span class="fw-bold">Account: </span>&nbsp;
-                              </span>
-                              <span class="d-block text-md-start text-center lg:mt-1 mt-0 mt-md-0">
-                                  @if (trim(strtolower($role)) === 'distributor')
-                                      Distributor
-                                  @else
-                                      Retailer
-                                  @endif
-                              </span>
-                          </div>
-                      </a>
-                  </li> --}}
-                  <li><div class="dropdown-divider"></div></li>
-                  <li>
-                      <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
-                          <i class="bx bx-power-off me-2"></i>
-                          <span class="align-middle">Log Out</span>
-                      </a>
-                  </li>
-                  <li>
-                      <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
-                          <i class="bx bx-file me-2"></i>
-                          <span class="align-middle">Certificate</span>
-                      </a>
-                  </li>
-              </ul>
-          </li>
-      </ul>
   </div>
 </nav>
 <!-- /Navbar -->
@@ -867,7 +883,7 @@
           <h5><b>Name:</b>{{ $customer->name }}</h5>
           <h5><b>ID:</b>{{ $customer->username }}</h5>
           <h6 class=""style="text-transform: capitalize">{{ $customer->role }}</h6>
-          <p><b>Balance:</b>{{ session('balance') }}</p>
+          {{-- <p><b>Balance:</b>{{ session('balance') }}</p> --}}
           <p><b>Email:</b>{{ $customer->email }}</p>
           <p><b>Phone:</b>{{ $customer->phone }}</p>
           <p><b>Shop Name:</b>{{ $customer->owner }}</p>
@@ -879,6 +895,126 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="mpinModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title">Enter MPIN</h5>
+          </div>
+          <form id="mpinForm">
+              <div class="modal-body text-center mb-2">
+                  <p>Please enter your MPIN to continue.</p>
+                  <div class="d-flex justify-content-center">
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin1" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin2" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin3" required>
+                      <input type="password" class="otp-input mx-2" maxlength="1" id="mpin4" required>
+                  </div>
+                  <div class="text-danger mt-2" id="mpinError" style="display:none;">Incorrect MPIN</div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+
+<style>
+    .otp-input {
+        width: 45px;
+        height: 50px;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        border: 3px solid #007bff;
+        border-radius: 8px;
+        outline: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .otp-input:focus {
+        border-color: #ff5722;
+        box-shadow: 0 0 8px rgba(255, 87, 34, 0.5);
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        let storedMpin = "{{ session('mpin') }}"; // Fetch MPIN from Laravel session
+        let inactivityTime = 10 * 60 * 1000; // 10 minutes timeout
+        let timeout;
+        
+        // Auto-focus and move to next field
+        $(".otp-input").on("input", function () {
+            if ($(this).val().length === 1) {
+                $(this).next('.otp-input').focus();
+            }
+            checkAndSubmit();
+        });
+
+        // Move back on backspace
+        $(".otp-input").on("keydown", function (e) {
+            if (e.key === "Backspace" && $(this).val().length === 0) {
+                $(this).prev('.otp-input').focus();
+            }
+        });
+
+        // Auto-submit when 4 digits are entered
+        function checkAndSubmit() {
+            let enteredMpin = $('#mpin1').val() + $('#mpin2').val() + $('#mpin3').val() + $('#mpin4').val();
+            if (enteredMpin.length === 4) {
+                validateMpin(enteredMpin);
+            }
+        }
+
+        function validateMpin(enteredMpin) {
+            if (enteredMpin !== storedMpin) {
+                $('#mpinError').text("Incorrect MPIN").show();
+                $('.otp-input').val(''); // Clear input fields
+                $('#mpin1').focus(); // Focus back on first input
+            } else {
+                $('#mpinError').hide();
+                $('#mpinModal').modal('hide'); // Hide modal on correct MPIN
+                sessionStorage.setItem("mpinLocked", "false"); // Unlock
+                resetTimer(); // Restart inactivity timer
+            }
+        }
+
+        // Lock the page if inactive
+        function lockPage() {
+            sessionStorage.setItem("mpinLocked", "true");
+            $('#mpinModal').modal('show');
+        }
+
+        // Reset inactivity timer
+        function resetTimer() {
+            clearTimeout(timeout);
+            timeout = setTimeout(lockPage, inactivityTime);
+        }
+
+        // Detect user activity to reset timer
+        $(document).on("mousemove keypress click", function () {
+            if (sessionStorage.getItem("mpinLocked") !== "true") {
+                resetTimer();
+            }
+        });
+
+        // Lock page if it was locked before
+        if (sessionStorage.getItem("mpinLocked") === "true") {
+            lockPage();
+        } else {
+            resetTimer();
+        }
+    });
+</script>
+
+
 
     <!-- /Layout wrapper -->
 {{-- pin --}}

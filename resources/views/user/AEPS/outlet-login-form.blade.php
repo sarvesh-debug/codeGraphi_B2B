@@ -43,12 +43,12 @@
     }
     </style>
 
-<div class="card col-md-8 mx-auto shadow-lg border-0 loading">
+<div class="card col-md-6 mx-auto shadow-lg border-0 loading mt-3">
     <div id="loadingOverlay">
         <div class="loader"></div>
     </div>
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Daily Login Form</h4>
+    <div class="card-header">
+        <h4 class="card-heading mb-0">Daily Login Form</h4>
     </div>
     <div class="card-body p-4">
         <form action="{{route('outlet-login/aeps.store')}}" method="POST">
@@ -117,9 +117,11 @@
             </div> --}}
             
             <!-- Submit Button -->
-            <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
-            <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
-            <button type="submit" class="btn btn-info w-100">Submit</button>
+             <div class="d-flex justify-content-center"> 
+                <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
+                <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
+                <!-- <button type="submit" class="btn btn-info w-100">Submit</button> -->
+            </div>
         </form>
     </div>
 </div>

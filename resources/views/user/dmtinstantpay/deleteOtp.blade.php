@@ -8,8 +8,8 @@
  </div>
 @endif
 <div class="card col-md-6 mx-auto shadow-lg border-0">
-    <div class="card-header bg-danger text-white text-center py-3">
-        <h4 class="mb-0">Beneficiary Delete OTP</h4>
+    <div class="card-header bg-danger py-3">
+        <h4 class="card-heading mb-0">Beneficiary Delete OTP</h4>
     </div>
     <div class="card-body p-4">
         <p>{{$status}}</p>

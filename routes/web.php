@@ -31,8 +31,16 @@ use App\Http\Controllers\RemitterController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\BinCheckerController;
 
+
+Route::get('/test-error', function () {
+    abort(500);
+});
+
+
+
 Route::get('admin', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect()->away('https://zpaypvtltd.com/');
 })->name('admin');
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +59,7 @@ Route::get('testing.pal',function(){
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->away('https://zpaypvtltd.com/');
 });
 // user Auth
 
@@ -308,6 +316,8 @@ Route::get('/pan/history', [PanCardController::class, 'panHistory'])->name('pan.
 Route::get('/pan/callback', [PanCardController::class, 'handleCallback'])->name('pan.callback');
 Route::get('/pan/test', [PanCardController::class, 'updateCustomerBalance']);
 
+Route::post('/get-mpin', [CustomerController::class, 'getMpin'])->name('mpin');
+Route::post('/change-mpin', [CustomerController::class, 'changeMpin'])->name('changeMpin');
 
 
 // AEPS API
@@ -464,9 +474,18 @@ Route::get('/ladger/statement',[infoController::class,'index'])->name('laser.sta
 
 Route::get('fund/Qr',[AddBankController::class,'dispalyQr'])->name('dispalyQr1');
 
-//Mobile Rechage 
-Route::get('mobile/isp',[prePaidRechargeController::class,'getISP'])->name('getISP');
 
+//Mobile Rechage 
+Route::get('mobile/test',[prePaidRechargeController::class,'mobiletest']);
+
+Route::get('mobile/isp',[prePaidRechargeController::class,'getISP'])->name('getISP');
+Route::get('mobile/mobileRecharge',[prePaidRechargeController::class,'mobileRecharge'])->name('mobileRecharge');
+Route::post('mobile/recharge',[prePaidRechargeController::class,'mobileRechargePay'])->name('mobileRechargePay');
+
+
+Route::get('page/not/found',function(){
+    return view('user/notFound');
+})->name('pageNotFound');
 
 });
 
@@ -634,9 +653,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::post('wallet/mapping/admin',[CustomerController::class,'adminMapp'])->name('admin.disMapp');
     Route::get('wallet/transfer/history/admin',[walletToWalletController::class,'walletHistoryAdmin'])->name('admin.trans.his');
 
-    // Route::get('/admin/user-list',function(){
-    //     return view('admin/user-details.user-list');
-    // })->name('admin/user-list');
+    Route::get('/admin/not/found',function(){
+        return view('admin.notFound');
+    })->name('admin.notFound');
 
     Route::get('/fund/request',[addMoneyController::class,'getFundRequests'])->name('getFundRequests');
     Route::get('/fund/request/history',[addMoneyController::class,'getFundRequestsHistory'])->name('getFundRequests.History');
@@ -647,6 +666,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
 
 
     // web.php
+    Route::get('/admin/add/balance', [CustomerController::class, 'adminBalanceAddForm'])->name('adminBalanceAddForm');
+    Route::post('/admin/add/balance', [CustomerController::class, 'adminBalanceAdd'])->name('adminBalanceAdd');
+
     Route::get('/admin/users/{id}/edit', [CustomerController::class, 'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [CustomerController::class, 'update'])->name('admin.users.update');
 
@@ -761,6 +783,7 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     // Add QR
     Route::get('/bankdetails/qr', [AddBankController::class, 'showFormQr'])->name('bankdetails.Qr');
     Route::post('/bankdetails/store/qr', [AddBankController::class, 'storeQr'])->name('bankdetails.storeQr');
+
 
     // Add Other Serves
     Route::get('/other/services/create', [otherServiceController::class, 'showForm'])->name('otherServices.form');
