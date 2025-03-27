@@ -455,7 +455,7 @@ class aepsController extends Controller
         $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
         session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
         $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $payableValue + ($commissionAmount - $tds), 'AEPS');
-   //dd($apiBalance);
+      
        
         // DB::table('business')
         // ->where('business_id', session('business_id'))
@@ -466,7 +466,8 @@ class aepsController extends Controller
    ->value('balance');
    // Store the retrieved balance in the session
    session(['adminBalance'=> $balanceAd]);
-dd('ok');
+//dd('ok');
+//dd($apiBalance);
     }
     
 

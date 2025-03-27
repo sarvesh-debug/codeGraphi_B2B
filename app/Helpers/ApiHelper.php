@@ -21,7 +21,9 @@ class ApiHelper
     public static function increaseBalance($email, $amount, $service)
     {
         $apiUrl = env('API_URL') . '/customer/increase-balance';
-
+//return $apiUrl;
+// dd($email,$amount,$service);
+// die();
         try {
             $response = Http::withHeaders([
                 'Accept' => 'application/json',
