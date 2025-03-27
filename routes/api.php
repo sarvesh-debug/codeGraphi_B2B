@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\infoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KycController;
@@ -21,4 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/admin/kyc-list', [KycController::class, 'getAllData'])->name('admin.kyc-list');
+Route::get('/transcation/list', [infoController::class, 'indexAdminAPI']);
 

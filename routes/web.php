@@ -31,6 +31,13 @@ use App\Http\Controllers\RemitterController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\BinCheckerController;
 
+
+Route::get('/test-error', function () {
+    abort(500);
+});
+
+
+
 Route::get('admin', function () {
     // return view('welcome');
     return redirect()->away('https://zpaypvtltd.com/');
@@ -646,9 +653,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::post('wallet/mapping/admin',[CustomerController::class,'adminMapp'])->name('admin.disMapp');
     Route::get('wallet/transfer/history/admin',[walletToWalletController::class,'walletHistoryAdmin'])->name('admin.trans.his');
 
-    // Route::get('/admin/user-list',function(){
-    //     return view('admin/user-details.user-list');
-    // })->name('admin/user-list');
+    Route::get('/admin/not/found',function(){
+        return view('admin.notFound');
+    })->name('admin.notFound');
 
     Route::get('/fund/request',[addMoneyController::class,'getFundRequests'])->name('getFundRequests');
     Route::get('/fund/request/history',[addMoneyController::class,'getFundRequestsHistory'])->name('getFundRequests.History');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Helpers\ApiHelper;
 use function PHPUnit\Framework\returnCallback;
 class prePaidRechargeController extends Controller
 {
@@ -54,7 +55,11 @@ class prePaidRechargeController extends Controller
     $getAmount = session('balance');
     $opBal = $getAmount;
     $getAmount -= 50;
-    if ($getAmount > $amountTr) {
+
+    $balance = ApiHelper::getBalance(env('Business_Email'));
+    if ($balance >= $getAmount && $getAmount > $amountTr) 
+    //if ($getAmount > $amountTr) 
+{
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->post(env('liveUrl') . 'v1/bbps/paymentBiller', [
@@ -133,14 +138,16 @@ class prePaidRechargeController extends Controller
 public function mobiletest()
     {
        
+        // return "Hello";
+        // die();
         $mobile = session('mobile');
         $role = session('role');
       
         // $externalRef = 'RPF-' . strtoupper(uniqid(date('YmdHis')));
         $externalRef = 'ZPR' . date('Y') . '' . round(microtime(true) * 1000);
-        // dd($externalRef);
-        // dd($mobile,$role,$externalRef);
-        // die();
+        //dd($externalRef);
+        //dd($mobile,$role,$externalRef);
+         //die();
       //  $this->updateCustomerBalance($mobile, $role, $externalRef);
         $this->updateCustomerBalance($mobile, $role, $externalRef);
     }
@@ -166,9 +173,9 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
                 ->where('mobile', $mobile)
                 ->latest('created_at')
                 ->first();
-                // dd($lastRecord);
-                // dd("    Hellowqq");
-               // die();
+            //     dd($lastRecord);
+            //     dd("    Hellowqq");
+            //    die();
             if (!$lastRecord) {
                 session(['totalPayableValue' => 0]);
                 return;
@@ -381,8 +388,11 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
      ->value('balance');
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
+
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newPayableValue, 'Mobile Recharge');
+     
     //dd($payableValue, $commissionValue,($commissionValue-$tds), $role, $mobile, $newPayableValue);
-        //dd('OK');
+        dd($apiBalance);
     } catch (\Exception $e) {
         dd('General error updating customer balance: ' . $e->getMessage());
         session(['totalPayableValue' => 0]);
