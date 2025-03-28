@@ -3,7 +3,7 @@
  
 @section('content')
 <div class="container-fluid ">
-    <div class="container mt-2">
+    <div class="container mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
         <li class="breadcrumb-item active">All User</li>

@@ -14,12 +14,12 @@
         </div>
     @endif
 
-    <div class="card">
+    <div class="">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Cash Withdrawal History</h3>
+            <h3 class="text-lg lg:text-3xl md:text-3xl">Cash Withdrawal History</h3>
             <button id="exportExcel" class="btn btn-success">Export to Excel</button>
         </div>
-        <div class="card-body">
+        <div class="card-body mb-5">
             <!-- Date Filter Form -->
             <form method="GET" action="{{ route('aeps.history') }}" class="row mb-4">
                 <div class="col-md-5">
@@ -34,7 +34,7 @@
                            value="{{ request('end_date') ? \Carbon\Carbon::parse(request('end_date'))->format('Y-m-d\TH:i') : '' }}" 
                            class="form-control">
                 </div>
-                <div class="col-md-2 d-flex align-items-end">
+                <div class="col-md-2 mt-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary">Filter</button>
                 </div>
             </form>

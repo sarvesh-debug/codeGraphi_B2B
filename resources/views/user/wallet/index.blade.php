@@ -76,7 +76,7 @@
                         <table class="table table-bordered table-striped">
                             <thead class="fw-bold">
                             <tr>
-                                <th>ID3</th>
+                                <th>ID</th>
                                 <th>Sender ID</th>
                                 <th>Receiver ID</th>
                                 <th>Amount</th>

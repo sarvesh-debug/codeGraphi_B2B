@@ -699,75 +699,30 @@
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center fixed-top mt-0 mt-lg-3" id="layout-navbar">
 
 
-	<div class="layout-menu-toggle navbar-nav align-items-xl-center me-1 d-xl-none">
-		<a class="nav-item nav-link px-0" href="javascript:void(0)">
-			<i class="bx bx-menu bx-sm"></i>
-		</a>
-	</div>
+  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-1 d-xl-none">
+    <a class="nav-item nav-link px-0" href="javascript:void(0)">
+        <i class="bx bx-menu bx-sm"></i>
+    </a>
+</div>
 
 
 
   <div class="navbar-nav-right d-flex align-items-center" id="navbar-collaps">
-    {{-- <div class="navbar-nav align-items-center  py-2 px-3 rounded"> --}}
-      {{-- <div class="nav-item d-flex flex-row flex-md-row justify-content-between align-items-start align-items-md-center w-100"> --}}
-          <!-- Balance Section -->
-          {{-- <div class="d-flex flex-md-row align-items-start align-items-md-center"> --}}
-            {{-- <div class="flex flex-row items-center justify-start gap-6 bg-red"> --}}
-              <!-- Add Fund Button -->
-              <div class=" rounded ">
-                <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold ">
-                 +
-                </a>
-              </div>
-            
+ 
 
-
-    <style>
-        /* Default: Hidden */
-		.bx-wallet {
-			display: none;
-		}
-
-		/* Show in desktop view */
-		@media (min-width: 768px) {
-			.bx-wallet {
-				display: inline-block;
-			}
-		}
-
-		.bx-barcode {
-			display: none;
-		}
-
-		/* Show in desktop view */
-		@media (min-width: 768px) {
-			.bx-barcode {
-				display: inline-block;
-			}
-		}
-
-
-    </style>
-	<div class="d-flex justify-content-between align-items-center gap-3">
-		<!-- Wallet Icon and Balance -->
-		<!-- <div class="flex flex-row items-center gap-2">
-			<i class="bx bx-wallet bx-sm icon mb-1"></i>
-			<span class="text-gray-900 fw-bold bal">₹: </span>
-			<span class="text-dark rup fw-bold">{{ session('balance') }}</span>
-		</div> -->
-		<!-- Wallet Icon and Balance -->
-		<div class="d-flex align-items-center gap-2">
-			<i class="bx bx-wallet bx-sm text-primary"></i>
-			<span class="fw-bold text-dark">₹</span>
-			<span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
-		</div>
+     <!-- Add Fund Button -->
+     <div class=" rounded ">
+      <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold fa fa-plus">
+       
+      </a>
+    </div>
     
       <div class="d-flex justify-content-between align-items-center">
-          <!-- <div class="d-flex align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2">
               <i class="bx bx-wallet bx-sm text-primary"></i>
               <span class="fw-bold text-dark">₹</span>
-              <span class="fw-bold text-dark">{{ session('balance') }}</span>
-          </div> -->
+              <span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
+          </div>
 
           <!-- Account Section (Visible on Desktop) -->
           <div class="d-none d-md-flex flex-column flex-md-row ms-3">
@@ -784,53 +739,90 @@
           </div>
       </div>
   
-	  <ul class="navbar-nav flex-row align-items-center ms-auto gap-2">
-    <!-- Welcome Message -->
-    <span class="fw-bold d-none d-md-inline">Welcome, {{ $customer->name }} </span>
-    
-    <!-- Profile Image Dropdown -->
-    <li class="nav-item navbar-dropdown dropdown-user dropdown">
-        <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown">
-            <div class="avatar position-relative">
-                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="h-auto rounded-circle" />
-                @if (!$customer->pin > 0)
-                    <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
-                        style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                @else
-                    <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
-                        style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                @endif
-            </div>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-                <a class="dropdown-item" href="#">
-                    <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                            <div class="avatar avatar-online">
-                                <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">{{ $customer->name }}</span>
-                            <small class="text-muted">
-                                @if (trim(strtolower($role)) === 'distibuter')
-                                    Distributor
-                                @else
-                                    Retailer
-                                @endif
-                            </small>
-                        </div>
-                    </div>
-                </a>
-            </li>
-            <li><a class="dropdown-item" href="{{ route('get.profile') }}"><i class="bx bx-user me-2"></i>Profile</a></li>
-            <li><a class="dropdown-item" href="{{ route('remitter.certificate') }}"><i class="bx bx-file me-2"></i>Certificate</a></li>
-            <li><a class="dropdown-item" href="{{ route('coustomer.logout') }}"><i class="bx bx-power-off me-2"></i>Logout</a></li>
-        </ul>
-    </li>
-</ul>
+      <ul class="navbar-nav flex-row align-items-center float-end ms-auto gap-1">
+        <span class="fw-bold d-none d-md-inline">Welcome, {{ $customer->name }} </span>
+        <span class="fw-bold small d-inline d-md-none">Welcome, {{ $customer->name }} </span>
+        
+          <li class="nav-item navbar-dropdown dropdown-user dropdown">
+              <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                  <div class="avatar">
+                      <div class="position-relative d-inline-block">
+                          <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="h-auto rounded-circle" />
+                          @if (!$customer->pin > 0)
+                              <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
+                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                          @else
+                              <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
+                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                          @endif
+                      </div>
+                  </div>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                  <li>
+                      <a class="dropdown-item" href="#">
+                          <div class="d-flex">
+                              <div class="flex-shrink-0 me-3">
+                                  <div class="avatar avatar-online">
+                                      <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
+                                  </div>
+                              </div>
+                              <div class="flex-grow-1">
+                                  <span class="fw-semibold d-block">{{ $customer->name }}</span>
+                                  <small class="text-muted" style="text-transform: capitalize">
+                                    @if (trim(strtolower($role)) === 'distibuter')
+                                        Distributor
+                                    @else
+                                        Retailer
+                                    @endif
+                                  </small>
+                              </div>
+                          </div>
+                      </a>
+                  </li>
+                  {{-- <li><div class="dropdown-divider"></div></li> --}}
 
+                  {{-- <!-- Account Section (Visible in Mobile Dropdown) -->
+                  <li class="d-flex d-md-none">
+                      <a class="dropdown-item" href="javascript:void(0);">
+                          <div class="d-flex flex-row flex-md-row">
+                              <span class="role btn d-inline-flex align-items-center px-3 lg:py-1 py-0 rounded-pill">
+                                  <span class="fw-bold">Account: </span>&nbsp;
+                              </span>
+                              <span class="d-block text-md-start text-center lg:mt-1 mt-0 mt-md-0">
+                                  @if (trim(strtolower($role)) === 'distributor')
+                                      Distributor
+                                  @else
+                                      Retailer
+                                  @endif
+                              </span>
+                          </div>
+                      </a>
+                  </li> --}}
+                  <li><div class="dropdown-divider"></div></li>
+                  <li>
+                      <a class="dropdown-item" href="{{ route('get.profile') }}">
+                          <i class="bx bx-power-off me-2"></i>
+                          <span class="align-middle">Profile</span>
+                      </a>
+                  </li>
+                  
+                  <li>
+                    <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
+                        <i class="bx bx-file me-2"></i>
+                        <span class="align-middle">Certificate</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{{ route('coustomer.logout') }}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Logout</span>
+                    </a>
+                   
+                </li>
+              </ul>
+          </li>
+      </ul>
   </div>
 </nav>
 <!-- /Navbar -->

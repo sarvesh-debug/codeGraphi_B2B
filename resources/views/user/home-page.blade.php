@@ -1454,16 +1454,16 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 
 
 <!-- Carousel (Visible Only on Mobile) -->
-<div id="mobileCarousel" class="carousel slide d-md-none mb-5  rounded" data-bs-ride="carousel" style="max-width: 95%; margin: auto;">
+<div id="mobileCarousel" class="carousel slide d-md-none mb-5 mt-2 rounded" data-bs-ride="carousel" style="max-width: 95%; margin: auto;">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="{{asset('assets/img/carousel_5.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 1" style="height: 170px; object-fit: cover;">
+            <img src="{{asset('assets/img/carousel_5.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 1" style="height: 160px; object-fit: cover;">
         </div>
         <div class="carousel-item">
-            <img src="{{asset('assets/img/carousel_2.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 2" style="height: 170px; object-fit: cover;">
+            <img src="{{asset('assets/img/carousel_2.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 2" style="height: 160px; object-fit: cover;">
         </div>
         <div class="carousel-item">
-            <img src="{{asset('assets/img/carousel_3.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 3" style="height: 170px; object-fit: cover;">
+            <img src="{{asset('assets/img/carousel_3.jpg')}}" class="d-block w-100 rounded-3" alt="Slide 3" style="height: 160px; object-fit: cover;">
         </div>
     </div>
     <a class="carousel-control-prev" href="#mobileCarousel" role="button" data-bs-slide="prev">

@@ -1,7 +1,7 @@
 @extends('user/include.layout')
 
 @section('content')
-<div class="container-fluid lg:px-4 px-6">
+<div class="container-fluid lg:px-4 px-6 mb-5">
 
     <ol class="breadcrumb mb-4 m-4">
         <li class="breadcrumb-item"><a href="{{ route('customer/dashboard') }}">Home</a></li>
@@ -29,11 +29,11 @@
                    class="form-control">
         </div>
         <div class="col-12 col-lg-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100 p-1.5">Filter</button>
+            <button type="submit" class="btn btn-primary w-100 p-1.5 lg:mt-0 mt-2">Filter</button>
         </div>
     </form>
 
-    <div class="card m-2">
+    <div class="card m-2 mb-5">
         <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
             <h3 class="card-heading mb-3 mb-md-0 text-center text-md-start">Transaction List</h3>
             <button id="exportTransactions" class="btn btn-download"> <i class="fa-solid fa-download"></i> Download</button>

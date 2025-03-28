@@ -43,7 +43,7 @@
     }
     </style>
 
-<div class="card col-md-6 mx-auto shadow-lg border-0 loading mt-3">
+<div class="card col-md-6 col-11 mx-auto shadow-lg border-0 loading mt-5 ">
     <div id="loadingOverlay">
         <div class="loader"></div>
     </div>
