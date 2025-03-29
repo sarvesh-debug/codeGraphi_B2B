@@ -368,68 +368,68 @@ foreach ($getCommission as $commission) {
     }
 
     // // Fetch data from 'transactions_dmt_instant_pay'
-    // $transactionsDMTInstantPay = DB::table('transactions_dmt_instant_pay')
-    //     ->where('remitter_mobile_number', $mobile)
-    //     ->get();
-    // foreach ($transactionsDMTInstantPay as $transaction) {
-    //     $responseData = json_decode($transaction->response_data, true);
-    //     $amount = (float)($responseData['data']['txnValue'] ?? 0);
-    //     $individualTotals['DMT1'] += $amount;
-    //     $totalAmount += $amount;
-    //     $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
+    $transactionsDMTInstantPay = DB::table('transactions_dmt_instant_pay')
+        ->where('remitter_mobile_number', $mobile)
+        ->get();
+    foreach ($transactionsDMTInstantPay as $transaction) {
+        $responseData = json_decode($transaction->response_data, true);
+        $amount = (float)($responseData['data']['txnValue'] ?? 0);
+        $individualTotals['DMT'] += $amount;
+        $totalAmount += $amount;
+        $status = isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN' ? 'Success' : 'Failed';
 
-    //     $allTransactions[] = [
-    //         'source' => 'DMT1',
-    //         'credit'=>'',
-    //         'debit' => ($amount+$transaction->charges),
-    //         'commission'=>$transaction->commission?? 0,
-    //         'tds'=>$transaction->tds ?? 0,
-    //         'charges' =>$transaction->charges ?? 0,
-    //         'status' => $status,
-    //         'timestamp' => $responseData['timestamp'] ?? "N/A",
-    //         'type'=>'Deposit',
-    //         'desc'=>'Money Transfer to '.($responseData['data']['beneficiaryName']??'N/A').' ₹'.($amount ?? 0).' and Charges '.($transaction->charges ?? 0),
-    //         'trans_id'=>$responseData['data']['txnReferenceId']?? 'Null',
-    //         'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
-    //         'ext_ref'=>$responseData['data']['externalRef'] ??0,
-    //         'openingB'=>$transaction->opening_balance ?? 0,
-    //         'clsoingB'=>$transaction->closing_balance ?? 0,
+        $allTransactions[] = [
+            'source' => 'DMT',
+            'credit'=>'',
+            'debit' => ($amount+$transaction->charges),
+            'commission'=>$transaction->commission?? 0,
+            'tds'=>$transaction->tds ?? 0,
+            'charges' =>$transaction->charges ?? 0,
+            'status' => $status,
+            'timestamp' => $responseData['timestamp'] ?? "N/A",
+            'type'=>'Deposit',
+            'desc'=>'Money Transfer to '.($responseData['data']['beneficiaryName']??'N/A').' ₹'.($amount ?? 0).' and Charges '.($transaction->charges ?? 0),
+            'trans_id'=>$responseData['data']['txnReferenceId']?? 'Null',
+            'rrn'=>$responseData['data']['txnReferenceId'] ?? 0,
+            'ext_ref'=>$responseData['data']['externalRef'] ??0,
+            'openingB'=>$transaction->opening_balance ?? 0,
+            'clsoingB'=>$transaction->closing_balance ?? 0,
 
 
-    //     ];
-    // }
+        ];
+    }
 
     //Fatch data from 'commission'
-//     $getCommission = DB::table('getcommission')
-//             ->where('retailermobile', $mobile)
-//             ->get();
-// foreach($getCommission as $commission)
-// {
+    $getCommission = DB::table('getcommission')
+            ->where('retailermobile', $mobile)
+            ->get();
+foreach($getCommission as $commission)
+{
 
-//     $txnAmount=$commission->commission;
-//     $individualTotals['Commission'] += $txnAmount;
-//             $totalAmount += $txnAmount;
+    $txnAmount=$commission->commission;
+    $individualTotals['Commission'] += $txnAmount;
+            $totalAmount += $txnAmount;
 
-//             $allTransactions[] = [
-//                 'source' => 'Commission',
-//                 'credit'=>$commission->commission,
-//                 'debit' => '',
-//                 'commission'=>$commission->commissions ?? 0,
-//                 'tds'=>$commission->tds ?? 0,
-//                 'charges' =>$commission->charges ?? 0,
-//               'status' => $commission->commission === null ? 'Failed' : 'Success',
-//                 'timestamp' => $commission->created_at ?? "N/A",
-//                 'type'=>'',
-//                 'desc'=>'Get Commission on '.($commission->service),
-//                 'trans_id'=>'',
-//                 'rrn'=>'',
-//                 'ext_ref'=> '',
-//                 'openingB'=>$commission->opening_bal ?? 0,
-//                 'clsoingB'=>$commission->closing_bal ?? 0,
+            $allTransactions[] = [
+                'source' => 'Commission',
+                'credit'=>$commission->commission,
+                'debit' => '',
+                'commission'=>$commission->commissions ?? 0,
+                'tds'=>$commission->tds ?? 0,
+                'charges' =>$commission->charges ?? 0,
+              'status' => $commission->commission === null ? 'Failed' : 'Success',
+                'timestamp' => $commission->created_at ?? "N/A",
+                'type'=>'',
+                'desc'=>'Get Commission on '.($commission->service),
+                'trans_id'=>'',
+                'rrn'=>'',
+                'ext_ref'=> '',
+                'openingB'=>$commission->opening_bal ?? 0,
+                'clsoingB'=>$commission->closing_bal ?? 0,
 
-//             ];
+            ];
 
-// }
+}
         
     // Fetch data from 'pancard'
     // $pancards = DB::table('pancard')

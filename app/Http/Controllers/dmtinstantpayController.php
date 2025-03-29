@@ -641,6 +641,7 @@ private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
     $ff=0;
     $comA=0;
     $tds=0;
+    $realAmount=0;
     // Fetch the latest transaction for the given mobile number
     $lastRecord = DB::table('transactions_dmt_instant_pay')
         ->where('remitter_mobile_number', $mobile)
@@ -656,6 +657,8 @@ private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
         // Check if payableValue exists and update the balance
         if (isset($response_data['data']['txnValue'])  && isset($response_data['statuscode']) && $response_data['statuscode'] === 'TXN') {
             $payableValue = $response_data['data']['txnValue'];
+            $realAmount=$response_data['data']['txnValue'];
+
             
 
             $getCommission = DB::table('commission_plan')
@@ -827,7 +830,7 @@ if ($latestTransaction) {
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newpayableValue-($comA-$tds), 'DMT');
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'DMT');
      
     //  DB::table('business')
     //  ->where('business_id', session('business_id'))
@@ -849,8 +852,8 @@ session(['adminBalance'=> $balanceAd]);
     }
     
    
-   //dd('ok');
-   //dd($apiBalance);
+   //dd($realAmount);
+   dd($apiBalance);
    // dd($opB,$clB,$dis_no,$ret_no,$comm,$service,$disData,$disPhone,$getDis->dis_phone,$ff,$payableValue,$newpayableValue,$commission->charge,$commission->charge_in,$mode,$commissionAmount,$commissionAmount,$comA,$tds,$getDis,$getDisComm);
 }
 
