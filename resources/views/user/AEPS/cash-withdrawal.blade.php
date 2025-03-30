@@ -384,7 +384,7 @@
 
          <!-- Latest Transactions Section -->
          <!-- <div class="col-md-4 mt-2"> -->
-         <div class="col-lg-4 col-md-4 col-12 d-flex justify-content-center mb-5">
+         <div class="col-lg-4 col-md-4 col-12 lg:d-flex  md:d-flex justify-content-center mb-5">
             <div class="mb-5">
                 <div class="card-header bg-gradient-success text-white text-center py-3">
                     <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>

@@ -108,7 +108,7 @@ $total_trans=$valueAll+$DMTvalueAll;
     }
 
 	.service-textm {
-        font-size: 0.6rem;
+        font-size: 0.7rem;
         font-weight: 400;
 		text-align: center;
     }
@@ -1004,278 +1004,147 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 
  
 
+
+
 {{-- Mobile view --}}
-
 <div id="mobile-view" style="display: none;">
-    <!-- Mobile view code (same structure but optimized for mobile layout) -->
 
-	<div class="row  g-0.2 bg-white m-2 py-3 rounded">
-		<!-- <p class="h4 text-success1">Services</p>
-		<p class="h5 text-info1">Look A glance towards services</p> -->
-		   {{-- card start --}}
-		{{-- <div class="col-lg-2 col-md-3 col-6 mb-4"> --}}
+	{{-- <h5 class="d-block d-md-none ">Bill & Recharge</h5> --}}
 
+    <!-- Second Service Section -->
+    <div class="row g-0.2 bg-white m-2 py-3 rounded service-container">
+        <!-- AEPS Service -->
+       
 		<div class="col-3 ">
 
-		  <div class=" ">
-			  <div class="card-body">
-				  @if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
-					  <a href="{{ route('cash.withdrawal.form') }}">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{ asset('assets/img/icons/AEPS.png') }}" class="service-icon" />
-							  </div>
-						  </div> -->
-						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-fingerprint fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2  service-textm">AEPS</h3>
-					  </a>
-				  @else
-					  <a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{$customer->pin}},{{$customer->status}});">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{ asset('assets/img/icons/AEPS.png') }}" class="service-icon" />
-							  </div>
-						  </div> -->
-						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-fingerprint fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2 service-textm">AEPS</h3>
-					  </a>
-				  @endif
-			  </div>
-		  </div>
-	  </div>
+			<div class=" ">
+				<div class="card-body">
+					@if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
+						<a href="{{ route('cash.withdrawal.form') }}">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{ asset('assets/img/icons/AEPS.png') }}" class="service-icon" />
+								</div>
+							</div> -->
+							<div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-fingerprint fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title mb-2  service-textm">AEPS</h3>
+						</a>
+					@else
+						<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{$customer->pin}},{{$customer->status}});">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{ asset('assets/img/icons/AEPS.png') }}" class="service-icon" />
+								</div>
+							</div> -->
+							<div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-fingerprint fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title mb-2 service-textm">AEPS</h3>
+						</a>
+					@endif
+				</div>
+			</div>
+		</div>
 
-	  <div class="col-lg-2 col-md-3 col-3 ">
+
+		{{-- dmt --}}
+		<div class="col-lg-2 col-md-3 col-3 ">
+			<div class=" ">
+				<div class="card-body">
+					@if ($customer->dmt == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
+						<a href="{{route('dmt.remitter-profile')}}">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{asset('assets/img/icons/money_transfer.png')}}" class="service-icon" />
+								</div>
+							</div> -->
+							<div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-exchange-alt fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title mb-2 service-textm">DMT </h3>
+						</a>
+					@else
+						<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{asset('assets/img/icons/money_transfer.png')}}" class="service-icon" />
+								</div>
+							</div> -->
+							<div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-exchange-alt fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title mb-2 service-textm">DMT </h3>
+						</a>
+					@endif
+				</div>
+			</div>
+		</div>
+
+
+
+		<!-- mATM -->
+		<div class="col-lg-2 col-md-3 col-3 ">
+			<div class=" ">
+				<div class="card-body">
+					<a href="#">
+						<div class="card-title d-flex align-items-center justify-content-center">
+							<i class="fas fa-credit-card fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 mt-2 service-textm">mATM</h3>
+					</a>
+				</div>
+			</div>
+		</div>
+  
+  
+  
+		<!-- POS -->
+		<div class=" col-3 ">
+			<div class=" ">
+				<div class="card-body">
+					<a href="#">
+						<div class="card-title d-flex align-items-center justify-content-center">
+							<i class="fas fa-calculator fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 service-textm">POS</h3>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+			<!-- Pan -->
+	<div class="col-lg-2 col-md-3 col-3">
 		<div class=" ">
 			<div class="card-body">
-				@if ($customer->dmt == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
-					<a href="{{route('dmt.remitter-profile')}}">
-						<!-- <div class="card-title d-flex align-items-start justify-content-between">
-							<div class="card-img">
-								<img src="{{asset('assets/img/icons/money_transfer.png')}}" class="service-icon" />
-							</div>
-						</div> -->
-						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-exchange-alt fa-2xl mb-1"></i>
-						</div>
-						<h3 class="card-title mb-2 service-textm">DMT </h3>
-					</a>
-				@else
-					<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
-						<!-- <div class="card-title d-flex align-items-start justify-content-between">
-							<div class="card-img">
-								<img src="{{asset('assets/img/icons/money_transfer.png')}}" class="service-icon" />
-							</div>
-						</div> -->
-						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-exchange-alt fa-2xl mb-1"></i>
-						</div>
-						<h3 class="card-title mb-2 service-textm">DMT </h3>
-					</a>
-				@endif
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fa-solid fa-id-card fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">PAN Card</h3>
+				</a>
 			</div>
 		</div>
 	</div>
-	
-	  <!-- mATM -->
-	  <div class="col-lg-2 col-md-3 col-3 ">
+  
+	  <!-- Nepal Money -->
+	  <div class=" col-3">
 		  <div class=" ">
 			  <div class="card-body">
 				  <a href="#">
 					  <div class="card-title d-flex align-items-center justify-content-center">
-						  <i class="fas fa-credit-card fa-2xl mb-1"></i>
+						  <i class="fa-solid fa-coins fa-2xl mb-1"></i>
 					  </div>
-					  <h3 class="card-title mb-2 mt-2 service-textm">mATM</h3>
+					  <h3 class="card-title mb-2 service-textm">Nepal Money</h3>
 				  </a>
 			  </div>
 		  </div>
 	  </div>
 
 
-
-	  <!-- POS -->
-	  <div class=" col-3 ">
-		  <div class=" ">
-			  <div class="card-body">
-				  <a href="#">
-					  <div class="card-title d-flex align-items-center justify-content-center">
-						  <i class="fas fa-calculator fa-2xl mb-1"></i>
-					  </div>
-					  <h3 class="card-title mb-2 service-textm">POS</h3>
-				  </a>
-			  </div>
-		  </div>
-	  </div>
-
-	   <div class="col-3 b-4">
-		  <div class=" ">
-			  <div class="card-body">
-				  @if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
-					  <a href="{{ route('getISP') }}">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />
-							  </div>
-						  </div> -->
-							<div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-mobile-alt fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title  service-textm">Mobile Recharge</h3>
-					  </a>
-				  @else
-					  <a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{$customer->pin}},{{$customer->status}});">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />
-							  </div>
-						  </div> -->
-							<div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-mobile-alt fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title  service-textm">Mobile Recharge</h3>
-					  </a>
-				  @endif
-			  </div>
-		  </div>
-	  </div>
- 
-
-
-	
-
- <!-- Nepal Money -->
- <div class=" col-3">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fa-solid fa-coins fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 service-textm">Nepal Money</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Insurance -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fas fa-shield-alt fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Insurance</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Loan -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fa-solid fa-sack-dollar fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Loan</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Pan -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fa-solid fa-id-card fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">PAN Card</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Postpaid -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<!-- <i class="fas fa-phone-alt fa-3x"></i> -->
-					<i class="fa-solid fa-mobile-button fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Postpaid</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Credit Card -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fas fa-credit-card fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Credit Card</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Electricity Bill -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fas fa-bolt fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Electricity</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-
-<!-- Water Bill -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fas fa-tint fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Water Bill</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-<!-- Gas Bill -->
-<div class="col-lg-2 col-md-3 col-3 mb-4">
-	<div class=" ">
-		<div class="card-body">
-			<a href="#">
-				<div class="card-title d-flex align-items-center justify-content-center">
-					<i class="fa-solid fa-bottle-droplet fa-2xl mb-1"></i>
-				</div>
-				<h3 class="card-title mb-2 mt-2 service-textm">Gas Bill</h3>
-			</a>
-		</div>
-	</div>
-</div>
-
-	  <!-- Aahar pay -->
-	  <div class="col-md-3 col-3 ">
+	   <!-- Aahar pay -->
+	   <div class="col-md-3 col-3 ">
 		<div class=" ">
 			<div class="card-body">
 				<a href="#">
@@ -1288,167 +1157,374 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 		</div>
 	</div>
 
-
-
-		 <div class="col-lg-2 col-md-3 col-3 ">
-		  <div class=" ">
-			  <div class="card-body">
-				  @if ($customer->payout == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
-					  <!-- If AEPS is active, open the cash withdrawal form -->
-					  <a href="">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="">
-								  <img src="{{asset('assets/img/icons/pay_out.png')}}" class="service-icon" />
-							  </div>
-						  </div> -->
-						   <div class="card-title d-flex align-items-center justify-content-center">
-							   <i class="fas fa-wallet fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2 service-textm">PayOut</h3>
-					  </a>
-				  @else
-					  <!-- If AEPS is inactive, show an alert -->
-					  <a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="">
-								  <img src="{{asset('assets/img/icons/pay_out.png')}}" class="service-icon" />
-							  </div>
-						  </div> -->
-						   <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-shield-alt fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2 service-textm">PayOut</h3>
-					  </a>
-				  @endif
-			  </div>
-		  </div>
-	  </div>
-
-
-
-
-
-	   <!-- card-->
-	   <div class="col-lg-2 col-md-3 col-3 ">
-		  <div class=" ">
-			  <div class="card-body">
-				  @if ($customer->cc_bill_payment == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
-					  <!-- If AEPS is active, open the cash withdrawal form -->
-					  <a href="{{route('getcategory')}}">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{asset('assets/img/icons/bill_payment.png')}}" class="service-icon" />
-							  </div>
-						  </div> -->
-						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-file-invoice-dollar fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2 mt-2 service-textm">Bill Payment</h3>
-					  </a>
-				  @else
-					  <!-- If AEPS is inactive, show an alert -->
-					  <a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
-						  <!-- <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{asset('assets/img/icons/bill_payment.png')}}" class="service-icon" />
-							  </div>
-						  </div> -->
-						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-file-invoice-dollar fa-2xl mb-1"></i>
-						  </div>
-						  <h3 class="card-title mb-2 service-textm">Bill Payment</h3>
-					  </a>
-				  @endif
-			  </div>
-		  </div>
-	  </div>
-
   
-	  @foreach($services as $service)
-		  <div class=" col-3 ">
-			  <div class=" ">
-				  <div class="">
-					  <a href="{{ $service->service_link }}" target="_blank">
-						  <div class="card-title d-flex align-items-start justify-content-center">
-							  <div class="card-img">
-								  {{-- <img src="{{ $service->logo_name }}" class="service-icon" /> --}}
-								  <img src="{{ $service->logo_name }}" class="service-icon" style="width: 40px; height: 40px;" />
+			<!-- Credit Card -->
+	<div class="col-lg-2 col-md-3 col-3">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fas fa-credit-card fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Credit Card</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+		  
 
-							  </div>
-						  </div>
-						  <h3 class="card-title mb-2 mt-3 service-textm">{{ $service->service }}</h3>
-					  </a>
-				  </div>
-			  </div>
-		  </div>
-	  @endforeach
-	  
-		  <!-- @foreach($services as $service)
-		  <div class="col-lg-2 col-md-3 col-6 b-4">
-			  <div class="card">
-				  <div class="card-body">
-					  <a href="{{ $service->service_link }}" target="_blank">
-						  <div class="card-title d-flex align-items-start justify-content-between">
-							  <div class="card-img">
-								  <img src="{{ $service->logo_name }}" class="service-icon" />
-							  </div>
-						  </div>
-						  <h3 class="card-title mb-2 service-text">{{ $service->service }}</h3>
-					  </a>
-				  </div>
-			  </div>
-		  </div>
-		  @endforeach -->
-	 
-	  <script>
-		  function showAlert(name, balance, status, pin) {
-			  if (balance <= 0) {
-				  alert('Insufficient Wallet Balance');
-			  } 
-			  else if (pin == 0) {
-				  alert(`Dear ${name}, please complete your Full-KYC.`);
-			  } else if (status === "deactive") {
-				  alert(`Dear ${name}, your account is deactivated. Please contact the distributor.`);
-			  } else {
-				  alert(`Dear ${name}, your services are deactivated. Please contact the distributor.`);
-			  }
-		  }
-	  </script> 
-	  <!-- <div class="col-lg-12 col-md-12 order-1 my-4"> 
-		  <div class="card">
-			  <div class="card-body text-center">
-				  <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-					  <div class="carousel-indicators">
-						  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-						  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-						  <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-					  </div>
-					  <div class="carousel-inner custom-carousel-height">
-						  <div class="carousel-item active">
-							  <img src="{{asset('assets/img/backgrounds/banner3.png')}}" class="d-block w-100" alt="...">
-						  </div>
-						  <div class="carousel-item">
-							  <img src="{{asset('assets/img/backgrounds/banner3.png')}}" class="d-block w-100" alt="...">
-						  </div>
-						  <div class="carousel-item">
-							  <img src="{{asset('assets/img/backgrounds/banner3.png')}}" class="d-block w-100" alt="...">
-						  </div>
-					  </div>
-					  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-						  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						  <span class="visually-hidden">Previous</span>
-					  </button>
-					  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-						  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-						  <span class="visually-hidden">Next</span>
-					  </button>
-				  </div>
-			  </div>
-		  </div>
-	  </div>      -->
-  </div> 
+		<!-- Postpaid -->
+	<div class="col-3 service-card hidden-service"  style="display: none;">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<!-- <i class="fas fa-phone-alt fa-3x"></i> -->
+						<i class="fa-solid fa-mobile-button fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Postpaid</h3>
+				</a>
+			</div>
+		</div>
+	</div>
 
-  
+
+
+	<div class="col-3 service-card hidden-service" style="display: none;">
+		<div class=" ">
+			<div class="card-body">
+				@if ($customer->payout == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
+					<!-- If AEPS is active, open the cash withdrawal form -->
+					<a href="">
+						<!-- <div class="card-title d-flex align-items-start justify-content-between">
+							<div class="">
+								<img src="{{asset('assets/img/icons/pay_out.png')}}" class="service-icon" />
+							</div>
+						</div> -->
+						 <div class="card-title d-flex align-items-center justify-content-center">
+							 <i class="fas fa-wallet fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 service-textm">PayOut</h3>
+					</a>
+				@else
+					<!-- If AEPS is inactive, show an alert -->
+					<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
+						<!-- <div class="card-title d-flex align-items-start justify-content-between">
+							<div class="">
+								<img src="{{asset('assets/img/icons/pay_out.png')}}" class="service-icon" />
+							</div>
+						</div> -->
+						 <div class="card-title d-flex align-items-center justify-content-center">
+							<i class="fas fa-shield-alt fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 service-textm">PayOut</h3>
+					</a>
+				@endif
+			</div>
+		</div>
+	</div>
+
+
+        <!-- More / Less Button -->
+        <div class="col-12 text-center mt-3">
+            <button class="btn btn-primary toggle-btn" onclick="toggleServices(this)">More</button>
+        </div>
+    </div>
+
+
+
+	
+	<h5 class="d-block d-md-none ">Bill & Recharge</h5>
+
+	 <!-- Third Service Section -->
+	 <div class="row g-0.2 bg-white m-2 py-3 rounded service-container">
+        <!-- AEPS Service -->
+		<div class="col-3 ">
+			<div class=" ">
+				<div class="card-body">
+					@if ($customer->aeps == 1 && $customer->status ==="active" && $customer->pin >0)
+						<a href="{{ route('getISP') }}">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />
+								</div>
+							</div> -->
+							  <div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-mobile-alt fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title  service-textm">Mobile Recharge</h3>
+						</a>
+					@else
+						<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{$customer->pin}},{{$customer->status}});">
+							<!-- <div class="card-title d-flex align-items-start justify-content-between">
+								<div class="card-img">
+									<img src="{{ asset('assets/img/icons/mobile_recharge.png') }}" class="service-icon" />
+								</div>
+							</div> -->
+							  <div class="card-title d-flex align-items-center justify-content-center">
+								<i class="fas fa-mobile-alt fa-2xl mb-1"></i>
+							</div>
+							<h3 class="card-title  service-textm">Mobile Recharge</h3>
+						</a>
+					@endif
+				</div>
+			</div>
+		</div>
+
+
+			<!-- Electricity Bill -->
+	<div class="col-lg-2 col-md-3 col-3 ">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fas fa-bolt fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Electricity Bill</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Water Bill -->
+	<div class="col-lg-2 col-md-3 col-3">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fas fa-tint fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Water Bill</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+
+	 <!-- card-->
+	 <div class="col-lg-2 col-md-3 col-3 ">
+		<div class=" ">
+			<div class="card-body">
+				@if ($customer->cc_bill_payment == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
+					<!-- If AEPS is active, open the cash withdrawal form -->
+					<a href="{{route('getcategory')}}">
+						<!-- <div class="card-title d-flex align-items-start justify-content-between">
+							<div class="card-img">
+								<img src="{{asset('assets/img/icons/bill_payment.png')}}" class="service-icon" />
+							</div>
+						</div> -->
+						<div class="card-title d-flex align-items-center justify-content-center">
+							<i class="fas fa-file-invoice-dollar fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 mt-2 service-textm">Bill Payment</h3>
+					</a>
+				@else
+					<!-- If AEPS is inactive, show an alert -->
+					<a href="javascript:void(0);" onclick="showAlert('{{ $customer->name }}',{{ $customer->balance }},{{$customer->pin}});">
+						<!-- <div class="card-title d-flex align-items-start justify-content-between">
+							<div class="card-img">
+								<img src="{{asset('assets/img/icons/bill_payment.png')}}" class="service-icon" />
+							</div>
+						</div> -->
+						<div class="card-title d-flex align-items-center justify-content-center">
+							<i class="fas fa-file-invoice-dollar fa-2xl mb-1"></i>
+						</div>
+						<h3 class="card-title mb-2 service-textm">Bill Payment</h3>
+					</a>
+				@endif
+			</div>
+		</div>
+	</div>
+
+
+        <!-- More services -->
+        <div class="col-3 service-card hidden-service" style="display: none;">
+            <div class="card-body">
+                <a href="#">
+                    <div class="card-title d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tint fa-2xl mb-1"></i>
+                    </div>
+                    <h3 class="card-title mb-2 mt-2 service-textm">Water Bill</h3>
+                </a>
+            </div>
+        </div>
+
+		<!-- Gas Bill -->
+	<div class="col-3 service-card hidden-service" style="display: none;">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fa-solid fa-bottle-droplet fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Gas Bill</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+        <!-- More / Less Button -->
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-primary toggle-btn" onclick="toggleServices(this)">More</button>
+        </div>
+    </div>
+
+
+	<h5 class="d-block d-md-none ">Other Services</h5>
+
+	 <!-- fourth Service Section -->
+	 <div class="row g-0.2 bg-white m-2 py-3 rounded service-container">
+		<!-- Insurance -->
+	<div class="col-lg-2 col-md-3 col-3">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fas fa-shield-alt fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Insurance</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- Loan -->
+	<div class="col-lg-2 col-md-3 col-3 ">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fa-solid fa-sack-dollar fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Loan</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+		<!-- Postpaid -->
+	<div class="col-lg-2 col-md-3 col-3">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<!-- <i class="fas fa-phone-alt fa-3x"></i> -->
+						<i class="fa-solid fa-mobile-button fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 mt-2 service-textm">Postpaid</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+	 <!-- POS -->
+	 <div class=" col-3 ">
+		<div class=" ">
+			<div class="card-body">
+				<a href="#">
+					<div class="card-title d-flex align-items-center justify-content-center">
+						<i class="fas fa-calculator fa-2xl mb-1"></i>
+					</div>
+					<h3 class="card-title mb-2 service-textm">POS</h3>
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+        <!-- More services -->
+       
+		@foreach($services as $service)
+		<div class=" col-3 service-card hidden-service "   style="display: none;">
+			<div class=" ">
+				<div class="">
+					<a href="{{ $service->service_link }}" target="_blank">
+						<div class="card-title d-flex align-items-start justify-content-center">
+							<div class="card-img">
+								{{-- <img src="{{ $service->logo_name }}" class="service-icon" /> --}}
+								<img src="{{ $service->logo_name }}" class="service-icon" style="width: 40px; height: 40px;" />
+
+							</div>
+						</div>
+						<h3 class="card-title mb-2 mt-3 service-textm">{{ $service->service }}</h3>
+					</a>
+				</div>
+			</div>
+		</div>
+	@endforeach
+	
+		<!-- @foreach($services as $service)
+		<div class="col-lg-2 col-md-3 col-6 b-4">
+			<div class="card">
+				<div class="card-body">
+					<a href="{{ $service->service_link }}" target="_blank">
+						<div class="card-title d-flex align-items-start justify-content-between">
+							<div class="card-img">
+								<img src="{{ $service->logo_name }}" class="service-icon" />
+							</div>
+						</div>
+						<h3 class="card-title mb-2 service-text">{{ $service->service }}</h3>
+					</a>
+				</div>
+			</div>
+		</div>
+		@endforeach -->
+
+
+        <!-- More / Less Button -->
+        <div class="col-12 text-center mt-2">
+            <button class="btn btn-primary toggle-btn" onclick="toggleServices(this)">More</button>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+<script>
+    (function() {
+        function toggleServices(button) {
+            let section = button.closest('.service-container'); // Find the closest section
+            let hiddenCards = section.querySelectorAll('.hidden-service'); // Select hidden services inside this section
+
+            if (hiddenCards.length === 0) return; // Prevent errors if no hidden services exist
+
+            let isHidden = hiddenCards[0].style.display === "none"; // Check the first hidden element's state
+
+            hiddenCards.forEach(card => card.style.display = isHidden ? "block" : "none"); // Toggle visibility
+            button.textContent = isHidden ? "Less" : "More"; // Toggle button text
+        }
+
+        function showAlert(name, balance, pin, status) {
+            if (balance <= 0) {
+                alert('Insufficient Wallet Balance');
+            } else if (pin == 0) {
+                alert(`Dear ${name}, please complete your Full-KYC.`);
+            } else if (status === "deactive") {
+                alert(`Dear ${name}, your account is deactivated. Please contact the distributor.`);
+            } else {
+                alert(`Dear ${name}, your services are deactivated. Please contact the distributor.`);
+            }
+        }
+
+        // Expose function to global scope
+        window.showAlert = showAlert;
+        window.toggleServices = toggleServices;
+    })();
+</script>
+
+
+
 </div>
 
 
