@@ -391,10 +391,10 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $payAmount, 'Mobile Recharge');
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $payAmount, 'MobileRecharge');
      
     //dd($payableValue, $commissionValue,($commissionValue-$tds), $role, $mobile, $newPayableValue);
-        //dd($apiBalance);
+        dd($apiBalance);
     } catch (\Exception $e) {
         dd('General error updating customer balance: ' . $e->getMessage());
         session(['totalPayableValue' => 0]);
