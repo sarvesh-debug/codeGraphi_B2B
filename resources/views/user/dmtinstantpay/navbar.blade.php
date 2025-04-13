@@ -17,6 +17,9 @@
                 <li class="nav-item {{ request()->routeIs('transaction.history') ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('transaction.history') }}">History</a>
                 </li>
+                <li class="nav-item {{ request()->routeIs('pending.dmt') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('pending.dmt') }}">Pending</a>
+                </li>
             </ul>
         </div>
     </div>

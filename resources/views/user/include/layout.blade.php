@@ -336,12 +336,12 @@
 </li>
 @endif
         <!-- More menu items -->
-        <li class="menu-item">
+        {{-- <li class="menu-item">
           <a href="{{route('/user/wallet/index')}}" class="menu-link d-flex align-items-center gap-2">
               <i class="fa-solid fa-wallet fs-5 fs-md-2 fs-lg-1"></i>
               <div data-i18n="Analytics">ZPay Collect</div>
           </a>
-      </li>
+      </li> --}}
       
        
 
@@ -396,10 +396,10 @@
 </li>
 @else
 <li class="menu-item">
-<a href="" class="menu-link  gap-2">
+<a href="{{route('usercg.verifyForm')}}" class="menu-link  gap-2">
 {{-- <img src="https://cdn-icons-png.flaticon.com/128/1981/1981861.png" alt="Bill Payments Icon" style="width: 20px; height: 20px; margin-right: 10px;"> --}}
 <i class="fa-solid fa-credit-card fs-5 fs-md-2 fs-lg-1"></i>
-<div data-i18n="Analytics">Bill Payments</div>
+<div data-i18n="Analytics">Payout</div>
 </a>
 </li>
 @endif

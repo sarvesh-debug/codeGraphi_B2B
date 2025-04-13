@@ -52,11 +52,20 @@ class prePaidRechargeController extends Controller
     // API request
     $role = session('role');
     $amountTr = $rechargeAmount;
-    $getAmount = session('balance');
-    $opBal = $getAmount;
-    $getAmount -= 50;
+    // $getAmount = session('balance');
+    // $opBal = $getAmount;
+    // $getAmount -= 50;
 
-    $balance = ApiHelper::getBalance(env('Business_Email'));
+
+    $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    $opBal = $getAmount;
+    $getAmount-=50;
+    
+$balanceAd = ApiHelper::getBalance(env('Business_Email'));
+
+$balance = $balanceAd['wallet'];
     if ($balance >= $getAmount && $getAmount > $amountTr) 
     //if ($getAmount > $amountTr) 
 {
@@ -391,10 +400,10 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $payAmount, 'Mobile Recharge');
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $payAmount, 'MobileRecharge');
      
     //dd($payableValue, $commissionValue,($commissionValue-$tds), $role, $mobile, $newPayableValue);
-        //dd($apiBalance);
+        dd($apiBalance);
     } catch (\Exception $e) {
         dd('General error updating customer balance: ' . $e->getMessage());
         session(['totalPayableValue' => 0]);

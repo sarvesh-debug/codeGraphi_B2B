@@ -21,44 +21,29 @@ class PasswordResetController extends Controller
 
     public function sendResetLink(Request $request)
     {
+        
         $request->validate([
             'mobile' => 'required',
             'email' => 'required|email|exists:customer,email',
         ]);
-
+$mobile= $request->mobile;
         // Find the user by username and email
         $customer = CustomerModel::where('phone', $request->mobile)
                                   ->where('email', $request->email)
                                   ->first();
 
+                                //   return $customer;
+                                //   die();                     
+
         if ($customer) {
 
-            // $otp = rand(100000, 999999);
-            // session(['otp' => $otp]);
-    
-            // // Send OTP via SMS (replace with your SMS API logic)
-            // $apikey = "Q5aq9iNxvaSeiOWS";
-            // $senderid = "ABHEPY";
-            // $mobile = $request->mobile;
-            // $message = urlencode("Dear Customer your login otp for Abheepay will be $otp TEAM-ABHEEPAY");
-            
-            // $url = "https://manage.txly.in/vb/apikey.php?apikey=$apikey&senderid=$senderid&number=$mobile&message=$message";
-    
-            // // Send the request to the SMS gateway
-            // $response = file_get_contents($url);
-    
-            // if ($response) {
-            //    // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
-            //    return view('user.auth.getOtpFormForget', ['otp' => $otp, 'mobile' => $request->mobile]);
-            // }
-
-            // Generate a reset token and save it in the database
             $token = Str::random(60);
             $customer->reset_token = $token;
             $customer->save();
 
             // Send the user to the reset form with the token in URL
-            return redirect()->route('password.reset', ['token' => $token]);
+            //return redirect()->route('password.reset', ['token' => $token]);
+            return view('user.auth.reset-password',compact('mobile'));
         }
 
         return redirect()->back()->withErrors(['email' => 'Invalid mobile or email.']);
@@ -94,21 +79,23 @@ class PasswordResetController extends Controller
     public function showResetForm(Request $request)
     {
         $mobile = $request->query('mobile');
+        return $mobile;
+        die();
         return view('user.auth.reset-password',compact('mobile'));
     }
 
     // Handle the password reset
     public function resetPassword(Request $request)
     {
-        //  return $request;
-        // die();
+        
         $request->validate([
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         // Find the user with the matching reset token
         $customer = CustomerModel::where('phone', $request->mobile)->first();
-
+        // return $customer;
+        // die();
         if ($customer) {
             // Update the customer's password
             $customer->password = Hash::make($request->password);

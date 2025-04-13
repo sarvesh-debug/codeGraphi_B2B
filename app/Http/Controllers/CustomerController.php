@@ -641,7 +641,12 @@ public function login(Request $request)
         session(['mpin'=> $customer->mpin]);
         session(['txnpin'=> $customer->txnpin]);
         session(['lockBalance'=> $customer->LockBalance]);
-        
+
+        //Bank Details
+        session(['ifsc'=> $customer->ifsc_code]);
+        session(['accountNo'=> $customer->account_no]);
+        session(['bankName'=> $customer->bank_name]);
+
 
         $deviceId=md5(string: request()->ip() . request()->header('User-Agent'));
         $today = Carbon::today();
