@@ -307,7 +307,8 @@ public function remitterKyc(Request $request)
 
 public function beneficiaryRegistration(Request $request)
 {
-    
+    $mobile=session('mobile');
+    $realAmount=1.18;
     $customerOutletId = intval(session('outlet'));
     $request->validate([
         
@@ -346,6 +347,11 @@ public function beneficiaryRegistration(Request $request)
 // die();
         // Check if status is OTP sent successfully
         if (isset($data['statuscode']) && $data['statuscode'] === 'OTP') {
+            $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'Bank Account Verification');
+
+            DB::table('customer')
+            ->where('phone', $mobile)
+            ->decrement('balance', $realAmount);
             return view('user.dmtinstantpay.beneficiaryRegistrationSuccess', [
                 'beneficiaryId' => $data['data']['beneficiaryId'],
                 'referenceKey' => $data['data']['referenceKey'],
@@ -537,17 +543,25 @@ public function transaction(Request $request)
     //$mobile = $request->input('mobileNumber');
     $mobile = $request->input('mobileNumber');
     $amountTr=$request->input('amount');
-    $getAmount=session('balance');
-    $opb=$getAmount;
-    $getAmount-=50;
+   // $getAmount=session('balance');
+   
 // return $getAmount;
 // die();
 
-$balance = ApiHelper::getBalance(env('Business_Email'));
+    $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    $opb=$getAmount;
+    $getAmount-=50;
+    // return $getAmount;
+    // die();
+$balanceAd = ApiHelper::getBalance(env('Business_Email'));
+
+$balance = $balanceAd['wallet'];
+   
 if ($balance >= $getAmount && $getAmount > $amountTr) 
     //if($getAmount > $amountTr)  //450 > 400
     {
-
         
         $externalRef = 'TXN' . date('Y') . '' . round(microtime(true) * 1000);
 
@@ -581,7 +595,8 @@ if ($balance >= $getAmount && $getAmount > $amountTr)
             DB::table('transactions_dmt_instant_pay')->insert([
                 'remitter_mobile_number' => $pry_mobile,
                 'second_no'=>$mobile,
-                'reference_key' => $request->input('transferMode'),
+              //  'reference_key' => $request->input('transferMode'),
+              'reference_key' => $externalRef,
                 'customer_outlet_id' => $customerOutletId,  // Store customerOutletId
                 'response_data' => json_encode($data),
                 'opening_balance' =>$opb,
@@ -590,12 +605,10 @@ if ($balance >= $getAmount && $getAmount > $amountTr)
                 'updated_at' => now(),
             ]);
             $mode=$request->input('transferMode');
-            if($data['statuscode']=="TXN")
-            {
-                //$this->updateCustomerBalance(session('mobile'),'mode');
-                $this->updateCustomerBalance(session('mobile'), $mode,$role,$externalRef);
+            if ($response['statuscode'] === "TXN" || $response['statuscode'] === "TUP") {
+                $this->updateCustomerBalance(session('mobile'), $mode, $role, $externalRef);
             }
-    
+            
             return view('user.dmtinstantpay.transactionSuccess', [
                 'response' => $data,
             ]);
@@ -641,6 +654,7 @@ private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
     $ff=0;
     $comA=0;
     $tds=0;
+    $realAmount=0;
     // Fetch the latest transaction for the given mobile number
     $lastRecord = DB::table('transactions_dmt_instant_pay')
         ->where('remitter_mobile_number', $mobile)
@@ -654,8 +668,10 @@ private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
         $response_data = json_decode($lastRecord->response_data, true);
 
         // Check if payableValue exists and update the balance
-        if (isset($response_data['data']['txnValue'])  && isset($response_data['statuscode']) && $response_data['statuscode'] === 'TXN') {
+        if (isset($response_data['data']['txnValue'])  && isset($response_data['statuscode']) && $response_data['statuscode'] === 'TXN' ?? 'TUP') {
             $payableValue = $response_data['data']['txnValue'];
+            $realAmount=$response_data['data']['txnValue'];
+
             
 
             $getCommission = DB::table('commission_plan')
@@ -827,7 +843,7 @@ if ($latestTransaction) {
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newpayableValue-($comA-$tds), 'DMT');
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'DMT');
      
     //  DB::table('business')
     //  ->where('business_id', session('business_id'))
@@ -849,8 +865,8 @@ session(['adminBalance'=> $balanceAd]);
     }
     
    
-   //dd('ok');
-   //dd($apiBalance);
+   //dd($realAmount);
+    dd($apiBalance);
    // dd($opB,$clB,$dis_no,$ret_no,$comm,$service,$disData,$disPhone,$getDis->dis_phone,$ff,$payableValue,$newpayableValue,$commission->charge,$commission->charge_in,$mode,$commissionAmount,$commissionAmount,$comA,$tds,$getDis,$getDisComm);
 }
 
@@ -997,6 +1013,135 @@ public function getAllTransactions(Request $request)
 //     return view('user.dmtinstantpay.transactionHistory', ['transactions' => $transactions]);
 // }
 
+
+public function pendingTransaction(Request $request)
+{
+    $mobile = session('mobile');
+
+    // Fetch transaction record
+    $pendingRecord = DB::table('transactions_dmt_instant_pay')
+        ->where('remitter_mobile_number', $mobile)
+        ->get();
+
+    $transactions = [];
+
+    foreach ($pendingRecord as $record) {
+        // Decode response_data
+        $responseData = json_decode($record->response_data, true);
+
+        // Check if statuscode is "TXN"
+        if (isset($responseData['statuscode']) && $responseData['statuscode'] === "TUP") {
+            $transactions[] = [
+                'id' => $record->id,
+                'remitter_mobile' => $record->remitter_mobile_number,
+                'beneficiary_account' => $responseData['data']['beneficiaryAccount'] ?? null,
+                'beneficiary_ifsc' => $responseData['data']['beneficiaryIfsc'] ?? null,
+                'beneficiary_name' => $responseData['data']['beneficiaryName'] ?? null,
+                'txn_value' => $responseData['data']['txnValue'] ?? null,
+                'txn_reference_id' => $responseData['data']['txnReferenceId'] ?? null,
+                'external_ref' => $responseData['data']['externalRef'] ?? null,
+                'pool_reference_id' => $responseData['data']['poolReferenceId'] ?? null,
+                'opening_balance' => $record->opening_balance,
+                'closing_balance' => $record->closing_balance,
+                'charges' => $record->charges,
+                'commission' => $record->commission,
+                'tds' => $record->tds,
+                'created_at' => $record->created_at
+            ];
+        }
+    }
+
+    // Return JSON if the request is an API call
+    if ($request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'transactions' => $transactions
+        ]);
+    }
+
+    // Return data for Blade view
+    return view('user.dmtinstantpay.dmtPendingTransaction', compact('transactions'));
+}
+
+public function pendingTransaction_api()
+{
+    
+
+    
+
+    // Fetch transaction record
+    $pendingRecord = DB::table('transactions_dmt_instant_pay')
+    ->orderBy('id', 'desc') // Sort by ID in descending order
+    ->get();
+
+
+    $transactions = [];
+
+    foreach ($pendingRecord as $record) {
+        // Decode response_data
+        $responseData = json_decode($record->response_data, true);
+        
+        // Ensure response_data contains 'data' key
+        $data = $responseData['data'] ?? [];
+
+        // Check if statuscode is "TXN"
+        if (isset($responseData['statuscode']) && $responseData['statuscode'] === "TXN") {
+            $transactions[] = [
+                'id' => $record->id,
+                'remitter_mobile' => $record->remitter_mobile_number,
+                'beneficiary_account' => $data['beneficiaryAccount'] ?? null,
+                'beneficiary_ifsc' => $data['beneficiaryIfsc'] ?? null,
+                'beneficiary_name' => $data['beneficiaryName'] ?? null,
+                'txn_value' => $data['txnValue'] ?? null,
+                'txn_reference_id' => $data['txnReferenceId'] ?? null,
+                'external_ref' => $data['externalRef'] ?? null,
+                'pool_reference_id' => $data['poolReferenceId'] ?? null,
+                'opening_balance' => $record->opening_balance,
+                'closing_balance' => $record->closing_balance,
+                'charges' => $record->charges,
+                'commission' => $record->commission,
+                'tds' => $record->tds,
+                'created_at' => $record->created_at
+            ];
+        }
+    }
+
+    // Return JSON response
+    return response()->json([
+        'success' => true,
+        'message' => count($transactions) > 0 ? 'Pending transactions found' : 'No pending transactions available',
+        'transactions' => $transactions
+    ]);
+}
+
+public function pendingResponse(Request $request)
+{
+    \Log::info('Received Pending DMT Data:', $request->all());
+
+    // Extract top-level externalRef
+    $topLevelExternalRef = $request->externalRef;
+
+    // Optional: Also extract nested externalRef inside data key if needed
+    $nestedExternalRef = $request->input('data.externalRef');
+
+    // For safety, log both
+    \Log::info("Top Level externalRef: " . $topLevelExternalRef);
+    \Log::info("Nested externalRef from data: " . $nestedExternalRef);
+
+    // Use the top-level externalRef to update the record
+    $updatePending = DB::table('transactions_dmt_instant_pay')
+        ->where('reference_key', $topLevelExternalRef)
+        ->update([
+            'response_data' => json_encode($request->all())
+        ]);
+
+    // Optional: Return a confirmation response
+    return response()->json([
+        'success' => true,
+        'message' => 'Pending transaction data received and stored.',
+        'externalRef' => $topLevelExternalRef
+    ]);
+}
 
 
 }

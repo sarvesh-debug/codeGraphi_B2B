@@ -28,13 +28,13 @@
     {{ session('success') }}
 </div>
 @endif
-    <div class="row change">
+    <div class="row change mb-5">
         <div class="col-lg-6 mx-auto">
-            <div class="card shadow">
+            <div class=" shadow">
                 <div class="card-header bg-success text-white text-center py-3">
                     <h4 class="mb-0"><span class="text-success1">Add</span> <span class="text-info1">Money</span></h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body mb-5">
                     <form action="{{route('add.slip')}}" method="POST" enctype="multipart/form-data">
                         @csrf
 

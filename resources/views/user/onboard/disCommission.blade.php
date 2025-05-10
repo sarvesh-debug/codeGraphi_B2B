@@ -3,7 +3,7 @@
  
 @section('content')
 <div class="container-fluid ">
-    <div class="container mt-2">
+    <div class="container mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
         <li class="breadcrumb-item active">All User</li>
@@ -11,7 +11,7 @@
     <!-- <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
         <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
              alt="Download Icon" 
-             style="width: 16px; height: 16px; margin-right: 5px;">
+             style="width: 16px; height: 16px; margin-right: 5px;"> --}}
         Export
     </button> -->
     <div class="row">
@@ -85,5 +85,6 @@
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 @endsection

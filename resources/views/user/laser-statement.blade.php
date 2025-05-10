@@ -2,23 +2,23 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+    <ol class="breadcrumb mb-4 mt-3">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item active">Ledger Statement</li>
     </ol>
 
     <!-- Transaction Summary Section -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-3 col-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">Total Transactions</h5>
+                    <h5 class="card-title">Total Trans</h5>
                     <p class="card-text">₹ {{ $totalAmount ?? 0 }}</p>
                 </div>
             </div>  
         </div>
         @foreach ($individualTotals as $source => $amount)
-        <div class="col-md-3 my-1">
+        <div class="col-md-3 col-6 my-1">
             <div class="card text-center">
                 <div class="card-body">
                     <h5 class="card-title">{{ ucwords(str_replace('_', ' ', $source)) }}</h5>

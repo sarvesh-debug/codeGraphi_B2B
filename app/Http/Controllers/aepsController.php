@@ -86,7 +86,8 @@ class aepsController extends Controller
     }
 
     public function outletLogin(Request $request)
-    {
+    {   $mobile=session('mobile');
+        $realAmount=0.95;
         // Validate inputs
         $request->validate([
             'type' => 'required|string',
@@ -129,6 +130,13 @@ class aepsController extends Controller
         } elseif ($responseData['statuscode'] === 'TXN') {
             $message = $responseData['status'] ?? $responseData['message'] ?? '';
             $type = 'success';
+            $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'AePS Bio Auth Fee');
+
+            DB::table('customer')
+            ->where('phone', $mobile)
+            ->decrement('balance', $realAmount);
+
+
         } else {
             $message = $responseData['status'] ?? $responseData['message'] ?? '';
             $type = 'unknown';
@@ -338,7 +346,7 @@ class aepsController extends Controller
         $commissionAmount = 0;
         $tds = 0;
         $distributorCommission = 0;
-    
+        $realAmount=0;
         // Fetch the latest transaction for the given mobile number
         $lastTransaction = DB::table('cash_withdrawals')
             ->where('mobile', $mobile)
@@ -350,6 +358,7 @@ class aepsController extends Controller
     
             if (isset($responseData['data']['transactionValue']) && $responseData['statuscode'] === 'TXN') {
                 $payableValue = $responseData['data']['transactionValue'];
+                $realAmount=$responseData['data']['transactionValue'];
     
                 // Fetch commission details
                 $commissionPlans = DB::table('commission_plan')
@@ -454,7 +463,8 @@ class aepsController extends Controller
         // Update session balance
         $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
         session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
-        $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $payableValue + ($commissionAmount - $tds), 'AEPS');
+        //$apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $payableValue + ($commissionAmount - $tds), 'AEPS');
+        $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $realAmount, 'AEPS');
       
        
         // DB::table('business')
@@ -467,7 +477,7 @@ class aepsController extends Controller
    // Store the retrieved balance in the session
    session(['adminBalance'=> $balanceAd]);
 //dd('ok');
-//dd($apiBalance);
+dd($apiBalance);
     }
     
 
@@ -501,4 +511,12 @@ class aepsController extends Controller
         // Fetch the 5 latest transactions from the database
     }
 
+    public function cashDepositForm()
+    {
+        return view('user.aeps.cash_deposit');
+    }
+    public function cashDeposit(Request $request)
+    {
+        return $request;
+    }
 }

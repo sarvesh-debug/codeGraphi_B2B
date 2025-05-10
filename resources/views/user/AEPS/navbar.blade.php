@@ -9,7 +9,9 @@
             <li class="nav-item {{ request()->routeIs('cash.withdrawal.form') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('cash.withdrawal.form') }}">Withdraw</a>
             </li>
-
+            <li class="nav-item {{ request()->routeIs('aepsCashDeposit.form') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('aepsCashDeposit.form') }}">Deposit</a>
+            </li>
             <li class="nav-item {{ request()->routeIs('balance.enquiry-form') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('balance.enquiry-form') }}">Balance Enquiry</a>
             </li>

@@ -48,15 +48,24 @@ class prePaidRechargeController extends Controller
     $circle = $request->input('circle');
     $rechargeAmount = $request->input('rechargeAmount');
     $customerOutletId = session('outlet') ? intval(session('outlet')) : 0;
-    $externalRef = 'ZPR' . date('Y') . '' . round(microtime(true) * 1000);
+    $externalRef = 'TXN' . date('Y') . '' . round(microtime(true) * 1000);
     // API request
     $role = session('role');
     $amountTr = $rechargeAmount;
-    $getAmount = session('balance');
-    $opBal = $getAmount;
-    $getAmount -= 50;
+    // $getAmount = session('balance');
+    // $opBal = $getAmount;
+    // $getAmount -= 50;
 
-    $balance = ApiHelper::getBalance(env('Business_Email'));
+
+    $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    $opBal = $getAmount;
+    $getAmount-=50;
+    
+$balanceAd = ApiHelper::getBalance(env('Business_Email'));
+
+$balance = $balanceAd['wallet'];
     if ($balance >= $getAmount && $getAmount > $amountTr) 
     //if ($getAmount > $amountTr) 
 {
@@ -144,7 +153,7 @@ public function mobiletest()
         $role = session('role');
       
         // $externalRef = 'RPF-' . strtoupper(uniqid(date('YmdHis')));
-        $externalRef = 'ZPR' . date('Y') . '' . round(microtime(true) * 1000);
+        $externalRef = 'TXN' . date('Y') . '' . round(microtime(true) * 1000);
         //dd($externalRef);
         //dd($mobile,$role,$externalRef);
          //die();
@@ -166,6 +175,7 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
     $commissionValue = 0;
     $newPayableValue = 0;
     $payableValue=0;
+    $payAmount=0;
     try {
         // Fetch the latest transaction for the given mobile number
         try {
@@ -202,6 +212,7 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
         if (isset($responseData['respose']['data']['txnValue'], $responseData['statuscode']) &&
                 in_array($responseData['statuscode'], ['TXN', 'TUP'])) {
             $payableValue = $responseData['respose']['data']['txnValue'];
+            $payAmount=$responseData['respose']['data']['txnValue'];
 
                     // dd($payableValue);
                     // die();
@@ -389,7 +400,7 @@ private function updateCustomerBalance($mobile, $role, $externalRef){
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $newPayableValue, 'Mobile Recharge');
+     $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $payAmount, 'MobileRecharge');
      
     //dd($payableValue, $commissionValue,($commissionValue-$tds), $role, $mobile, $newPayableValue);
         dd($apiBalance);

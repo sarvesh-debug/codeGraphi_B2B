@@ -71,7 +71,14 @@
                 <img src="{{ $profile->aadhar_front }}" alt="Profile Picture">
                 <div>
                     <h3>{{ $profile->name }} ({{ $profile->username }})</h3>
-                    <p>Role: {{ $profile->role }}</p>
+                    <p>Role:
+                        @if (trim(strtolower($profile->role)) === 'distibuter')
+                            Distributor
+                        @else
+                            Retailer
+                        @endif
+                            </p>
+                    
                     <p>Status: <span class="badge bg-{{ $profile->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($profile->status) }}</span></p>
                 </div>
                 <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeMpinModal">Change MPIN</a>

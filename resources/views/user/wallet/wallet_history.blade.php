@@ -3,7 +3,7 @@
 @section('content')
 
 
-<div class="container-fluid px-4 mt-3">
+<div class="container-fluid px-4 mt-3 mb-5">
     <nav class="navbar navbar-expand-lg navbar-light bg-light p-3 m-2">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -55,7 +55,7 @@
              class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID3</th>
+                        <th>ID</th>
                         <th>Sender ID</th>
                         <th>Receiver ID</th>
                         <th>Amount</th>

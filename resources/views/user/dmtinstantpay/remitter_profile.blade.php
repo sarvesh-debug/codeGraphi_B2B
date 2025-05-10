@@ -6,7 +6,7 @@
     @include('user.dmtinstantpay.navbar')
     <div class="row justify-content-center mt-3">
         <!-- Remitter Profile Section -->
-        <div class="col-md-6 ">
+        <div class="col-md-6 mt-3">
             <div class="card shadow-lg border-0">
                 <div class="card-header py-3">
                     <h4 class="card-heading mb-0"><i class="fas fa-user-circle me-2"></i>Remitter Profile</h4>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-success">
-                                <i class="fas fa-check-circle me-2"></i>Submit
+                                <i class="me-2"></i>Submit
                             </button>
                         </div>
 
@@ -31,12 +31,12 @@
 
         <!-- Latest Transactions Section -->
         @if($latestTransactions && count($latestTransactions) > 0)
-            <div class="col-md-6">
-                <div class="card shadow-lg border-0 h-100">
+            <div class="col-md-6 mb-5 mt-3">
+                <div class=" shadow-lg border-0">
                     <div class="card-header bg-gradient-success text-white text-center py-3">
                         <h5 class="card-heading"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 mb-5">
                         @foreach($latestTransactions as $transaction)
                             <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
                                 <div class="transaction-details">

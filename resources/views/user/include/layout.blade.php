@@ -265,12 +265,15 @@
       </div>
       <div class="menu-inner-shadow"></div>
       <ul class="menu-inner py-1">
+        
         <li class="menu-item">
-          <a href="{{route('customer/dashboard')}}" class="menu-link">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1E0uREEQwPHfnMJC4jNCWNqRuIG4jI0bcCAuICwtJhJi4WMh4RJIyXvS2pt5Ncbs9O516v3/1V1VPTDjNZgx3ySCOZziDft4zSSXFQT8EisN9B47GUlGEPBzrOGpESziDnt9kj5BmfkzdhvBBebRe5Jxgi54eYKUZJRgHLytbVxTr6RLkIGnJbVgEnhKUgrKbomfl/GY6XUs4aGJ/dZdpeAaWwWwr8Nq93uxcYXt+C4ht1j/I8ENNmtBy24zaeUHOMZGlXJADnHW7Nf/fW53XUMd+IKoT9eKQVudVtCZGer9X5/gX/Cjdqm7naYG8WIuJCe4DovJjxfga3W1afT9STV0Gd8QR8VcjJyDDCwdM+l7kwa3gR/DDlQZ8ZOLqAAAAABJRU5ErkJggg=="/>
-            <div data-i18n="Analytics">Home</div>
+          <a href="{{route('customer/dashboard')}}" class="menu-link d-flex align-items-center gap-2">
+              <i class="fa-solid fa-house fs-4 fs-md-2 fs-lg-1"></i>
+              <div data-i18n="Analytics">Home</div>
           </a>
-        </li>
+      </li>
+      
+      
 
        
 <!-- Example of submenu -->
@@ -302,17 +305,19 @@
 @endif
 @if($role==="distibuter")
 <li class="menu-item">
-<a href="javascript:void(0);" class="menu-link menu-toggle">
-<img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" alt="PAN Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-<div data-i18n="Layouts">OnBoard</div>
+  <a href="javascript:void(0);" class="menu-link menu-toggle d-flex align-items-center gap-1">
+    <i class="fa-solid fa-user-plus fs-4 fs-md-2 fs-lg-1"></i>
+    <div data-i18n="Layouts">OnBoard</div>
 </a>
+
 <ul class="menu-sub">
 
-<li class="menu-item">
+{{-- <li class="menu-item">
     <a href="{{route('add-new')}}" class="menu-link">
         <div data-i18n="Without menu">Onboard Retailer</div>
     </a>
-</li>
+</li> --}}
+
 
 <li class="menu-item">
   <a href="{{route('list.new')}}" class="menu-link">
@@ -331,12 +336,13 @@
 </li>
 @endif
         <!-- More menu items -->
-        <li class="menu-item">
-          <a href="{{route('/user/wallet/index')}}" class="menu-link">
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAMZJREFUSEvt1U8KQVEUx/GPRfgzUjKgZC0WopQyEWMxsRwLkZiJEVZBTwYPcfVuz0Du9HR+3/O759xzC3I+hZz1fRWQwMboohzhbIMBFolG2sEc/QjhdOoW9UfACSW0sI4AnW+51+LTDu4CPw3oYIpmwGXmKzp+OGWZAaFeRTf5Dwjupz2qH7yTzE1OxnSGRl5jGio+eooyAw6ooI1VSOVN/KWDCYYRwunUHWqP2zTp+gg9FCNAy1uhTx9OhObr1K/+ybk4uADSZCwZKEMV0gAAAABJRU5ErkJggg=="/>
-            <div data-i18n="Analytics">ZPay Collect</div>
+        {{-- <li class="menu-item">
+          <a href="{{route('/user/wallet/index')}}" class="menu-link d-flex align-items-center gap-2">
+              <i class="fa-solid fa-wallet fs-5 fs-md-2 fs-lg-1"></i>
+              <div data-i18n="Analytics">ZPay Collect</div>
           </a>
-        </li>
+      </li> --}}
+      
        
 
         <li class="menu-header small text-uppercase">
@@ -346,48 +352,54 @@
 <!-- Example of submenu -->
 @if($customer->pin > 0)
         @if($customer->aeps == 1)
-<li class="menu-item">
-<a href="{{route('cash.withdrawal.form')}}" class="menu-link">
-<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuEPF5Nys2Qd4cyU9zxWKOG39KyH0iF59lJw&s" alt="AePS Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-<div data-i18n="Analytics">AePS</div>
-</a>
-</li>
+        <li class="menu-item">
+          <a href="{{route('cash.withdrawal.form')}}" class="menu-link d-flex align-items-center gap-2">
+              <i class="fa-solid fa-fingerprint fs-5 fs-md-2 fs-lg-1"></i>
+              <div data-i18n="Analytics">AePS</div>
+          </a>
+      </li>
+      
 @else
 <li class="menu-item">
-<a href="" class="menu-link">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuEPF5Nys2Qd4cyU9zxWKOG39KyH0iF59lJw&s" alt="AePS Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-  <div data-i18n="Analytics">AePS</div>
-</a>
+  <a href="" class="menu-link d-flex align-items-center gap-2">
+      <i class="fa-solid fa-fingerprint fs-5 fs-md-2 fs-lg-1"></i>
+      <div data-i18n="Analytics">AePS</div>
+  </a>
 </li>
+
 @endif
 
 @if($customer->dmt == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
 <li class="menu-item">
-<a href="{{route('dmt.remitter-profile')}}" class="menu-link">
-<img src="https://cdn-icons-png.flaticon.com/128/846/846980.png" alt="DMT Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-<div data-i18n="Analytics">DMT</div>
-</a>
+  <a href="{{route('dmt.remitter-profile')}}" class="menu-link d-flex align-items-center gap-2">
+      <i class="fa-solid fa-right-left fs-5 fs-md-2 fs-lg-1"></i>
+      <div data-i18n="Analytics">DMT</div>
+  </a>
 </li>
+
 @else
 <li class="menu-item">
-<a href="" class="menu-link">
-<img src="https://cdn-icons-png.flaticon.com/128/846/846980.png" alt="DMT Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-<div data-i18n="Analytics">DMT</div>
-</a>
+  <a href="" class="menu-link d-flex align-items-center gap-2">
+      <i class="fa-solid fa-right-left fs-5 fs-md-2 fs-lg-1"></i>
+      <div data-i18n="Analytics">DMT</div>
+  </a>
 </li>
+
 @endif
 @if($customer->cc_bill_payment == 1 && $customer->balance >0 && $customer->status ==="active" && $customer->pin >0)
 <li class="menu-item">
-<a href="{{route('getcategory')}}" class="menu-link">
-<img src="https://cdn-icons-png.flaticon.com/128/1981/1981861.png" alt="Bill Payments Icon" style="width: 20px; height: 20px; margin-right: 10px;">
+<a href="{{route('getcategory')}}" class="menu-link  gap-2">
+{{-- <img src="https://cdn-icons-png.flaticon.com/128/1981/1981861.png" alt="Bill Payments Icon" style="width: 20px; height: 20px; margin-right: 10px;"> --}}
+<i class="fa-solid fa-credit-card fs-5 fs-md-2 fs-lg-1"></i>
 <div data-i18n="Analytics">Bill Payments</div>
 </a>
 </li>
 @else
 <li class="menu-item">
-<a href="" class="menu-link">
-<img src="https://cdn-icons-png.flaticon.com/128/1981/1981861.png" alt="Bill Payments Icon" style="width: 20px; height: 20px; margin-right: 10px;">
-<div data-i18n="Analytics">Bill Payments</div>
+<a href="{{route('usercg.verifyForm')}}" class="menu-link  gap-2">
+{{-- <img src="https://cdn-icons-png.flaticon.com/128/1981/1981861.png" alt="Bill Payments Icon" style="width: 20px; height: 20px; margin-right: 10px;"> --}}
+<i class="fa-solid fa-credit-card fs-5 fs-md-2 fs-lg-1"></i>
+<div data-i18n="Analytics">Payout</div>
 </a>
 </li>
 @endif
@@ -549,8 +561,9 @@
         </a>
       </li> --}}
       <li class="menu-item">
-        <a href="{{route('commission.get')}}" class="menu-link">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1btKBEEQheFvETUTczHwBcRUBC+BGAhmPoWBoKYarKGgRr6HKAYiKBiZ+gCCCBuLkYmXbRlh6O3ZadZdTLbD4lT93aemahoGfBoDrm8IqHW4bNEtlmsz8gR3WAnSMuArLzdb9VO7V8AHbrDWBfcnwC6O0cR+BSQbsFS8NPgazgU2MIlHTOcCgm4C51GzFzFWWPKMObziEutR8Wts4u03nhq0GTwlbhV8X8AD9nCU0EyhVY6nAON4TyTv4ATzuMdIQhNin3WA7ba/p1Fyyve4NyFlC2dVgKo5eMFswvcAGC16k+pz9ld00LbjsIvvVaOQDQgFroqhSvneF0D2figJO17Qz2UX1shqvIt6uWVtzvCP9v8WfQPMWC8Z5nK9/gAAAABJRU5ErkJggg=="/>
+        <a href="{{route('commission.get')}}" class="menu-link gap-1">
+          {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1btKBEEQheFvETUTczHwBcRUBC+BGAhmPoWBoKYarKGgRr6HKAYiKBiZ+gCCCBuLkYmXbRlh6O3ZadZdTLbD4lT93aemahoGfBoDrm8IqHW4bNEtlmsz8gR3WAnSMuArLzdb9VO7V8AHbrDWBfcnwC6O0cR+BSQbsFS8NPgazgU2MIlHTOcCgm4C51GzFzFWWPKMObziEutR8Wts4u03nhq0GTwlbhV8X8AD9nCU0EyhVY6nAON4TyTv4ATzuMdIQhNin3WA7ba/p1Fyyve4NyFlC2dVgKo5eMFswvcAGC16k+pz9ld00LbjsIvvVaOQDQgFroqhSvneF0D2figJO17Qz2UX1shqvIt6uWVtzvCP9v8WfQPMWC8Z5nK9/gAAAABJRU5ErkJggg=="/> --}}
+          <i class="fa-solid fa-hand-holding-dollar  fs-4 fs-md-2 fs-lg-1"></i>
           <div data-i18n="Analytics">Commission Plans</div>
         </a>
       </li> 
@@ -559,8 +572,9 @@
         <span class="menu-header-text">Report</span>
       </li>
       <li class="menu-item">
-        <a href="javascript:void(0);" class="menu-link menu-toggle">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAMhJREFUSEvt1DEOAUEUxvGfRK0kkWi4gFs4iUolUZA4gwM4CIlb0OioFFoXIJssZjc2YseqTDeT+d7/vfe9mZqKV63i+H4KSGBzjNAqUdkeE6xCbVjBAuMSgUPJAb0iwBlNDLApAbqmmkzbw839QuWAEslnJBkvXlVwQSOS8vDiFSB2dDNe/AGJVfnx/HqL/oCPX8TXPchnUAg4oY0+th/n/RQUApYYRgQOpUd0k4PwJdcxSyGdCNAOU6zzgIiYxdLYj+1tUpUDbgOALxmvJD5dAAAAAElFTkSuQmCC"/>
+        <a href="javascript:void(0);" class="menu-link menu-toggle gap-2">
+          {{-- <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAMhJREFUSEvt1DEOAUEUxvGfRK0kkWi4gFs4iUolUZA4gwM4CIlb0OioFFoXIJssZjc2YseqTDeT+d7/vfe9mZqKV63i+H4KSGBzjNAqUdkeE6xCbVjBAuMSgUPJAb0iwBlNDLApAbqmmkzbw839QuWAEslnJBkvXlVwQSOS8vDiFSB2dDNe/AGJVfnx/HqL/oCPX8TXPchnUAg4oY0+th/n/RQUApYYRgQOpUd0k4PwJdcxSyGdCNAOU6zzgIiYxdLYj+1tUpUDbgOALxmvJD5dAAAAAElFTkSuQmCC"/> --}}
+          <i class="fa-solid fa-clipboard-list fs-4 fs-md-2 fs-lg-1"></i>
           <div data-i18n="Layouts">Report</div>
         </a>
         <ul class="menu-sub">
@@ -637,8 +651,8 @@
         </a>
       </li> --}}
       <li class="menu-item">
-        <a href="{{route('laser.statement')}}" class="menu-link">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAPJJREFUSEvt1TFOAkEYhuGHmADHsNGCcA8bCgsPYUNLTKSDBENL4x1sbTyHsZLCY6ANZslANsvCzGbExMRJptn993tn3n93p+XEo3XifE0A51iEBQ3xkbK4FEAHd2F2Q+gKD2F+HgPFAFd4RLH6ulHs4hYvhyCHAFsdgxQNeEattiqg0DHCGO1K+BPucYYZriv3vzDFHDttZUBMxwWWIbSP1xRtZcA6ouMS76Gmh7dI/Sa7CaCsaIKbnwYk9ntX1ngH2YAioNyHrb6ca3u/ipywumf/AZu+H+vV7yqKfcnZr+nfBzRVkFQfO9GSQnKOzGzAN0gjOhlouyZoAAAAAElFTkSuQmCC"/>
+        <a href="{{route('laser.statement')}}" class="menu-link gap-2">
+          <i class="fa-solid fa-landmark fs-5 fs-md-2 fs-lg-1"></i>
           <div data-i18n="Analytics">All transaction</div>
         </a>
       </li> 
@@ -660,14 +674,14 @@
       </li>
 
       <li class="menu-item">
-        <a href="{{route('get.profile')}}" class="menu-link">
-    <img src="https://cdn-icons-png.flaticon.com/128/3135/3135715.png" style="width: 20px; height: 20px; margin-right: 10px;">
+        <a href="{{route('get.profile')}}" class="menu-link gap-2">
+    <i class="fa-solid fa-user fs-3 fs-md-2 fs-lg-1"></i>
           <div data-i18n="Analytics">Profile</div>
         </a>
       </li>
       <li class="menu-item">
-        <a href="#" class="menu-link">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAZpJREFUSEvt1L1L11EUx/GXOUQQhARRUJJ/QBQ1NxYZRUJ/gGDSAw1tDT1QELSIS4MFUVOzIRJB6CLSqEGTGFTUUEPRFERB3SNX+Hr5PXTJ39YZL+d83vd8zrm3T4+jr8f6ugG24ixO4CD24zfe4RWeYxo/2120E2AYU1m0U6NvcBHzrZLaAW6l5Nu5IATuYzl18zqfHcBhXMZQPruKiRLSChDCAYi2b2ISv9q0EBZexzX04wruNXNLwCnM4geOY+Evl+B0mtFT1mZ6NNW+XK9rArZjFbtz6+F/Tax3voKwcG3wTcClPNTwOTYmtqUmwq632JM2bAQzJeAZTuIcHtcoN3JvpFncwUOcLwEfsDfdYhQv0up9qoSEtWeSxQ+wlGZ5pAR8x7YsGuLRak18ThbvygVfsbMElJ53e+UlvGV9U+Q/oKtF37CjYey/zCC0Bsohj+X93YI5HKtZocbDjBccWk9KQKXehvRBvMdH7Ov02XWCtNuy+Fbu5l/gUYKMbxagvEzc/hC+bDYgBBdxAfGaN0TtplTPqeeAPwR2TRktA7nHAAAAAElFTkSuQmCC"/>
+        <a href="#" class="menu-link gap-2">
+          <i class="fa-solid fa-headset"></i>
           <div data-i18n="Analytics">Support Ticket</div>
         </a>
       </li>
@@ -678,197 +692,124 @@
         <!-- Layout container -->
         <div class="layout-page">
         <!-- Navbar -->
+        
+
+        
 <!-- Navbar -->
-<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center  " id="layout-navbar">
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center fixed-top mt-0 mt-lg-3" id="layout-navbar">
+
 
   <div class="layout-menu-toggle navbar-nav align-items-xl-center me-1 d-xl-none">
-    <a class="nav-item nav-link px-0 " href="javascript:void(0)">
+    <a class="nav-item nav-link px-0" href="javascript:void(0)">
         <i class="bx bx-menu bx-sm"></i>
     </a>
 </div>
 
 
+
   <div class="navbar-nav-right d-flex align-items-center" id="navbar-collaps">
-    {{-- <div class="navbar-nav align-items-center  py-2 px-3 rounded"> --}}
-      {{-- <div class="nav-item d-flex flex-row flex-md-row justify-content-between align-items-start align-items-md-center w-100"> --}}
-          <!-- Balance Section -->
-          {{-- <div class="d-flex flex-md-row align-items-start align-items-md-center"> --}}
-            {{-- <div class="flex flex-row items-center justify-start gap-6 bg-red"> --}}
-              <!-- Add Fund Button -->
-              <div class=" rounded ">
-                <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold ">
-                 +
-                </a>
-              </div>
-            
+ 
 
-
-              <style>
-                /* Default: Hidden */
-.bx-wallet {
-    display: none;
-}
-
-/* Show in desktop view */
-@media (min-width: 768px) {
-    .bx-wallet {
-        display: inline-block;
-    }
-}
-
-.bx-barcode {
-    display: none;
-}
-
-/* Show in desktop view */
-@media (min-width: 768px) {
-    .bx-barcode {
-        display: inline-block;
-    }
-}
-
-
-              </style>
-<div class="d-flex justify-content-between align-items-center gap-3">
-  <!-- Wallet Icon and Balance -->
-  <!-- <div class="flex flex-row items-center gap-2">
-      <i class="bx bx-wallet bx-sm icon mb-1"></i>
-      <span class="text-gray-900 fw-bold bal">₹: </span>
-      <span class="text-dark rup fw-bold">{{ session('balance') }}</span>
-  </div> -->
-      <!-- Wallet Icon and Balance -->
-      <div class="d-flex align-items-center gap-2">
-        <i class="bx bx-wallet bx-sm text-primary"></i>
-        <span class="fw-bold text-dark">₹</span>
-        <span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
+     <!-- Add Fund Button -->
+     <div class=" rounded ">
+      <a href="{{route('/user/fund-transfer/bank-account')}}" class="add_fund whitespace-nowrap fw-bold fa fa-plus">
+       
+      </a>
     </div>
+    
+      <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+              <i class="bx bx-wallet bx-sm text-primary"></i>
+              <span class="fw-bold text-dark">₹</span>
+              <span class="fw-bold text-dark">{{ session('balance')+session('lockBalance') }}</span>
+          </div>
 
+          <!-- Account Section (Visible on Desktop) -->
+          <div class="d-none d-md-flex flex-column flex-md-row ms-3">
+              <span class="role btn d-inline-flex align-items-center px-3 lg:py-1 py-0 rounded-pill">
+                  <span class="fw-bold">Account: </span>&nbsp;
+              </span>
+              <span class="d-block text-md-start text-center lg:mt-1 mt-0 mt-md-0">
+                  @if (trim(strtolower($role)) === 'distibuter')
+                      Distributor
+                  @else
+                      Retailer
+                  @endif
+              </span>
+          </div>
+      </div>
   
-  <!-- DT/RT Code -->
-  <!-- <span class="role d-none d-md-inline-block lg:mb-2 mb-md-0 text-primary">
-      <i class="bx bx-barcode bx-sm mb-1"></i>
-      @if ($role==='distibuter')
-          Distributer
-      @else
-          Retailer
-      @endif: <span class="text-dark">{{ $customer->username }}</span>
-  </span> -->
-
-  <span class="role btn btn-primary d-inline-flex align-items-center px-3 py-1 rounded-pill">
-    <span class="fw-bold">Account: </span>&nbsp;
-    @if (trim(strtolower($role)) === 'distibuter')
-        Distributor
-    @else
-        Retailer
-    @endif
-  </span>
-
-
-  <!-- Verification Status aligned to the right -->
-  <!-- <span class="verify text-right text-success blink ml-auto">
-      @if(!$customer->pin > 0)
-          <span class="text-danger blink me-1">Not Verified</span>
-      @else
-          <span class="text-success fw-bold blink me-1">Verified</span>
-      @endif
-  </span> -->
-</div>
-
-<style>
-  .blink {
-      animation: blinker 1s linear infinite;
-  }
-
-  @keyframes blinker {
-      50% {
-          opacity: 0;
-      }
-  }
-</style>
-
-          
-             
-          {{-- </div> --}}
-
-          
-
-
-      {{-- </div> --}}
-  {{-- </div> --}}
-  
-  
-  
-
-  <ul class="navbar-nav flex-row align-items-center float-end ms-auto">
-          <!-- User -->
-           <span class="fw-bold">Welcome, {{ $customer->name }}</span>
+      <ul class="navbar-nav flex-row align-items-center float-end ms-auto gap-1">
+        <span class="fw-bold d-none d-md-inline">Welcome, {{ $customer->name }} </span>
+        <span class="fw-bold small d-inline d-md-none">Welcome, {{ $customer->name }} </span>
+        
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
               <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                   <div class="avatar">
-                      <!-- <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" /> -->
                       <div class="position-relative d-inline-block">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class=" h-auto rounded-circle" />
-                        @if (!$customer->pin > 0)
-                          <!-- Cross Icon Below the Image with Background -->
-                          <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
-                            style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                      @else
-                          <!-- Check Icon Below the Image with Background -->
-                          <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
-                            style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
-                      @endif
-                    </div>
-
+                          <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="h-auto rounded-circle" />
+                          @if (!$customer->pin > 0)
+                              <i class="fa fa-times-circle text-white bg-danger position-absolute bottom-0 start-100 translate-middle-x"
+                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                          @else
+                              <i class="fa fa-check-circle text-white bg-success position-absolute bottom-0 start-100 translate-middle-x"
+                                  style="font-size: 1.3rem; padding: 1px; border-radius: 50%;"></i>
+                          @endif
+                      </div>
                   </div>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
-                      <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                          <div class="avatar avatar-online">
-                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
+                      <a class="dropdown-item" href="#">
+                          <div class="d-flex">
+                              <div class="flex-shrink-0 me-3">
+                                  <div class="avatar avatar-online">
+                                      <img src="{{ asset('assets/img/avatars/1.png') }}" alt="User Avatar" class="w-px-40 h-auto rounded-circle" />
+                                  </div>
+                              </div>
+                              <div class="flex-grow-1">
+                                  <span class="fw-semibold d-block">{{ $customer->name }}</span>
+                                  <small class="text-muted" style="text-transform: capitalize">
+                                    @if (trim(strtolower($role)) === 'distibuter')
+                                        Distributor
+                                    @else
+                                        Retailer
+                                    @endif
+                                  </small>
+                              </div>
                           </div>
-                        </div>
-                        <div class="flex-grow-1">
-                          <span class="fw-semibold d-block">{{ $customer->name }}</span>
-                          <small class="text-muted" style="text-transform: capitalize">{{$customer->role}}</small>
-                          {{-- <small class="text-muted">{{$outlet}}</small> --}}
-                        </div>
-                      </div>
-                    </a>
-                    
-                  </li>
-                  <li>
-                      <div class="dropdown-divider"></div>
-                  </li>
-                  {{-- <li>
-                      <a class="dropdown-item" href="#">
-                          <i class="bx bx-user me-2"></i>
-                          <span class="align-middle"><b>RT Code </b>{{$customer->username}}</span>
                       </a>
                   </li>
-                  <li>
-                      <a class="dropdown-item" href="#">
-                          <i class="bx bx-cog me-2"></i>
-                          <span class="align-middle">HelpLine No: 999 999 1234</span>
+                  {{-- <li><div class="dropdown-divider"></div></li> --}}
+
+                  {{-- <!-- Account Section (Visible in Mobile Dropdown) -->
+                  <li class="d-flex d-md-none">
+                      <a class="dropdown-item" href="javascript:void(0);">
+                          <div class="d-flex flex-row flex-md-row">
+                              <span class="role btn d-inline-flex align-items-center px-3 lg:py-1 py-0 rounded-pill">
+                                  <span class="fw-bold">Account: </span>&nbsp;
+                              </span>
+                              <span class="d-block text-md-start text-center lg:mt-1 mt-0 mt-md-0">
+                                  @if (trim(strtolower($role)) === 'distributor')
+                                      Distributor
+                                  @else
+                                      Retailer
+                                  @endif
+                              </span>
+                          </div>
                       </a>
-                      <a class="dropdown-item" href="#">
-                          <i class="bx bx-cog me-2"></i>
-                          <span class="align-middle">TSM-Mob: 999 999 1234</span>
-                      </a>
-                  </li>  {{route('get.profile')}} --}}
+                  </li> --}}
+                  <li><div class="dropdown-divider"></div></li>
                   <li>
                       <a class="dropdown-item" href="{{ route('get.profile') }}">
                           <i class="bx bx-power-off me-2"></i>
                           <span class="align-middle">Profile</span>
                       </a>
-                     
                   </li>
                   
                   <li>
                     <a class="dropdown-item" href="{{ route('remitter.certificate') }}">
-                        <i class="bx bx-power-off me-2"></i>
+                        <i class="bx bx-file me-2"></i>
                         <span class="align-middle">Certificate</span>
                     </a>
                 </li>
@@ -881,21 +822,40 @@
                 </li>
               </ul>
           </li>
-          <!--/ User -->
       </ul>
   </div>
 </nav>
 <!-- /Navbar -->
+
+<style>
+@media (max-width: 768px) { /* Target mobile screens */
+    .layout-navbar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1050;
+        background-color: #fff; /* Ensure visibility */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        padding-top: 56px; /* Adjust based on navbar height */
+    }
+}
+
+</style> 
+
+
 <!-- /Navbar -->
 
+ <!-- Main Content -->
+      <main>
+       @yield('content')
+      </main>
 
-          <!-- Main Content -->
-          <main>
-            @yield('content')
-          </main>
-
-        </div>
-        <!-- /Layout page -->
+       </div>
+      <!-- /Layout page -->
       </div>
 
       <div class="layout-overlay layout-menu-toggle"></div>
@@ -1076,6 +1036,10 @@
   
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
     <script src="js/datatables-simple-demo.js"></script>
+
+
+    @extends('user.navigationBar')
+
   </body>
 </html>
 

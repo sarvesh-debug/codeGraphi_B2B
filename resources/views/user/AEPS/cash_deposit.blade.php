@@ -1,7 +1,5 @@
 @extends('user/include.layout')
-
 @section('content')
-@include('user.AEPS.navbar')
 <style>
     /* Loader overlay styles */
     #loadingOverlay {
@@ -32,6 +30,20 @@
     100% { transform: rotate(360deg); }
 }
 
+    .card-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    .transaction-card-body {
+        max-height: 400px;
+        overflow-y: auto; /* Scrollable if the content exceeds height */
+    }
+    .transaction-item {
+        transition: background-color 0.2s ease-in-out;
+    }
+    .transaction-item:hover {
+        background-color: #f8f9fa;
+    }
 
     /* Prevent interactions while loader is active */
     body.loading {
@@ -41,94 +53,380 @@
     body.loading * {
         pointer-events: none;
     }
-    </style>
-
-<div class="card col-md-6 col-11 mx-auto shadow-lg border-0 loading mt-5 ">
-    <div id="loadingOverlay">
-        <div class="loader"></div>
-    </div>
-    <div class="card-header">
-        <h4 class="card-heading mb-0">Daily Login Form</h4>
-    </div>
-    <div class="card-body p-4">
-        <form action="{{route('outlet-login/aeps.store')}}" method="POST">
-            @csrf
-            
-            <!-- Type -->
-            <div class="form-group mb-3">
-                <label for="type" class="form-label">Type</label>
-                <input type="text" class="form-control" name="type" id="type" value="DAILY_LOGIN" readonly required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="encryptedAadhaar" class="form-label">Aadhaar</label>
-                <input type="text" class="form-control" value="{{session('adhar_no')}}" name="aadhaar" id="encryptedAadhaar" required>
-            </div>
-            
-            <!-- Latitude -->
-            
-                <input type="text" class="form-control"hidden name="latitude" id="latitude" readonly required>
-          
-            
-            <!-- Longitude -->
-           
-                
-                <input type="text" class="form-control"  hidden name="longitude" id="longitude" readonly required>
-                <textarea id="txtBiometricData" hidden name="biometricData" rows="10" cols="50" placeholder="Biometric Data will appear here"></textarea>
-            
-            {{-- <!-- External Reference -->
-            <div class="form-group mb-3">
-                <label for="externalRef" class="form-label">External Reference</label>
-                <input type="text" class="form-control"  name="externalRef" id="externalRef" required>
-            </div> --}}
-            
-            <!-- Biometric Data -->
-            {{-- <h5 class="text-info mb-3">Biometric Data</h5>
-            <div class="form-group mb-3">
-                <label for="encryptedAadhaar" class="form-label">Encrypted Aadhaar</label>
-                <input type="text" class="form-control" name="biometricData[encryptedAadhaar]" id="encryptedAadhaar" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="dc" class="form-label">Device Code (DC)</label>
-                <input type="text" class="form-control" name="biometricData[dc]" id="dc" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="ci" class="form-label">Certificate Identifier (CI)</label>
-                <input type="text" class="form-control" name="biometricData[ci]" id="ci" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="hmac" class="form-label">HMAC</label>
-                <input type="text" class="form-control" name="biometricData[hmac]" id="hmac" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="dpId" class="form-label">Device Provider ID</label>
-                <input type="text" class="form-control" name="biometricData[dpId]" id="dpId" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="mc" class="form-label">Encrypted Device Certificate (MC)</label>
-                <input type="text" class="form-control" name="biometricData[mc]" id="mc" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="pidDataType" class="form-label">PID Data Type</label>
-                <input type="text" class="form-control" name="biometricData[pidDataType]" id="pidDataType" required>
-            </div>
-            <div class="form-group mb-3">
-                <label for="sessionKey" class="form-label">Session Key</label>
-                <input type="text" class="form-control" name="biometricData[sessionKey]" id="sessionKey" required>
-            </div> --}}
-            
-            <!-- Submit Button -->
-             <div class="d-flex justify-content-center"> 
-                <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
-                <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
-                <!-- <button type="submit" class="btn btn-info w-100">Submit</button> -->
-            </div>
-        </form>
-    </div>
+</style>
+<div class="controller mt-3 mx-3 mb-5 loading">
+   <div id="loadingOverlay">
+    <div class="loader"></div>
 </div>
 
-<script>
+    @include('user.AEPS.navbar')
+<div class="container mt-3 ">
+    <div class="row justify-content-center">
+        <!-- <div id="kt_app_content" class="app-content flex-column-fluid mt-4 col-md-9"> -->
+            {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
+                <!-- <div class="card  col-lg-6 col-md-8 col-12 gap-3"> -->
+                <div class="card col-lg-6 col-md-8 col-12 mb-3">
+                    <div class="card-header">
+                        <h4 class="mb-0"><span class="card-heading"> AEPS Cash Deposit </h4>
+                    </div>
 
-window.onload = async function () {
+                    <div class="card-body p-4">
+                        <form id="aeps-balance-enquiry-form" action="{{ route('aepsCashDeposit') }}" method="post">
+                            @csrf
+
+                            <!-- Aadhaar Number Field -->
+                            <div class="form-group mb-3">
+                                <label for="aadhaar" class="form-label">Aadhaar Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="number" class="form-control numeric-input" id="aadhaar" name="aadhaarNumber" 
+                                        placeholder="Enter Aadhaar Number" maxlength="12" required 
+                                        inputmode="numeric" pattern="[0-9]{12}" oninput="this.value = this.value.replace(/\D/g, '')" />
+                                </div>
+                                <small class="form-text text-muted">Enter a valid 12-digit Aadhaar number.</small>
+                            </div>
+                           
+                            <!-- Bank IIN (Institution Identification Number) Field -->
+                            <div class="form-group">
+                                <label for="bankCode">Select Bank</label>
+                                <select class="form-control" id="bankCode" name="bankiin">
+                                    <option value="">-- Select a Bank --</option>
+                                    <option value="607094">STATE BANK OF INDIA</option>
+                                    <option value="607027">Punjab National Bank</option>
+                                    <option value="608314">INDIA POST PAYMENTS BANK</option>
+                                    <option value="607105">INDIAN BANK</option>
+                                    <option value="607161">UNION BANK OF INDIA</option>
+                                    <option value="508505">BANK OF INDIA</option>
+                                    <option value="606985">BANK OF BARODA</option>
+                                    <option value="607396">CANARA BANK</option>
+                                    <option value="607126">INDIAN OVERSEAS BANK</option>
+                                    <option value="607066">UCO BANK</option>
+                                    <option value="606993">BARODA UP BANK</option>
+                                    <option value="607264">CENTRAL BANK OF INDIA</option>
+                                    <option value="990320">AIRTEL PAYMENTS BANK</option>
+                                    <option value="607280">BARODA RAJASTHAN KSHETRIYA GRAMIN BANK</option>
+                                    <option value="607189">IndusInd Bank</option>
+                                    <option value="607063">BANGIYA GRAMIN VIKASH BANK</option>
+                                    <option value="607069">UTTAR BIHAR GRAMIN BANK</option>
+                                    <option value="607387">BANK OF MAHARASHTRA</option>
+                                    <option value="608001">FINO PAYMENTS BANK</option>
+                                    <option value="607136">DAKSHIN BIHAR GRAMIN BANK</option>
+                                    <option value="607135">PRATHAMA UP GRAMIN BANK</option>
+                                    <option value="607087">PUNJAB AND SIND BANK</option>
+                                    <option value="607121">ANDHRA PRAGATHI GRAMEENA BANK</option>
+                                    <option value="607400">KARNATAKA GRAMIN BANK</option>
+                                    <option value="607022">MADHYA PRADESH GRAMEEN BANK</option>
+                                    <option value="607195">TELANGANA GRAMEENA BANK</option>
+                                    <option value="607198">ANDHRA PRADESH GRAMEENA VIKAS BANK</option>
+                                    <option value="607122">KARNATAKA VIKAS GRAMEENA BANK</option>
+                                    <option value="990309">Kotak Mahindra Bank</option>
+                                    <option value="607053">SAPTAGIRI GRAMEENA BANK</option>
+                                    <option value="607139">SARVA HARYANA GRAMIN BANK</option>
+                                    <option value="607060">ODISHA GRAMYA BANK</option>
+                                    <option value="607152">HDFC Bank</option>
+                                    <option value="607509">RAJASTHAN MARUDHARA GRAMIN BANK</option>
+                                    <option value="508534">ICICI Bank</option>
+                                    <option value="607024">ARYAVART BANK</option>
+                                    <option value="607095">IDBI BANK</option>
+                                    <option value="607052">TAMIL NADU GRAMA BANK</option>
+                                    <option value="607065">TRIPURA GRAMIN BANK</option>
+                                    <option value="607214">CHHATTISGARH RAJYA GRAMIN BANK</option>
+                                    <option value="607234">UTKAL GRAMEEN BANK</option>
+                                    <option value="607138">PUNJAB GRAMIN BANK</option>
+                                    <option value="817304">FINCARE SMALL FINANCE BANK</option>
+                                    <option value="607153">Axis Bank</option>
+                                    <option value="607210">JHARKHAND RAJYA GRAMIN BANK</option>
+                                    <option value="607073">UTTAR BANGA KSHETRIYA GRAMIN BANK</option>
+                                    <option value="607232">MADHYANCHAL GRAMIN BANK</option>
+                                    <option value="607363">FEDERAL BANK</option>
+                                    <option value="607399">KERALA GRAMIN BANK</option>
+                                    <option value="607440">JAMMU AND KASHMIR BANK</option>
+                                    <option value="606995">BARODA GUJARAT GRAMIN BANK</option>
+                                    <option value="607768">NSDL PAYMENTS BANK</option>
+                                    <option value="607393">RBL BANK</option>
+                                    <option value="607064 ">ASSAM GRAMIN VIKASH BANK</option>
+                                    <option value="607324">CITY UNION BANK</option>
+                                    <option value="607080">CHAITANYA GODAVARI GRAMEENA BANK</option>
+                                    <option value="608022">SURYODAY SMALL FINANCE BANK</option>
+                                    <option value="608087">AU Small Finance Bank</option>
+                                    <option value="608117">IDFC FIRST Bank</option>
+                                    <option value="508991">UJJIVAN SMALL FINANCE BANK</option>
+                                    <option value="607270">KARNATAKA BANK</option>
+                                    <option value="508647">THE CUDDALORE DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="607020">VIDHARBHA KONKAN GRAMIN BANK</option>
+                                    <option value="608014">UTKARSH SMALL FINANCE BANK</option>
+                                    <option value="508680">THE TIRUCHIRAPALLI DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="607197">UTTARAKHAND GRAMIN BANK</option>
+                                    <option value="508720">THE KUMBAKONAM CENTRAL CO-OP BANK</option>
+                                    <option value="508646">THE COIMBATORE DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508737">THE VILLUPURAM DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508662">KARUR VYSYA BANK</option>
+                                    <option value="508659">THE DINDIGUL CENTRAL CO-OP BANK</option>
+                                    <option value="508658">DHARMAPURI CENTRAL CO-OP BANK</option>
+                                    <option value="607884">JIO PAYMENTS BANK</option>
+                                    <option value="607439">SOUTH INDIAN BANK</option>
+                                    <option value="607187">TAMILNAD MERCANTILE BANK</option>
+                                    <option value="607618">Yes Bank</option>
+                                    <option value="607054">PUDUVAI BHARATHIAR GRAMA BANK</option>
+                                    <option value="508656">THE PUDUKKOTTAI DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508660">THE NILGIRIS DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508648">THE SALEM DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508665">THE THANJAVUR CENTRAL CO-OP BANK</option>
+                                    <option value="607058">LAKSHMI VILAS BANK</option>
+                                    <option value="508677">THE TIRUNELVELI DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508657">THE TIRUVANNAMALAI DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="652150">SARASWAT BANK</option>
+                                    <option value="508681">THE MADURAI DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508679">THE VELLORE DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508998">EQUITAS SMALL FINANCE BANK</option>
+                                    <option value="607140">HIMACHAL PRADESH GRAMIN BANK</option>
+                                    <option value="508910">JANA SMALL FINANCE BANK</option>
+                                    <option value="508676">THE RAMANATHAPURAM DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="508654">ERODE DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="607062">MANIPUR RURAL BANK</option>
+                                    <option value="607206">MEGHALAYA RURAL BANK</option>
+                                    <option value="607395">SBM BANK</option>
+                                    <option value="508664">THE CHENNAI CENTRAL CO-OP BANK</option>
+                                    <option value="508732">THE VIRUDHUNAGAR DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="607978">TRIPURA STATE CO-OP BANK</option>
+                                    <option value="508754">ANGUL UNITED CENTRAL CO-OP BANK</option>
+                                    <option value="508774">BOLANGIR DISTRICT CENTRAL CO-OP BANK</option>
+                                    <option value="608194">COSMOS BANK</option>
+                                    <option value="607082">CSB Bank</option>
+                                    <option value="508776">CUTTACK CENTRAL CO-OP BANK</option>
+                                    <option value="607218">ELLAQUAI DEH</option>
+                            
+                                    <option value="607094">STATE BANK OF INDIA</option>
+                                    <option value="607027">Punjab National Bank</option>
+                                    <option value="608314">INDIA POST PAYMENTS BANK</option>
+                                    <option value="607105">INDIAN BANK</option>
+                                    <option value="607161">UNION BANK OF INDIA</option>
+                                    <option value="508505">BANK OF INDIA</option>
+                                    <option value="606985">BANK OF BARODA</option>
+                                    <option value="607396">CANARA BANK</option>
+                                    <option value="607126">INDIAN OVERSEAS BANK</option>
+                                    <option value="607066">UCO BANK</option>
+                                    <option value="606993">BARODA UP BANK</option>
+                                    <option value="607264">CENTRAL BANK OF INDIA</option>
+                                    <option value="990320">AIRTEL PAYMENTS BANK</option>
+                                    <option value="607280">BARODA RAJASTHAN KSHETRIYA GRAMIN BANK</option>
+                                    <option value="607189">IndusInd Bank</option>
+                                    <option value="607063">BANGIYA GRAMIN VIKASH BANK</option>
+                                    <option value="607069">UTTAR BIHAR GRAMIN BANK</option>
+                                    <option value="607387">BANK OF MAHARASHTRA</option>
+                                    <option value="608001">FINO PAYMENTS BANK</option>
+                                    <option value="607136">DAKSHIN BIHAR GRAMIN BANK</option>
+                                    <option value="607135">PRATHAMA UP GRAMIN BANK</option>
+                                    <option value="607087">PUNJAB AND SIND BANK</option>
+                                    <option value="607121">ANDHRA PRAGATHI GRAMEENA BANK</option>
+                                    <option value="607400">KARNATAKA GRAMIN BANK</option>
+                                    <option value="607022">MADHYA PRADESH GRAMEEN BANK</option>
+                                    <option value="607195">TELANGANA GRAMEENA BANK</option>
+                                    <option value="607198">ANDHRA PRADESH GRAMEENA VIKAS BANK</option>
+                                    <option value="607122">KARNATAKA VIKAS GRAMEENA BANK</option>
+                                    <option value="990309">Kotak Mahindra Bank</option>
+                                    <option value="607053">SAPTAGIRI GRAMEENA BANK</option>
+                                    <option value="607139">SARVA HARYANA GRAMIN BANK</option>
+                                    <option value="607060">ODISHA GRAMYA BANK</option>
+                                    <option value="607152">HDFC Bank</option>
+                                    <option value="607509">RAJASTHAN MARUDHARA GRAMIN BANK</option>
+                                    <option value="508534">ICICI Bank</option>
+                                    <option value="607024">ARYAVART BANK</option>
+                                    <option value="607095">IDBI BANK</option>
+                                    <option value="607052">TAMIL NADU GRAMA BANK</option>
+                                    <option value="607065">TRIPURA GRAMIN BANK</option>
+                                    <option value="607214">CHHATTISGARH RAJYA GRAMIN BANK</option>
+                                    <option value="607234">UTKAL GRAMEEN BANK</option>
+                                    <option value="607138">PUNJAB GRAMIN BANK</option>
+                                    <option value="817304">FINCARE SMALL FINANCE BANK</option>
+                                    <option value="607153">Axis Bank</option>
+                                    <option value="607210">JHARKHAND RAJYA GRAMIN BANK</option>
+                                    <option value="607073">UTTAR BANGA KSHETRIYA GRAMIN BANK</option>
+                                    <option value="607232">MADHYANCHAL GRAMIN BANK</option>
+                                    <option value="607363">FEDERAL BANK</option>
+                                    <option value="607399">KERALA GRAMIN BANK</option>
+                                    <option value="607440">JAMMU AND KASHMIR BANK</option>
+                                    <option value="606995">BARODA GUJARAT GRAMIN BANK</option>
+                                    <option value="607768">NSDL PAYMENTS BANK</option>
+                                    <option value="607393">RBL BANK</option>
+                                    <option value="607064">ASSAM GRAMIN VIKASH BANK</option>
+                                    <option value="607324">CITY UNION BANK</option>
+                                    <option value="607080">CHAITANYA GODAV</option>
+                                  <option value="607218">ELLAQUAI DEHATI BANK</option>
+                                  <option value="508992">ESAF SMALL FINANCE BANK</option>
+                                  <option value="607000">MAHARASHTRA GRAMEEN BANK</option>
+                                  <option value="508756">MAYURBHANJ CENTRAL CO-OP BANK</option>
+                                  <option value="608032">PAYTM PAYMENTS BANK</option>
+                                  <option value="607200">SAURASHTRA GRAMIN BANK</option>
+                                  <option value="607119">SHIVALIK MERCANTILE CO-OP BANK</option>
+                                  <option value="607131">TAMILNADU STATE APEX CO-OP BANK (TNSC BANK)</option>
+                                  <option value="508761">THE BANKI CENTRAL CO-OP BANK</option>
+                                  <option value="508734">THE KANCHIPURAM CENTRAL CO-OP BANK</option>
+                                  <option value="508655">THE KANYAKUMARI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508771">THE KHORDHA CENTRAL CO-OP BANK</option>
+                                  <option value="508755">THE KORAPUT CENTRAL CO-OP BANK</option>
+                                  <option value="607315">THE MAHARASHTRA STATE CO-OP BANK</option>
+                                  <option value="508777">THE SAMBALPUR DISTRICT CO-OP CENTRAL BANK</option>
+                                  <option value="508678">THE THOOTHUKUDI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508782">UNITED PURI NIMAPARA CENTRAL CO-OP BANK</option>
+                                  <option value="508758">BALASORE BHADRAK CENTRAL CO-OP BANK</option>
+                                  <option value="508759">BERHAMPORE CENTRAL CO-OP BANK</option>
+                                  <option value="508775">BOUDH CENTRAL CO-OP BANK</option>
+                                  <option value="607808">JAMMU AND KASHMIR GRAMEEN BANK</option>
+                                  <option value="508760">KEONJHAR CENTRAL CO-OP BANK</option>
+                                  <option value="608165">KERALA STATE CO-OP BANK</option>
+                                  <option value="607230">MIZORAM RURAL BANK</option>
+                                  <option value="508772">NAYAGARH DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607079">PASCHIM BANGA GRAMIN BANK</option>
+                                  <option value="508757">SUNDARGARH CENTRAL CO-OP BANK</option>
+                                  <option value="607051">THE AP MAHESH CO-OP URBAN BANK</option>
+                                  <option value="508773">THE ASKA CO-OP CENTRAL BANK</option>
+                                  <option value="607847">THE BHANDARA DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508778">THE BHAWANIPATNA CENTRAL CO-OP BANK</option>
+                                  <option value="607157">THE GAYATRI CO-OPERATIVE URBAN BANK</option>
+                                  <option value="607935">THE ODISHA STATE CO-OP BANK</option>
+                                  <option value="607266">THE RAJASTHAN STATE CO-OP BANK</option>
+                                  <option value="508649">THE SIVAGANGAI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607602">THE YAVATMAL DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607523">UTTAR PRADESH CO-OP BANK</option>
+                                 
+                                  <option value="607218">ELLAQUAI DEHATI BANK</option>
+                                  <option value="508992">ESAF SMALL FINANCE BANK</option>
+                                  <option value="607000">MAHARASHTRA GRAMEEN BANK</option>
+                                  <option value="508756">MAYURBHANJ CENTRAL CO-OP BANK</option>
+                                  <option value="608032">PAYTM PAYMENTS BANK</option>
+                                  <option value="607200">SAURASHTRA GRAMIN BANK</option>
+                                  <option value="607119">SHIVALIK MERCANTILE CO-OP BANK</option>
+                                  <option value="607131">TAMILNADU STATE APEX CO-OP BANK (TNSC BANK)</option>
+                                  <option value="508761">THE BANKI CENTRAL CO-OP BANK</option>
+                                  <option value="508734">THE KANCHIPURAM CENTRAL CO-OP BANK</option>
+                                  <option value="508655">THE KANYAKUMARI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508771">THE KHORDHA CENTRAL CO-OP BANK</option>
+                                  <option value="508755">THE KORAPUT CENTRAL CO-OP BANK</option>
+                                  <option value="607315">THE MAHARASHTRA STATE CO-OP BANK</option>
+                                  <option value="508777">THE SAMBALPUR DISTRICT CO-OP CENTRAL BANK</option>
+                                  <option value="508678">THE THOOTHUKUDI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508782">UNITED PURI NIMAPARA CENTRAL CO-OP BANK</option>
+                                  <option value="508758">BALASORE BHADRAK CENTRAL CO-OP BANK</option>
+                                  <option value="508759">BERHAMPORE CENTRAL CO-OP BANK</option>
+                                  <option value="508775">BOUDH CENTRAL CO-OP BANK</option>
+                                  <option value="607808">JAMMU AND KASHMIR GRAMEEN BANK</option>
+                                  <option value="508760">KEONJHAR CENTRAL CO-OP BANK</option>
+                                  <option value="608165">KERALA STATE CO-OP BANK</option>
+                                  <option value="607230">MIZORAM RURAL BANK</option>
+                                  <option value="508772">NAYAGARH DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607079">PASCHIM BANGA GRAMIN BANK</option>
+                                  <option value="508757">SUNDARGARH CENTRAL CO-OP BANK</option>
+                                  <option value="607051">THE AP MAHESH CO-OP URBAN BANK</option>
+                                  <option value="508773">THE ASKA CO-OP CENTRAL BANK</option>
+                                  <option value="607847">THE BHANDARA DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="508778">THE BHAWANIPATNA CENTRAL CO-OP BANK</option>
+                                  <option value="607157">THE GAYATRI CO-OPERATIVE URBAN BANK</option>
+                                  <option value="607935">THE ODISHA STATE CO-OP BANK</option>
+                                  <option value="607266">THE RAJASTHAN STATE CO-OP BANK</option>
+                                  <option value="508649">THE SIVAGANGAI DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607602">THE YAVATMAL DISTRICT CENTRAL CO-OP BANK</option>
+                                  <option value="607523">UTTAR PRADESH CO-OP BANK</option>
+                                    <!-- Add any additional banks as needed -->
+                                </select>
+                            </div>
+                             <!-- Amount Number Field -->
+                             <div class="form-group mb-3">
+                                <label for="aadhaar" class="form-label">Amount</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control numeric-input" id="aadhaar" name="amount" placeholder="Enter Amount"  required/>
+                                </div>
+                              
+                            </div>
+                            <!-- Mobile Number Field -->
+                            <div class="form-group mb-3">
+                                <label for="mobile" class="form-label">Mobile Number</label>
+                                <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter Mobile Number" maxlength="10" required/>
+                            </div>
+
+                            <!-- External Reference Field -->
+                       
+                              
+
+
+                            <!-- Hidden Fields for Auto-filled Data -->
+
+                            <!-- Latitude (hidden) -->
+                          <!-- Hidden Fields for Latitude and Longitude -->
+                        <input type="hidden" id="latitude" name="latitude" />
+                        <input type="hidden" id="longitude" name="longitude" />
+
+                            <!-- Biometric Data Fields (hidden) -->
+                            {{-- <input type="hidden" id="dc" name="biometricData[dc]"/>
+                            <input type="hidden" id="ci" name="biometricData[ci]"/>
+                            <input type="hidden" id="dpId" name="biometricData[dpId]"/>
+                            <input type="hidden" id="pidDataType" name="biometricData[pidDataType]"/> --}}
+                            <textarea id="txtBiometricData" hidden name="biometricData" rows="10" cols="50" placeholder="Biometric Data will appear here"></textarea>
+                            <!-- Submit and Reset Buttons -->
+                            <a onclick="discoverAvdm();"  id="discoverButton" style="display:none;">Discover AVDM</a>
+                            <div class="d-flex justify-content-end gap-3">
+                                <!-- Capture Button -->
+                                <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
+                            
+                                <!-- Submit Button -->
+                                <!-- <button type="submit" class="btn btn-success w-100 mb-2 mb-sm-0">Submit</button> -->
+                            
+                                <!-- Reset Button -->
+                                <button type="reset" class="btn btn-warning">Reset</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            {{-- </div> --}}
+        <!-- </div> -->
+
+         <!-- Latest Transactions Section -->
+         <!-- <div class="col-md-4 mt-2"> -->
+         {{-- <div class="col-lg-4 col-md-4 col-12 lg:d-flex  md:d-flex justify-content-center mb-5">
+            <div class="mb-5">
+                <div class="card-header bg-gradient-success text-white text-center py-3">
+                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
+                </div>
+                <div class="card-body p-4 mb-5">
+                    @if($latestTransactions && count($latestTransactions) > 0)
+                        @foreach($latestTransactions as $transaction)
+                            <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">
+                                <div class="transaction-details">
+                                    <strong class="text-primary">₹{{ $transaction['status'] === 'success' ? $transaction['transactionAmount'] : $transaction['amount'] }}
+                                    </strong>
+                                    <div class="small text-muted">{{ $transaction['date'] ?? "N/A" }}</div>
+                                </div>
+                                <span 
+                                    class="badge bg-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} px-3 py-2">
+                                    {{ ucfirst($transaction['status']) }}
+                                </span>
+                                <div class="transaction-icon position-absolute end-0 top-50 translate-middle-y me-3">
+                                    <!-- <i class="fas fa-{{ $transaction['status'] === 'success' ? 'check-circle' : ($transaction['status'] === 'pending' ? 'hourglass-half' : 'times-circle') }} text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg"></i> -->
+                                    <i class="fas fa-{{ $transaction['status'] === 'pending' ? 'hourglass-half' : '' }} 
+                                        text-{{ $transaction['status'] === 'success' ? 'success' : ($transaction['status'] === 'pending' ? 'warning' : 'danger') }} fa-lg">
+                                    </i>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <p class="text-center text-muted mb-0"><i class="fas fa-exclamation-circle me-2"></i>No recent transactions available.</p>
+                    @endif
+                </div>
+            </div>
+        </div> --}}
+        
+
+    </div>
+
+    {{-- </div> --}}
+</div>
+
+<!-- JavaScript for Location and Biometric Data Fetching -->
+<!-- JavaScript to Fetch Latitude and Longitude -->
+<script>
+  window.onload = async function () {
             try {
                 // Run discoverAvdm function and wait for it to complete
                 await discoverAvdm();
@@ -140,22 +438,29 @@ window.onload = async function () {
                 document.body.classList.remove("loading");
             }
         };
-    // Geolocation API to auto-fetch latitude and longitude
-    document.addEventListener('DOMContentLoaded', () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
-                },
-                (error) => {
-                    console.error('Error getting location:', error);
-                    alert('Unable to fetch location. Please enable location services.');
-                }
-            );
-        } else {
-            alert('Geolocation is not supported by your browser.');
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Auto-fetch location details (latitude and longitude)
+        function fetchLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        document.getElementById('latitude').value = position.coords.latitude;
+                        document.getElementById('longitude').value = position.coords.longitude;
+                        console.log("Location fetched: ", position.coords.latitude, position.coords.longitude);
+                    },
+                    (error) => {
+                        console.error("Error fetching location: ", error);
+                        alert("Unable to retrieve your location. Please enable location access or check permissions.");
+                    }
+                );
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
         }
+
+        // Call fetchLocation on page load
+        fetchLocation();
     });
 </script>
 
@@ -1447,12 +1752,11 @@ const biometricData = {
     errCode: response?.PidData?.Resp?.["@attributes"]?.errCode || "0",
     errInfo: response?.PidData?.Resp?.["@attributes"]?.errInfo || "",
     fCount: response?.PidData?.Resp?.["@attributes"]?.fCount || "1",
-    fType: response?.PidData?.Resp?.["@attributes"]?.fType || "2",
+     fType: response?.PidData?.Resp?.["@attributes"]?.fType || "2",
     // fType:  "2",
     iCount: response?.PidData?.Resp?.["@attributes"]?.iCount || "1",
     iType: response?.PidData?.Resp?.["@attributes"]?.iType || "",
-    // pCount: response?.PidData?.Resp?.["@attributes"]?.pCount || "0",
-    pCount:'0',
+    pCount: response?.PidData?.Resp?.["@attributes"]?.pCount || "1",
     pType: response?.PidData?.Resp?.["@attributes"]?.pType || "",
     srno: response?.PidData?.DeviceInfo?.additional_info?.Param?.find(param => param["@attributes"]?.name === "srno")?.["@attributes"]?.value || "",
     sysid: response?.PidData?.DeviceInfo?.additional_info?.Param?.find(param => param["@attributes"]?.name === "sysid")?.["@attributes"]?.value || "",
@@ -1527,6 +1831,5 @@ return obj;
 </section>  
 </div>
 <script type="text/javascript" src="jquery-1.12.4.js"></script>
-
 
 @endsection

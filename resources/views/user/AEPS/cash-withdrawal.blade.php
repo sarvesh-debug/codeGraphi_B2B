@@ -54,17 +54,18 @@
         pointer-events: none;
     }
 </style>
-<div class="controller mt-3 mx-3 loading">
+<div class="controller mt-3 mx-3 mb-5 loading">
    <div id="loadingOverlay">
     <div class="loader"></div>
 </div>
 
     @include('user.AEPS.navbar')
 <div class="container mt-3 ">
-    <div class="row">
+    <div class="row justify-content-center">
         <!-- <div id="kt_app_content" class="app-content flex-column-fluid mt-4 col-md-9"> -->
             {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
-                <div class="card  col-lg-6 col-md-8 col-12 gap-3">
+                <!-- <div class="card  col-lg-6 col-md-8 col-12 gap-3"> -->
+                <div class="card col-lg-6 col-md-8 col-12 mb-3">
                     <div class="card-header">
                         <h4 class="mb-0"><span class="card-heading"> AEPS Cash Withdrawal </h4>
                     </div>
@@ -382,12 +383,13 @@
         <!-- </div> -->
 
          <!-- Latest Transactions Section -->
-         <div class="col-md-6">
-            <div class="border-1 h-100">
-                <div class="card-header bg-gradient-success text-white text-center">
-                    <h5 class="mb-0 card-heading">Latest Transactions</h5>
+         <!-- <div class="col-md-4 mt-2"> -->
+         <div class="col-lg-4 col-md-4 col-12 lg:d-flex  md:d-flex justify-content-center mb-5">
+            <div class="mb-5">
+                <div class="card-header bg-gradient-success text-white text-center py-3">
+                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body p-4 mb-5">
                     @if($latestTransactions && count($latestTransactions) > 0)
                         @foreach($latestTransactions as $transaction)
                             <div class="transaction-item d-flex justify-content-between align-items-center py-3 border-bottom position-relative">

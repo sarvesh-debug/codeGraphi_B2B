@@ -6,6 +6,7 @@ use App\Http\Controllers\AddBankController;
 use App\Http\Controllers\addMoneyController;
 use App\Http\Controllers\AmountController;
 use App\Http\Controllers\bbpsController;
+use App\Http\Controllers\cgPayoutController;
 use App\Http\Controllers\cmsController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\CreditCardController;
@@ -155,16 +156,17 @@ return view('user.auth.certificate');
 
     Route::get('/aeps/history', [aepsController::class, 'history'])->name('aeps.history');
 
-    
+    //cash deposite
+    Route::get('/aeps.cash/deposit',[aepsController::class,'cashDepositForm'])->name('aepsCashDeposit.form');
+    Route::post('/aeps.cash/deposit',[aepsController::class,'cashDeposit'])->name('aepsCashDeposit');
     Route::get('/admin/AEPS/balance-enquiry',function(){
         return view('user/AEPS.balance-enquiry');
-
 
     });
     Route::get('/user/AEPS/cash-withdrawal',function(){
         return view('user/AEPS.cash-withdrawal');
     })->name('/user/AEPS/cash-withdrawal');
-    
+   
     Route::get('/admin/AEPS/mini-statement',function(){
         return view('user/AEPS.mini-statement');
     });
@@ -401,7 +403,7 @@ Route::post('dmt/den/deleteotp', [dmtinstantpayController::class, 'DeleteVerify'
 Route::post('dmt/den/deleteotp', [dmtinstantpayController::class, 'DeleteVerify'])->name('dmt.deleteOtp');
 
 Route::get('/transaction-history', [dmtinstantpayController::class, 'getAllTransactions'])->name('transaction.history');
-
+Route::get('/dmt/pending/transaction', [dmtinstantpayController::class, 'pendingTransaction'])->name('pending.dmt');
 
 
 
@@ -486,6 +488,13 @@ Route::post('mobile/recharge',[prePaidRechargeController::class,'mobileRechargeP
 Route::get('page/not/found',function(){
     return view('user/notFound');
 })->name('pageNotFound');
+
+//CGPayout
+Route::get('/user/verify/form',[cgPayoutController::class,'verifyUserForm'])->name('usercg.verifyForm');
+Route::post('/user/verify',[cgPayoutController::class,'verifyUser'])->name('usercg.verify');
+Route::post('/user/payout',[cgPayoutController::class,'payout'])->name('usercg.payout');
+Route::get('/user/payout/res',[cgPayoutController::class,'payoutMsg'])->name('payout.msg');
+Route::get('/user/payout/history',[cgPayoutController::class,'payoutHistory'])->name('payout.history');
 
 });
 

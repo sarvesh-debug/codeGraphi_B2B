@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\dmtinstantpayController;
 use App\Http\Controllers\infoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,4 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/admin/kyc-list', [KycController::class, 'getAllData'])->name('admin.kyc-list');
 Route::get('/transcation/list', [infoController::class, 'indexAdminAPI']);
+Route::get('/pending/transcation/list', [dmtinstantpayController::class, 'pendingTransaction_api']);
+Route::post('/receive-pending/data',[dmtinstantpayController::class,'pendingResponse']);
+
 

@@ -36,7 +36,7 @@
 
   
         <!-- Form Section -->
-        <div class="container mt-4">
+        <div class="container mt-4 mb-5">
         <div class="row g-4">
         <!-- First Card -->
         <div class="col-md-4 col-12">
@@ -76,7 +76,7 @@
                         <table class="table table-bordered table-striped">
                             <thead class="fw-bold">
                             <tr>
-                                <th>ID3</th>
+                                <th>ID</th>
                                 <th>Sender ID</th>
                                 <th>Receiver ID</th>
                                 <th>Amount</th>

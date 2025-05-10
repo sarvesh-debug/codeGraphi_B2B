@@ -1,8 +1,8 @@
 @extends('user/include.layout')
 
 @section('content')
-<div class="container d-flex justify-content-center align-items-center p-3">
-    <div class="col-md-6">
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh; padding-top: 20px;">
+    <div class="col-11 col-md-6">
         <div class="card shadow-lg border-0 rounded-lg">
             <div class="card-header">
                 <h3 class="card-heading mb-0"> New Member</h3>
