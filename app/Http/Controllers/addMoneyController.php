@@ -11,7 +11,23 @@ class addMoneyController extends Controller
 {
     public function storeSlip(Request $request)
     {
-        
+       // return $request; die();
+
+$tds = $request->tds;
+$charges = $request->charges;
+$amount = $request->amount;
+
+// Calculate charge amount
+$chargeAmount = ($amount * $charges) / 100;
+
+// Calculate TDS on the charge
+$tdsAmount = ($chargeAmount * $tds) / 100;
+
+// Total = Charge + TDS
+$totalAmount = $amount-($chargeAmount + $tdsAmount);
+
+
+//dd($tds,$charges,$amount,$chargeAmount,$tdsAmount,$totalAmount);die();
         // Validate the incoming request data
         // $request->validate([
         //     'bank' => 'required',
@@ -42,7 +58,10 @@ class addMoneyController extends Controller
             'bank_id' => $request->input('bank'),
             'ifsc' => $request->input('ifsc'),
             'account_no' => $request->input('account_no'),
-            'amount' => $request->input('amount'),
+            'totalAmount' => $request->input('amount'),
+            'amount' => $totalAmount,
+            'tds' => $tdsAmount,
+            'charges' => $chargeAmount,
             'utr' => $request->input('utr'),
             'date' => $request->input('date'),
             'mode' => $request->input('mode'),

@@ -44,6 +44,11 @@ return [
             'driver' => 'session',
             'provider' => 'customers', // Make sure this references the correct provider
         ],
+         // example for custom guard
+    'emp' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
         'admin' => [
         'driver' => 'session',
         'provider' => 'admins',

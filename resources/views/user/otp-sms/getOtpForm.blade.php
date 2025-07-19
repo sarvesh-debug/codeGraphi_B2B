@@ -90,8 +90,8 @@
 </head>
 <body>
     <div class="otp-container">
-        <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="AbeePay Logo">
-        <h1>ZPay</h1>
+        <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="code graphi logo">
+        <h1>CodeGraphi</h1>
         <h2>OTP Verification</h2>
         <p>We have sent an OTP to your Contact No <strong>{{ $mobile }}</strong>. Please enter it below.</p>
         <form id="otpForm" action="{{ route('verify.otp') }}" method="POST">

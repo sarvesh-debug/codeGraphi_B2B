@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Pay - Create an Account</title>
+    <title>CodeGraphi - Create an Account</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for Icons -->
@@ -61,9 +61,9 @@
 <body>
     <div class="form-container">
          <div class="brand-logo">
-            <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="Z Pay Logo">
-            <div class="brand-name">Z Pay</div>
-            <div class="welcome-message">Welcome to Z Pay</div>
+            <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="CodeGraphi Logo">
+            <div class="brand-name">CodeGraphi</div>
+            <div class="welcome-message">Welcome to CodeGraphi</div>
         </div>
         <!-- Form Title -->
         <h1 class="form-title">Registration OTP</h1>

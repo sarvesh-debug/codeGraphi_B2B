@@ -27,7 +27,7 @@
 
     <div class="card mt-4">
         <div class="card-header">
-            <h5>Send Money</h5>
+            <h5 class="card-heading">Send Money</h5>
         </div>
         <div class="card-body">
             <form action="{{ route('generateTransactionOtp') }}" method="POST">
@@ -39,6 +39,7 @@
 
                
                     <input type="text"hidden name="mobile" id="mobile" class="form-control" value="{{ $mobile }}" readonly>
+                    <input type="text"hidden name="beneName" id="mobile" class="form-control" value="{{ $beneName }}" readonly>
             
 
                 

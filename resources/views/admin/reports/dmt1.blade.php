@@ -19,7 +19,7 @@
 </style>
 <div class="container-fluid px-4">
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">DMT Statement</li>
     </ol>
 
@@ -80,9 +80,6 @@
                     <button type="submit" class="btn btn-primary me-2 w-100">Filter</button>
                     <!-- Export Button -->
                     <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
-                        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-                             alt="Download Icon" 
-                             style="width: 16px; height: 16px; margin-right: 5px;">
                         Export
                     </button>
                 </div>
@@ -98,7 +95,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Remitter No</th>
+                    <th>Remitter id</th>
+                    <th>Remitter Name</th>
                     <th>Bene No</th>
                     <th>A/c Holder</th>
                     <th>RRN Id</th>
@@ -107,6 +105,8 @@
                     <th>Status</th>
                     <th>Amount</th>
                     <th>Charges</th>
+                    <th>Commission</th>
+                    <th>Tds</th>
                     <th>Opening</th>
                     <th>Closing</th>
                    
@@ -123,7 +123,7 @@
                     <th>UTR</th>
                     <th>Message</th> --}}
                     <th>Date</th>
-                    {{-- <th>Action</th> --}}
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,7 +133,8 @@
                 @endphp
                 <tr>
                     <td>{{ $transaction->id }}</td>
-                    <td>{{ $transaction->remitter_mobile_number }}</td>
+                    <td>{{ $transaction->username }}</td>
+                    <td>{{ $transaction->name }}</td>
                     <td>
                         {{ $data['data']['pool']['account'] ?? "Na" }}
                         {{-- @if(strlen($transaction->reference_key) > 15)
@@ -174,9 +175,17 @@
                         @endif
                     </td>
                     <td>{{ $data['data']['txnValue'] ?? "0" }}</td>
-                    <td>{{ $transaction->charges }}</td>
-                    <td>{{ $transaction->opening_balance }}</td>
-                    <td>{{ $transaction->closing_balance }}</td>
+                    <td>{{ $transaction->charges ?? 0}}</td>
+                    <td>{{ $transaction->commission ?? 0 }}</td>
+                    <td>{{ $transaction->tds ?? 0}}</td>
+                    <td>{{ $transaction->opening_balance ?? 0 }}</td>
+                     @php
+                                    $commission = $transaction->commission ?? 0;
+                                    $tds = $transaction->tds ?? 0;
+                                    $adjustedCommission = $commission - $tds;
+                                    $finalClosingBalance = $transaction->closing_balance + $adjustedCommission;
+                                @endphp
+                                <td>₹{{ number_format($finalClosingBalance, 2) }}</td>
                     
                     <td>{{ $transaction->reference_key ?? "0" }}</td>
                   
@@ -189,7 +198,11 @@
                         </button> --}}
                     </td>
                   
-                   
+                   <td>
+  <a href="{{ route('DuplicateRcptAd', ['id' => $transaction->id]) }}" class="btn btn-primary">
+    Print
+  </a>
+</td>
                 </tr>
 
                 <!-- Modal Structure -->

@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'subPass',
     ];
 
     /**
@@ -46,12 +47,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
+    // public function setPasswordAttribute($value)
+    // {
+    //     $this->attributes['password'] = Hash::make($value);
+    // }
+    // public function isAdmin()
+    // {
+    //     return $this->role === 'admin';
+    // }
 }

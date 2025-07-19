@@ -8,8 +8,8 @@
  </div>
 @endif
 <div class="card col-md-6 mx-auto shadow-lg border-0">
-    <div class="card-header bg-danger text-white text-center py-3">
-        <h4 class="mb-0">Beneficiary Delete OTP</h4>
+    <div class="card-header bg-danger py-3">
+        <h4 class="card-heading mb-0">Beneficiary Delete OTP</h4>
     </div>
     <div class="card-body p-4">
         <p>{{$status}}</p>
@@ -20,8 +20,10 @@
                 <input type="text" class="form-control" id="otp" name="otp" required>
             </div>
           <input type="text" hidden value="{{$beneficiaryId}}" name="beneficiaryId">
-          <input type="text" hidden value="{{$referenceKey}}" name="referenceKey">
+          <input type="text" hidden  value="{{$referenceKey}}" name="referenceKey">
           <input type="text" hidden value="{{$mobile}}" name="mobile">
+          <input type="text" hidden  value="{{$remMobile}}" name="beneMobile">
+
             <button type="submit" class="btn btn-danger w-100">Submit</button>
         </form>
     </div>

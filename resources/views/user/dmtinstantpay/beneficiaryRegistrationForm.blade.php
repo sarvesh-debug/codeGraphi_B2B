@@ -1,92 +1,201 @@
-{{-- <p><strong>Mobile Number:</strong> {{ $mobileNumber }}</p> --}}
 @extends('user/include.layout')
 @section('content')
+
 <div class="card col-md-6 mx-auto shadow-lg border-0 mt-5">
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Register Beneficiary</h4>
+    <div class="card-header">
+        <h4 class="card-heading mb-0">Register Beneficiary</h4>
     </div>
+
     @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="alert alert-danger">
+            <ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+        </div>
+    @endif
+
     <div class="card-body p-4">
         <form action="{{ route('beneficiaryRegistration') }}" method="POST">
             @csrf
-            <input type="text" name="mobile" hidden id="mobile" value="{{ $mobileNumber }}" class="form-control" placeholder="Enter mobile number" required>
+            <input type="hidden" name="mobile" id="mobile" value="{{ $mobileNumber }}" class="form-control">
 
-            <div class="form-group mb-3">
+            <div class="form-group mb-2">
                 <label for="benename" class="form-label">Beneficiary Name</label>
                 <input type="text" name="benename" id="benename" class="form-control" placeholder="Enter beneficiary name" required>
             </div>
-            <div class="form-group mb-3">
+
+            <div class="form-group mb-2">
                 <label for="beneMobile" class="form-label">Beneficiary Mobile No</label>
                 <input type="text" name="beneMobile" id="beneMobile" class="form-control" placeholder="Enter Mobile No" required>
             </div>
-            <div class="form-group mb-3">
+
+            <div class="form-group mb-2">
                 <label for="accno" class="form-label">Account Number</label>
                 <input type="text" name="accno" id="accno" class="form-control" placeholder="Enter account number" required>
             </div>
-            <div class="form-group">
-                <label for="bank">Select Bank</label>
-                <select class="form-control" id="bank" name="bankId">
-                    <option value="">Select Bank</option>
-                    @foreach ($responseData['data'] as $bank)
-                        <option value="{{ $bank['bankId'] }}" data-ifsc="{{ $bank['ifscGlobal'] }}">
+
+            <!-- Custom Bank Dropdown with Search -->
+            <div class="form-group position-relative mb-4">
+                <label for="bank-search" class="form-label">Select Bank *</label>
+                <input type="text" id="bank-search" class="form-control" placeholder="Type to search bank..." 
+                       oninput="filterBanks()" onclick="toggleBankDropdown()" autocomplete="off" />
+
+                <div id="bank-dropdown" class="bg-white border rounded mt-1 position-absolute w-100 shadow overflow-auto" 
+                     style="max-height: 200px; z-index: 1000; display: none;">
+                    @foreach($responseData['data'] as $bank)
+                        <div class="px-3 py-2 dropdown-item text-dark" style="cursor: pointer;"
+                            onclick="selectBank('{{ $bank['bankId'] }}', '{{ $bank['name'] }}', '{{ $bank['ifscGlobal'] }}')"
+                            data-name="{{ $bank['name'] }}">
                             {{ $bank['name'] }}
-                        </option>
+                        </div>
                     @endforeach
-                </select>
+                </div>
+
+                <!-- Hidden input for bankId -->
+                <input type="hidden" name="bankId" id="bank-hidden">
+
+                <!-- IFSC input (readonly) -->
+                <label for="ifsc" class="form-label mt-3">IFSC Code</label>
+                <input type="text" name="ifsc" id="ifsc" class="form-control" placeholder="Auto-filled IFSC" readonly>
             </div>
+
+            <!-- Verify Button -->
             <div class="form-group mb-3">
-                <label for="ifsc">IFSC Code</label>
-                <input type="text" class="form-control" id="ifsc" name="ifsc"  />
+                <button type="button" class="btn btn-primary w-100" onclick="verifyAccount()">Verify Bank Account</button>
             </div>
-            
-           
-                <input type="text" hidden name="latitude" id="latitude" class="form-control" placeholder="Fetching..." readonly required>
-        
-                <input type="text" hidden name="longitude" id="longitude" class="form-control" placeholder="Fetching..." readonly required> 
-           
-            
-            <button type="submit" class="btn btn-success w-100 py-2">Register Beneficiary</button>
+
+            <!-- Loader -->
+            <div id="verifyLoader" style="display: none;" class="text-center my-2">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Verifying...</span>
+                </div>
+                <p class="mt-1">Verifying bank account...</p>
+            </div>
+
+            <!-- Hidden Location -->
+            <input type="hidden" name="latitude" id="latitude" required>
+            <input type="hidden" name="longitude" id="longitude" required>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-success w-100 py-2">Register Beneficiary</button>
+            </div>
         </form>
     </div>
 </div>
 
-<!-- Include Select2 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Include Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<!-- Script Section -->
 <script>
-    // JavaScript to auto-fill the IFSC code when a bank is selected
-    document.getElementById('bank').addEventListener('change', function() {
-        const selectedBank = this.options[this.selectedIndex];
-        const ifsc = selectedBank.getAttribute('data-ifsc');
-        document.getElementById('ifsc').value = ifsc; // Set the IFSC code
+    function toggleBankDropdown() {
+        document.getElementById('bank-dropdown').style.display = 'block';
+    }
+
+    function filterBanks() {
+        const input = document.getElementById('bank-search').value.toLowerCase();
+        const items = document.querySelectorAll('#bank-dropdown .dropdown-item');
+
+        items.forEach(item => {
+            const name = item.getAttribute('data-name').toLowerCase();
+            item.style.display = name.includes(input) ? 'block' : 'none';
+        });
+    }
+
+    function selectBank(id, name, ifsc) {
+        document.getElementById('bank-search').value = name;
+        document.getElementById('bank-hidden').value = id;
+        document.getElementById('ifsc').value = ifsc;
+        document.getElementById('bank-dropdown').style.display = 'none';
+    }
+
+    document.addEventListener('click', function (e) {
+        const search = document.getElementById('bank-search');
+        const dropdown = document.getElementById('bank-dropdown');
+        if (!search.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
     });
 
-    // JavaScript to fetch Latitude and Longitude
-    window.onload = function() {
+    // Get location
+    window.onload = function () {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 document.getElementById('latitude').value = position.coords.latitude;
                 document.getElementById('longitude').value = position.coords.longitude;
-            }, function(error) {
-                console.error('Error getting location:', error.message);
+            }, function (error) {
+                console.error('Geolocation error:', error.message);
                 document.getElementById('latitude').value = 'Unavailable';
                 document.getElementById('longitude').value = 'Unavailable';
             });
-        } else {
-            alert('Geolocation is not supported by this browser.');
-            document.getElementById('latitude').value = 'Not Supported';
-            document.getElementById('longitude').value = 'Not Supported';
         }
     };
+
+    // Verify Account
+    function verifyAccount() {
+        const accno = document.getElementById('accno').value;
+        const ifsc = document.getElementById('ifsc').value;
+        const lat = document.getElementById('latitude').value;
+        const long = document.getElementById('longitude').value;
+
+        if (!accno || !ifsc || !lat || !long) {
+            alert("Please fill all fields and allow location.");
+            return;
+        }
+
+        document.getElementById('verifyLoader').style.display = 'block';
+
+        fetch("https://codegraphi.com/B2B/api/v1/account/verify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                outlet: "{{ session('outlet') }}",
+                accountNumber: accno,
+                ifsc: ifsc,
+                latitude: lat,
+                longitude: long
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const name = data.data?.payee?.name || '';
+                const verifiedIfsc = data.data?.payee?.ifsc || '';
+                if (name) document.getElementById('benename').value = name;
+                if (verifiedIfsc) document.getElementById('ifsc').value = verifiedIfsc;
+
+                return fetch("https://api.codegraphi.in/api/customer/decrease-balance", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        email: "{{ env('Business_Email') }}",
+                        amount: 3,
+                        service: "Account Verify"
+                    })
+                });
+            } else {
+                throw new Error(data.message || "Verification failed");
+            }
+        })
+        .then(res => res.json())
+        .then(balanceData => {
+            document.getElementById('verifyLoader').style.display = 'none';
+            if (balanceData.success) {
+                alert("Bank account verified successfully. ₹3 deducted.");
+            } else {
+                alert("Verified, : " + (balanceData.message || ''));
+            }
+        })
+        .catch(err => {
+            document.getElementById('verifyLoader').style.display = 'none';
+            alert("Error: " + err.message);
+            console.error("Error:", err);
+        });
+    }
 </script>
+
 @endsection

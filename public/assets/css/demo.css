@@ -7,6 +7,14 @@
   height: 64px;
   margin-top: 12px;
 }
+.bg-success
+{
+   background-color: green !important; 
+}
+/* .btn-success
+{
+   background-color: green !important; 
+} */
 
 .app-brand-logo.demo svg {
   width: 22px;

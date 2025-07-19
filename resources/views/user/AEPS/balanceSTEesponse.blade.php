@@ -8,7 +8,7 @@
     {{-- Check for successful transaction --}}
     @if (isset($response['statuscode']) && $response['statuscode'] === 'TXN')
     <div id="printableArea">
-        <img src="{{ asset('assets/img/icons/z-pay-logo.png') }}" width="20%" alt="" class="print-logo">
+        <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" width="20%" alt="" class="print-logo">
         <div class="card border-success mb-4">
             <div class="card-body">
                 <h2 class="card-title text-success">Status: {{ $response['status'] }}</h2>

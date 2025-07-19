@@ -237,7 +237,7 @@ public function validateOtp(Request $request)
     ]);
 
     $responseData = $response->json();
-    // return $responseData;
+   // return $responseData;
     // die(); 
     $outletId = $responseData['outletId'] ?? 0; // Use null coalescing for safety
     //$customer = CustomerModel::findOrFail($id);
@@ -245,6 +245,7 @@ public function validateOtp(Request $request)
     $customer->update([
         'pin' =>  $outletId,
     ]);
+     session(['outlet' => $outletId]);
 //  return $response;
 //     die();
     // Return to the Blade view with response data

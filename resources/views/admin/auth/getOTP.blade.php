@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Pay OTP Verification</title>
+    <title>CodeGraphi OTP Verification</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -91,8 +91,8 @@
 <body>
     {{-- {{ route('forgetPassworsAuth') }} --}}
     <div class="otp-container">
-        <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="Z Pay Logo">
-        <h1>Z Pay</h1>
+        <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="CodeGraphi Logo">
+        <h1>CodeGraphi</h1>
         <h2>OTP Forget Password</h2>
         <p>We have sent an OTP to your Contact No <strong>{{ $mobile }}</strong>. Please enter it below.</p>
         <form id="otpForm" action="{{ route('forgetPassworsAuth1') }}" method="POST">

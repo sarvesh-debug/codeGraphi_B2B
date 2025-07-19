@@ -1,184 +1,225 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Register - CodeGraphi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z Pay - Create an Account</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/fonts/font-awesome/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/fonts/flaticon/font/flaticon.css') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/img/favicon.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background-color: #f5f5f5;
-            color: #333333;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Jost', sans-serif;
+            margin: 0;
+            background: linear-gradient(to right, #00b4db, #0083b0);
         }
- .brand-logo {
+
+        .register-container {
+            max-width: 1100px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .register-left {
+            flex: 1;
+            background: linear-gradient(to bottom right, #006666, #004c4c);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .register-left h1 {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .register-left p {
+            margin-top: 15px;
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 400px;
+        }
+
+        .register-right {
+            flex: 1;
+            padding: 50px 40px;
+        }
+
+        .logo {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .brand-logo img {
-            max-width: 100px;
+        .logo img {
+            height: 60px;
         }
 
-        .brand-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00bcd4;
-            margin-top: 10px;
-        }
-        .form-container {
-            max-width: 600px;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-            margin: 50px auto;
+        .btn-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
         }
 
-        .form-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #00bcd4;
+        .link-btn {
+            flex: 1;
+            padding: 10px;
+            font-weight: 500;
+            border: 1px solid #008080;
+            border-radius: 8px;
+            color: #008080;
             text-align: center;
-            margin-bottom: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background-color: #00bcd4;
-            border: none;
-            transition: background-color 0.3s;
+        .link-btn:hover,
+        .active-bg {
+            background-color: #008080;
+            color: white !important;
         }
 
-        .btn-primary:hover {
-            background-color: #0097a7;
+        .form-control {
+            height: 48px;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 128, 128, 0.25);
+            border-color: #008080;
+        }
+
+        .btn-theme {
+            background-color: #008080;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .btn-theme:hover {
+            background-color: #006666;
+        }
+
+        .none-2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .register-container {
+                flex-direction: column;
+            }
+
+            .register-left,
+            .register-right {
+                padding: 30px 20px;
+            }
+
+            .btn-section {
+                flex-direction: column;
+            }
+
+            .link-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-         <div class="brand-logo">
-            <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="Z Pay Logo">
-            <div class="brand-name">Z Pay</div>
-            <div class="welcome-message">Welcome to ZPay</div>
-        </div>
-        <!-- Form Title -->
-        <h1 class="form-title">User Registration Form</h1>
-        @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-    
-        <!-- Registration Form -->
-        <form action="{{ route('admin.client.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="mb-3">
-                <label for="mobile" class="form-label">Mobile No (as per Aadhar Link)</label>
-                <input type="text" class="form-control" value=""  name="mobile" placeholder="Enter Mobile No" maxlength="10" required>
-            </div>
-            <!-- Name -->
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" required>
-            </div>
 
-            <!-- Shop Name -->
-            <div class="mb-3">
-                <label for="shop_name" class="form-label">Shop Name</label>
-                <input type="text" class="form-control" id="shop_name" name="shop_name" placeholder="Enter Shop Name" required>
-            </div>
-
-            <!-- Mobile Number -->
-           
-
-            <!-- Email ID -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email ID</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email ID" required>
-            </div>
-
-            <!-- Address (As per Aadhar) -->
-            {{-- <div class="mb-3">
-                <label for="address" class="form-label">Address (As per Aadhar)</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Full Address" required>
-                <div class="row mt-2">
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="city" placeholder="City" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="state" placeholder="State" required>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" name="pincode" placeholder="PIN Code" required>
-                    </div>
-                </div>
-            </div> --}}
-
-            <!-- Aadhar Number & Upload -->
-            {{-- <div class="mb-3">
-                <label for="aadhar" class="form-label">Aadhar No</label>
-                <input type="text" class="form-control" id="aadhar" name="aadhar" placeholder="Enter Aadhar No" maxlength="12" required>
-                <label class="form-label mt-2">Upload Aadhar Front & Back</label>
-                <input type="file" class="form-control mb-2" name="aadhar_front" accept="image/*" required>
-                <input type="file" class="form-control" name="aadhar_back" accept="image/*" required>
-            </div> --}}
-
-            <!-- PAN Number & Upload -->
-            {{-- <div class="mb-3">
-                <label for="pan" class="form-label">PAN No</label>
-                <input type="text" class="form-control" id="pan" name="pan" placeholder="Enter PAN No" maxlength="10" required>
-                <label class="form-label mt-2">Upload PAN Image</label>
-                <input type="file" class="form-control" name="pan_image" accept="image/*" required>
-            </div> --}}
-
-            <!-- Bank Details -->
-            {{-- <div class="mb-3">
-                <label for="account_no" class="form-label">Bank Account Details</label>
-                <input type="text" class="form-control mb-2" name="account_no" placeholder="Account Number" required>
-                <input type="text" class="form-control mb-2" name="ifsc" placeholder="IFSC Code" required>
-                <input type="text" class="form-control mb-2" name="bank_name" placeholder="Bank Name" required>
-                <label class="form-label mt-2">Upload Passbook / Cheque / Bank Statement</label>
-                <input type="file" class="form-control" name="bank_image" accept="image/*" required>
-            </div> --}}
-
-            <!-- Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required>
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mb-3">
-                <label for="password_confirmation" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm Password" required>
-            </div>
-  <!-- Balance -->
-                    
-          <input type="number" hidden class="form-control" value="0" id="balance" name="balance" placeholder="Enter Balance" required>
-          <input type="text" hidden class="form-control" value="Retailer" id="balance" name="role" placeholder="Enter Balance" required>
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary w-100">Submit</button>
-        </form>
+<div class="register-container">
+    <!-- Left Panel -->
+    <div class="register-left">
+        <h1>Welcome to CodeGraphi</h1>
+        <p>Streamline your business with CodeGraphi. Access secure, seamless fintech services like BBPS, AEPS, DMT, and more.</p>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script>
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = field.nextElementSibling.querySelector('i');
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                field.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        }
-    </script>
+    <!-- Right Panel -->
+    <div class="register-right">
+        <div class="logo">
+            <a href="{{ route('/verfy-retailer.form') }}">
+                <img src="{{ asset('assets/img/logos/codegraphi-logo.png') }}" alt="CodeGraphi Logo">
+            </a>
+        </div>
+
+        <h3 class="text-center mb-4">Create An Account</h3>
+
+        <div class="btn-section">
+            <a href="{{ route('customer.login') }}" class="link-btn">Login</a>
+            <a href="{{ route('/verfy-retailer.form') }}" class="link-btn active-bg">Register</a>
+        </div>
+
+        @if ($errors->any())
+            <div class="alert alert-danger p-2 mb-3">
+                <ul class="mb-0 ps-3">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('admin.client.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group mb-3">
+                <input name="mobile" type="text" class="form-control" placeholder="Mobile No" maxlength="10" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <input name="name" type="text" class="form-control" placeholder="Full Name" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <input name="shop_name" type="text" class="form-control" placeholder="Shop Name" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <input name="email" type="email" class="form-control" placeholder="Email ID" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <input name="password" type="password" class="form-control" placeholder="Password" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <input name="password_confirmation" type="password" class="form-control" placeholder="Confirm Password" required>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" id="terms" required>
+                <label class="form-check-label" for="terms">I agree to the <a href="#" class="text-decoration-underline">terms of service</a></label>
+            </div>
+
+            <input type="hidden" name="balance" value="0">
+            <input type="hidden" name="role" value="Retailer">
+
+            <button type="submit" class="btn btn-theme">Register</button>
+        </form>
+
+        <p class="none-2">Already a member? <a href="{{ route('customer.login') }}" class="text-decoration-underline">Login here</a></p>
+    </div>
+</div>
+
+<script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+
 </body>
 </html>

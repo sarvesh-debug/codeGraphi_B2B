@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+use App\Helpers\ApiHelper;
 class aepsController extends Controller
 {
     public function showForm()
@@ -29,7 +29,8 @@ class aepsController extends Controller
                 $statusDisplay = ($status === 'transaction successful') ? 'success' : 'Failed';
 
                 return [
-                    'amount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
+                    'amount' => $transaction->amount,
+                    'transactionAmount' => isset($responseData['data']['transactionValue']) ? $responseData['data']['transactionValue'] : 'N/A',
                     'date' => \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, h:i A'),
                     'status' => $statusDisplay,  // Display Success or Failed
                 ];
@@ -67,6 +68,7 @@ class aepsController extends Controller
 
     public function checkOutletLoginStatus()
     {
+        //return "hello";die();
         // Retrieve the customer's name (stored in session as 'pin')
         $customerOutletId = intval(session('outlet'));  // 'pin' holds the customer's name
         //  return $customerName;
@@ -75,29 +77,56 @@ class aepsController extends Controller
         
             'Content-Type' => 'application/json',
         ])->post(env('liveUrl') .'v1/aeps/outletLoginStatus', [
-            
+            'outLet'=>$customerOutletId
         ]);
 
         $data = json_decode($response->getBody()->getContents(), true);
+        $act=$data['actcode'];
+        //return $data;die();
 
-        // return $data;
+        if($act=='LOGINREQUIRED')
+        {
+            //return route('outlet-login/aeps.form');
+            return view('user.AEPS.outlet-login-form');
+        }
+        else if($act=='LOGGEDIN')
+        {
+           return redirect()->route('cash.withdrawal.form');
+
+        }
+        else{
         return view('user.AEPS.outlet-login-status-result', compact('data'));
+
+        }
     }
 
     public function outletLogin(Request $request)
-    {
+    {  
+      //  return $request;die();
+         $mobile=session('mobile');
+        $realAmount=0.95;
         // Validate inputs
+        $amountTr=50;
+        $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    
+         if($getAmount < $realAmount) 
+         {
+           // return $getAmount;die();
+            return back()->with('alert', 'Insufficient balance.');
+         }
         $request->validate([
             'type' => 'required|string',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'aadhaar' => 'required|digits:12',  // Aadhaar number must be 12 digits
-            'biometricData' => 'required|json',  // Ensure valid JSON
+            'biometricData' => 'required',  // Ensure valid JSON
         ]);
     //   return $request;
     //   die();
         // Generate a unique transaction ID for externalRef
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -119,7 +148,7 @@ class aepsController extends Controller
         // Send the data to the API
         $response = Http::withHeaders($headers)->post(env('liveUrl').'v1/aeps/outletLogin', $payload);
         $responseData = $response->json();
-        // return $response->json();
+        // return $response;
         // die();
         // Determine response status
         if ($responseData['statuscode'] === 'ERR') {
@@ -128,6 +157,13 @@ class aepsController extends Controller
         } elseif ($responseData['statuscode'] === 'TXN') {
             $message = $responseData['status'] ?? $responseData['message'] ?? '';
             $type = 'success';
+            $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'AePS Bio Auth Fee');
+
+            DB::table('customer')
+            ->where('phone', $mobile)
+            ->decrement('balance', $realAmount);
+
+
         } else {
             $message = $responseData['status'] ?? $responseData['message'] ?? '';
             $type = 'unknown';
@@ -144,7 +180,7 @@ class aepsController extends Controller
     public function balanceInquiry(Request $request)
     {
        
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -192,7 +228,7 @@ class aepsController extends Controller
 
     public function balanceStatement(Request $request)
     {
-        $externalRef = uniqid('ZPAY_', true);
+        $externalRef = uniqid('TXN', true);
 
         // Prepare headers for the API request
         $customerOutletId = intval(session('outlet'));
@@ -249,7 +285,7 @@ class aepsController extends Controller
         $role = session('role');
 
         
-            $externalRef = uniqid('ZPAY_', true);
+            $externalRef = uniqid('TXN', true);
 
             // Prepare headers for the API request
             $customerOutletId = intval(session('outlet'));
@@ -279,6 +315,7 @@ class aepsController extends Controller
             // return $responseData;
             // die();
             // Store transaction data
+            
             DB::table('cash_withdrawals')->insert([
                 'aadhaar_encrypted' => $request->input('aadhaarNumber'),
                 'mobile' => session('mobile'),
@@ -319,6 +356,10 @@ class aepsController extends Controller
      */
     public function testDemo()
     {
+        // return "Hello";
+        // die();
+        // $email=env('Business_Email');
+        // return $email;die();
         $mobile = session('mibile');
         $role = session('role');
         $externalRef = 'APAePS-' . strtoupper(uniqid(date('YmdHis')));
@@ -329,140 +370,184 @@ class aepsController extends Controller
 
         $this->updateCustomerBalance(session('mobile'), session('role'), $externalRef);
     }
-    private function updateCustomerBalance($mobile, $role, $externalRef)
-    {
-        $payableValue = 0;
-        $commissionAmount = 0;
-        $tds = 0;
-        $distributorCommission = 0;
-    
-        // Fetch the latest transaction for the given mobile number
-        $lastTransaction = DB::table('cash_withdrawals')
+   private function updateCustomerBalance($mobile,$role,$externalRef)
+{
+   
+
+    $transaction = DB::table('cash_withdrawals')
             ->where('mobile', $mobile)
             ->latest('created_at')
             ->first();
-    
-        if ($lastTransaction) {
-            $responseData = json_decode($lastTransaction->response_data, true);
-    
-            if (isset($responseData['data']['transactionValue']) && $responseData['statuscode'] === 'TXN') {
-                $payableValue = $responseData['data']['transactionValue'];
-    
-                // Fetch commission details
-                $commissionPlans = DB::table('commission_plan')
-                    ->where('packages', $role)
-                    ->where('service', 'AEPS')
-                    ->get();
-    
-                foreach ($commissionPlans as $plan) {
-                    if ($payableValue >= $plan->from_amount && $payableValue <= $plan->to_amount) {
-                        $commissionAmount = ($plan->commission_in === 'Percentage')
-                            ? ($payableValue * $plan->commission / 100)
-                            : $plan->commission;
-    
-                        $tds = ($plan->tds_in === 'Percentage')
-                            ? ($commissionAmount * $plan->tds / 100)
-                            : $plan->tds;
-                        break;
-                    }
-                }
-            }
-        }
-    
-        $openingBalance = session('balance');
-        $closingBalance = $openingBalance + ($payableValue + ($commissionAmount - $tds));
-    
-        // Fetch distributor details
-        $customer = DB::table('customer')->where('phone', $mobile)->first();
-        if ($customer && !is_null($customer->dis_phone)) {
-            $distributorPhone = $customer->dis_phone;
-            $distributorCount = DB::table('customer')->where('dis_phone', $distributorPhone)->count();
-    
-            if ($distributorCount > 0) {
-                $distributorCommissionData = DB::table('map_commission_plan')
-                    ->where('service', 'AEPS')
-                    ->whereRaw('? BETWEEN from_rt_count AND to_rt_count', [$distributorCount])
-                    ->selectRaw(
-                        "CASE 
-                            WHEN commission_in = 'Percentage' THEN ? * commission / 100 
-                            ELSE commission 
-                        END AS commission_value",
-                        [$payableValue]
-                    )
-                    ->first();
-                
-                $distributorCommission = $distributorCommissionData->commission_value ?? 0;
-            }
-        }
-    
-        // Update distributor balance
-        if ($distributorCommission > 0) {
-            $distributorData = DB::table('customer')->where('phone', $distributorPhone)->first();
-            if ($distributorData) {
-                DB::table('customer')
-                    ->where('phone', $distributorPhone)
-                    ->increment('balance', $distributorCommission);
-                
-                DB::table('dis_commission')->insert([
-                    'dis_no' => $distributorPhone,
-                    'services' => 'AEPS',
-                    'retailer_no' => $mobile,
-                    'commission' => $distributorCommission,
-                    'opening_balance' => $distributorData->balance,
-                    'closing_balance' => $distributorData->balance + $distributorCommission,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
-    
-        // Update customer's latest transaction balances
-        if ($lastTransaction) {
-            DB::table('cash_withdrawals')
-                ->where('id', $lastTransaction->id)
-                ->update([
-                    'opening_balance' => $openingBalance,
-                    'closing_balance' => $closingBalance,
-                    'commissions' => $commissionAmount,
-                    'tds' => $tds,
-                ]);
-        }
-    
-        // Insert commission details
-        DB::table('getcommission')->insert([
-            'retailermobile' => $mobile,
-            'service' => 'AEPS',
-            'sub_services' => 'aeps',
-            'opening_bal' => $closingBalance,
-            'commission' => $commissionAmount,
-            'tds' => $tds,
-            'externalRef' => $externalRef,
-            'amount' => $payableValue,
-            'closing_bal' => $closingBalance + $commissionAmount,
+
+    if (!$transaction) return;
+
+    $response_data = json_decode($transaction->response_data, true);
+    if (!isset($response_data['data']['transactionValue']) || !in_array($response_data['statuscode'], ['TXN', 'TUP'])) return;
+
+    $txnAmount = $response_data['data']['transactionValue'];
+    $realAmount = $response_data['data']['transactionValue'];
+
+
+    // Retailer info
+    $retailer = DB::table('customer')->where('phone', $mobile)->first();
+    if (!$retailer) return;
+
+    // Distributor & Super Distributor info
+    $distributor = DB::table('customer')->where('phone', $retailer->dis_phone)->first();
+    $superDistributor = $distributor ? DB::table('customer')->where('phone', $distributor->dis_phone)->first() : null;
+
+    // Retailer Commission
+    $retailerData = $this->calculateCommission($txnAmount, 'retailer', $retailer->packageId);
+    $retailerCommission = $retailerData['commission'];
+    $charge = $retailerData['charge'];
+    $tds = $retailerData['tds'];
+
+    // Distributor Commission
+    $distributorCommission = 0;
+    $distributorData = ['commission' => 0];
+    if ($distributor) {
+        $distributorData = $this->calculateCommission($txnAmount, 'distibuter', $distributor->packageId);
+        $distributorCommission = $distributorData['commission'];
+    }
+
+    // Super Distributor Commission
+    $superCommission = 0;
+    $superData = ['commission' => 0];
+    if ($superDistributor) {
+        $superData = $this->calculateCommission($txnAmount, 'sd', $superDistributor->packageId);
+        $superCommission = $superData['commission'];
+    }
+
+    // Commission Differences
+    $distributorEarning = max(0, $retailerCommission - $distributorCommission);
+    $superEarning = max(0, $distributorCommission - $superCommission);
+
+    // 1. Retailer Balance Update
+    $retailerOpening = $retailer->aepsWallet;
+    $retailerClosing = $retailerOpening + $txnAmount - $charge;
+    $retailerFinalBalance = $retailerClosing + ($retailerCommission - $tds);
+
+    DB::table('customer')->where('phone', $mobile)->update(['aepsWallet' => $retailerFinalBalance]);
+
+    DB::table('cash_withdrawals')->where('id', $transaction->id)->update([
+        'opening_balance' => $retailerOpening,
+        'closing_balance' => $retailerClosing,
+        'commissions' => $retailerCommission,
+        'tds' => $tds,
+    ]);
+
+    DB::table('getcommission')->insert([
+        'retailermobile' => $mobile,
+        'service' => 'AEPS',
+        'sub_services' => 'cash_withdrawals',
+        'externalRef' =>$externalRef,
+        'amount'=>$txnAmount,
+        'commission' => $retailerCommission,
+        'tds' => $tds,
+        'opening_bal' => $retailerClosing,
+        'closing_bal' => $retailerClosing + ($retailerCommission - $tds),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // 2. Distributor Balance Update
+    if ($distributor && $distributorEarning > 0) {
+        $disOpening = $distributor->balance;
+        $disClosing = $disOpening + $distributorEarning;
+
+        DB::table('customer')->where('phone', $distributor->phone)->update(['balance' => $disClosing]);
+
+        DB::table('dis_commission')->insert([
+            'dis_no' => $distributor->phone,
+            'services' => 'AEPS',
+            'retailer_no' => $mobile,
+            'commission' => $distributorEarning,
+            'opening_balance' => $disOpening,
+            'closing_balance' => $disClosing,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-    
-        // Update customer's balance
-        DB::table('customer')
-            ->where('phone', $mobile)
-            ->increment('balance', $payableValue + ($commissionAmount - $tds));
-    
-        // Update session balance
-        $newBalance = DB::table('customer')->where('phone', $mobile)->value('balance');
-        session(['balance' => $newBalance, 'totalPayableValue' => $payableValue + ($commissionAmount - $tds)]);
-
-        DB::table('business')
-        ->where('business_id', session('business_id'))
-        ->increment('balance', $payableValue + ($commissionAmount - $tds));    
-   
-   $balanceAd = DB::table('business')
-   ->where('business_id', session('business_id'))
-   ->value('balance');
-   // Store the retrieved balance in the session
-   session(['adminBalance'=> $balanceAd]);
     }
-    
+
+    // 3. Super Distributor Balance Update
+    if ($superDistributor && $superEarning > 0) {
+        $superOpening = $superDistributor->balance;
+        $superClosing = $superOpening + $superEarning;
+
+        DB::table('customer')->where('phone', $superDistributor->phone)->update(['balance' => $superClosing]);
+
+        DB::table('dis_commission')->insert([
+            'dis_no' => $superDistributor->phone,
+            'services' => 'AEPS',
+            'retailer_no' => $mobile,
+            'commission' => $superEarning,
+            'opening_balance' => $superOpening,
+            'closing_balance' => $superClosing,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+  $balance = DB::table('customer')
+     ->where('phone', $mobile)
+     ->value('balance');
+     // Store the retrieved balance in the session
+     session(['balance'=> $balance]);
+    $apiBalance = ApiHelper::increaseBalance(env('Business_Email'), $realAmount, 'AEPS');
+
+ 
+//     // dd([
+//     // 'Retailer Commission' => $retailerCommission,
+//     // 'Retailer TDS' => $tds,
+//     // 'Retailer Charge' => $charge,
+//     // 'Distributor Earning' => $distributorEarning,
+//     // 'Super Distributor Earning' => $superEarning,
+//     // 'Retailer Final Balance' => $retailerClosing + ($retailerCommission - $tds),
+//     // 'API DOCS' =>$apiBalance,
+// ]);
+
+
+}
+private function calculateCommission($amount, $role, $packageId)
+{
+    $commissionRows = DB::table('commission_plan')
+        ->where('packages', $role)
+        ->where('service', 'AEPS')
+        ->where('packegesId', $packageId)
+        ->get();
+
+    $charge = 0;
+    $commission = 0;
+    $tds = 0;
+
+     foreach ($commissionRows as $row) {
+                if ($amount >= $row->from_amount && $amount <= $row->to_amount) {
+                    
+                    // Calculate charge
+                    $charge = $row->charge_in === 'Percentage'
+                        ? ($amount * $row->charge / 100)
+                        : $row->charge;
+            
+                    // Calculate commission
+                    $commission = $row->commission_in === 'Percentage'
+                        ? ($amount * $row->commission / 100)
+                        : $row->commission;
+            
+                    // Calculate TDS
+                    $tds = $row->tds_in === 'Percentage'
+                        ? ($commission * $row->tds / 100)
+                        : $row->tds;
+            
+                    break; // Stop after finding the first match
+                }
+            }
+
+    return [
+        'charge' => $charge,
+        'commission' => $commission,
+        'tds' => $tds,
+    ];
+}
+
 
     
     public function history(Request $request)
@@ -493,5 +578,165 @@ class aepsController extends Controller
     {
         // Fetch the 5 latest transactions from the database
     }
+
+    public function cashDepositForm()
+    {
+        return view('user.AEPS.cash_deposit');
+    }
+    public function cashDeposit(Request $request)
+    {
+        return $request;
+    }
+
+    public function walletTxnForm()
+    {
+        return view('user.AEPS.aepsWalletTxn');
+    }
+
+
+public function transfer(Request $request)
+{
+    $request->validate([
+        'amount' => 'required|numeric|min:1',
+        'remarks' => 'nullable|string|max:255',
+    ]);
+
+    $email = session('email');
+    $mobile=session('mobile');
+    $txnAmount = $request->amount;
+    $remark = $request->remarks;
+
+    $avlBalanceAEPS = DB::table('customer')->where('email', $email)->value('aepsWallet');
+    $usableBalance = $avlBalanceAEPS - 50;
+
+    if ($usableBalance >= $txnAmount) {
+        DB::beginTransaction();
+        try {
+            $openingBal = $avlBalanceAEPS;
+            $closingBal = $openingBal - $txnAmount;
+
+            // Update balances
+            DB::table('customer')->where('email', $email)->decrement('aepsWallet', $txnAmount);
+            DB::table('customer')->where('email', $email)->increment('balance', $txnAmount);
+
+            $responseData = [
+    
+        "success" => true,
+        "actcode" => null,
+        "statuscode" => "TXN",
+        "status" => "AePS Wallet Transfer To Main Wallet",
+        "data" => [
+            "externalRef" => "",
+            "bankName" => "",
+            "accountNumber" => "",
+            "ipayId" => "",
+            "transactionMode" => "CR",
+            "payableValue" => "",
+            "transactionValue" => $txnAmount,
+            "openingBalance" => $openingBal,
+            "closingBalance" => $closingBal,
+            "operatorId" => "",
+            "walletIpayId" => "",
+            "bankAccountBalance" => "",
+            "miniStatement" => []
+        ],
+        "timestamp" => "",
+        "ipay_uuid" => "",
+        "orderid" => "",
+        "environment" => "LIVE"
+    
+];
+
+            // Log transaction
+            DB::table('aeps_wallet_transfers')->insert([
+                'email' => $email,
+                'amount' => $txnAmount,
+                'remarks' => $remark,
+                'from_wallet' => 'AEPS',
+                'to_wallet' => 'Main',
+                'openingBal' => $openingBal,
+                'closingBal' => $closingBal,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+              DB::table('cash_withdrawals')->insert([
+                'aadhaar_encrypted' => " ",
+                'mobile' => session('mobile'),
+                'external_ref' => "",
+                'amount' => $txnAmount,
+                'biometric_data' =>" ",
+                'response_data' => json_encode($responseData),
+                'opening_balance' => $openingBal,
+                'closing_balance' => $closingBal,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            $currentBalance = DB::table('customer')->where('email', $email)->value('balance');
+            session(['balance' => $currentBalance]);
+
+            $avlBalance = $currentBalance - $txnAmount;
+         DB::table('wallet_transfers')->insert([
+                    'sender_id' => session('username'),
+                    'receiver_id' => "Self",
+                    'amount' => $txnAmount,
+                    'opening_balance' => $avlBalance,
+                    'closing_balance' => $currentBalance,
+                    'charges' => 0,
+                    'tds' => 0,
+                    'remark' => $remark,
+                    'transfer_id' => "",
+                    'type' => 'Credit',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            // ✅ Print both updated balances for verification
+            $finalAEPSBalance = DB::table('customer')->where('email', $email)->value('aepsWallet');
+            $finalMainBalance = DB::table('customer')->where('email', $email)->value('balance');
+
+            // You can use either one:
+            // Option 1: Log for later debugging
+            Log::info("Transfer Debug:", [
+                'finalAEPSBalance' => $finalAEPSBalance,
+                'finalMainBalance' => $finalMainBalance
+            ]);
+
+            // Option 2: Temporary print
+            // dd([
+            //     'finalAEPSBalance' => $finalAEPSBalance,
+            //     'finalMainBalance' => $finalMainBalance
+            // ]);
+
+            DB::commit();
+            return back()->with('success', 'Transfer successful!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Optional: log the error
+            Log::error("Transfer Failed: " . $e->getMessage());
+
+            return back()->with('error', 'Transfer failed. Please try again.');
+        }
+    } else {
+        return back()->with('error', 'Insufficient AEPS balance. ₹50 must remain in wallet.');
+    }
+}
+
+
+
+public function aepsTxn()
+{
+    $email=session('email');
+   
+    $getLadger = DB::table('aeps_wallet_transfers')
+    ->where('email', $email)
+    ->orderBy('id', 'desc')
+    ->get();
+
+    //return $getLadger;die();
+    return view('user.aeps.aepsToWallet',compact('getLadger'));
+}
+
 
 }

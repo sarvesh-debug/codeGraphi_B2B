@@ -27,48 +27,46 @@ class KycController extends Controller
     }
     // Store KYC form submission
     public function store(Request $request)
-    {
-       
-        $request->validate([
-            'mobile' => 'required|string',
-            'email' => 'required|email',
-            'aadhaar' => 'required|string',
-            'pan' => 'required|string',
-            'bankAccountNo' => 'required|string',
-            'bankIfsc' => 'required|string',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
-            'consent' => 'required|string|in:Y,N',
-        ]);
-    
-        // Send data to the API
-        $responseData = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post(env('liveUrl') . 'user/onboard/signup', [
-            'mobile' => $request->mobile,
-            'email' => $request->email,
-            'aadhaar' => $request->aadhaar, // Fixed typo
-            'pan' => $request->pan,
-            'bankAccountNo' => $request->bankAccountNo,
-            'bankIfsc' => $request->bankIfsc,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'consent' => $request->consent,
-        ]);
-        // return $responseData;
-        // die();
-      $otpReferenceID = $responseData['otpReferenceID'] ?? null;
-            $hash = $responseData['hash'] ?? null;
-          $msg = $responseData['status'] ?? $responseData['message'] ?? ''; // Fetch 'status' field
-          
-            return view('user.marchant-onboard.signup_validate', [
-                'otpReferenceID' => $otpReferenceID,
-                'hash' => $hash,
-                'msg' => $msg,
-            ]);
-    
-    }
-    
+{
+    $request->validate([
+        'mobile' => 'required|string',
+        'email' => 'required|email',
+        'aadhaar' => 'required|string',
+        'pan' => 'required|string',
+        'bankAccountNo' => 'required|string',
+        'bankIfsc' => 'required|string',
+        'latitude' => 'required|string',
+        'longitude' => 'required|string',
+        'consent' => 'required|string|in:Y,N',
+    ]);
+
+    // Send data to the API with 180 seconds timeout
+    $responseData = Http::withHeaders([
+        'Content-Type' => 'application/json',
+    ])->timeout(180)->post(env('liveUrl') . 'user/onboard/signup', [
+        'mobile' => $request->mobile,
+        'email' => $request->email,
+        'aadhaar' => $request->aadhaar,
+        'pan' => $request->pan,
+        'bankAccountNo' => $request->bankAccountNo,
+        'bankIfsc' => $request->bankIfsc,
+        'latitude' => $request->latitude,
+        'longitude' => $request->longitude,
+        'consent' => $request->consent,
+    ]);
+
+    $otpReferenceID = $responseData['otpReferenceID'] ?? null;
+    $hash = $responseData['hash'] ?? null;
+    $msg = $responseData['status'] ?? $responseData['message'] ?? ''; // status or message fallback
+
+//return $responseData;die();
+    return view('user.marchant-onboard.signup_validate', [
+        'otpReferenceID' => $otpReferenceID,
+        'hash' => $hash,
+        'msg' => $msg,
+    ]);
+}
+
    
     public function getAllData(Request $request)
     {

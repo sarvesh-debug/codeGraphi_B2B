@@ -12,12 +12,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('commission-form')}}">Add Commission</a>
                 </li>  --}}
-                <li class="nav-item {{ request()->routeIs('commission-list') ? 'active' : '' }}">
+                {{-- <li class="nav-item {{ request()->routeIs('commission-list') ? 'active' : '' }}">
                     <a class="nav-link" href="{{route('commission-list')}}"> Commission List </a>
                 </li>
                 <li class="nav-item {{ request()->routeIs('map-commission') ? 'active' : '' }}">
                     <a class="nav-link" href="{{route('map-commission')}}"> Map Commission List </a>
-                </li>
+                </li> --}}
                 {{-- <li class="nav-item">
                     <a class="nav-link"  href="#">All Map Commission</a>
                 </li> --}}

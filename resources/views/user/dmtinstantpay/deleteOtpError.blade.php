@@ -5,7 +5,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header bg-danger text-white">
-                    <h5 class="card-title">Error in OTP Deletion</h5>
+                    <h5 class="card-heading">Error in OTP Deletion</h5>
                 </div>
                 <div class="card-body">
                     <h3 class="text-danger">Error Details</h3>

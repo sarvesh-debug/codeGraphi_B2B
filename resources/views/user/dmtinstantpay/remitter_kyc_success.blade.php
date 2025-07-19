@@ -22,9 +22,9 @@
     </div> --}}
 </div>
  <script>
-//     // Redirect to 'user' route after 5 seconds
-//     setTimeout(() => {
-//         window.location.href = "{{ route('dmt.remitter-profile') }}";
-//     }, 5000);
+    // Redirect to 'user' route after 5 seconds
+    setTimeout(() => {
+        window.location.href = "{{ route('dmt.remitter-profile') }}";
+    }, 5000);
  </script>
 @endsection

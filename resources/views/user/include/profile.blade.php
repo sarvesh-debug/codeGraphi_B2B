@@ -71,9 +71,17 @@
                 <img src="{{ $profile->aadhar_front }}" alt="Profile Picture">
                 <div>
                     <h3>{{ $profile->name }} ({{ $profile->username }})</h3>
-                    <p>Role: {{ $profile->role }}</p>
+                    <p>Role:
+                        @if (trim(strtolower($profile->role)) === 'distibuter')
+                            Distributor
+                        @else
+                            Retailer
+                        @endif
+                            </p>
+                    
                     <p>Status: <span class="badge bg-{{ $profile->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($profile->status) }}</span></p>
                 </div>
+                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeMpinModal">Change MPIN</a>
             </div>
             <table class="table info-table">
                 <tr>
@@ -136,4 +144,81 @@
             </div>
         </div>
     </div>
+
+    <!-- Change MPIN Modal -->
+<div class="modal fade" id="changeMpinModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change MPIN</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('changeMpin') }}" method="POST">
+                    @csrf
+                 
+                       
+                        <input type="text" hidden name="mobile" value="{{ $profile->phone }}" id="mobile" class="form-control" placeholder="Enter Mobile Number" required>
+                    
+
+                    <div class="mb-3">
+                        <label for="old_mpin" class="form-label">Old MPIN</label>
+                        <input type="password" name="old_mpin" id="old_mpin" class="form-control" maxlength="4" placeholder="Enter Old MPIN" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new_mpin" class="form-label">New MPIN</label>
+                        <input type="password" name="new_mpin" id="new_mpin" class="form-control" maxlength="4" placeholder="Enter New MPIN" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Update MPIN</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 @endsection

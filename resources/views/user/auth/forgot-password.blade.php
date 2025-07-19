@@ -2,69 +2,213 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Forget Password | CodeGraphi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login | ZPay</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/z-pay-fav.png') }}" />
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/fonts/font-awesome/css/font-awesome.min.css') }}">
+
     <style>
-        .button { background-color: #007BFF; }
-        .button:hover { background-color: #0056b3; transition: 0.3s ease; }
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        body {
+            font-family: 'Jost', sans-serif;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .forgot-wrapper {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: row;
+        }
+
+        .left-section {
+            background: linear-gradient(135deg, #203a43, #2c5364);
+            color: #fff;
+            flex: 1;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .left-section h1 {
+            font-size: 34px;
+            margin-bottom: 20px;
+        }
+
+        .left-section p {
+            font-size: 15px;
+            max-width: 350px;
+        }
+
+        .right-section {
+            flex: 1;
+            padding: 50px 40px;
+        }
+
+        .right-section .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .right-section h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            height: 48px;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-theme {
+            background-color: #1e3c72;
+            border: none;
+            color: #fff;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background-color: #16315d;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: #1e3c72;
+            font-weight: 500;
+        }
+
+        .btn-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .btn-outline-custom {
+            padding: 8px 16px;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .forgot-wrapper {
+                flex-direction: column;
+            }
+
+            .left-section {
+                display: none;
+            }
+
+            .right-section {
+                padding: 40px 20px;
+            }
+        }
+
+        .text-danger {
+            font-size: 13px;
+            text-align: left;
+        }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto flex flex-col items-center justify-center min-h-screen px-4">
-        <!-- Centered Brand Section -->
-        <div class="flex flex-col items-center text-center mb-8">
-            <!-- Centered Logo -->
-            <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" style="border-radius: 50%;" alt="ZPay Logo" class="w-20 h-20 mb-4">
-        <h1 class="text-blue-600 text-4xl md:text-6xl font-bold">
-                <span style="color: #FF6600">Z</span><span style="color: #111111">Pay</span>
-            </h1>
-            <p class="text-gray-600 text-lg font-semibold mt-2">Easy & Secure Financial Transactions</p>
+<body>
+
+<div class="forgot-wrapper">
+    <!-- Left Side -->
+    <div class="left-section">
+        <h1>Welcome to CodeGraphi</h1>
+        <p>Reset your password to securely access our financial tools like BBPS, AEPS, DMT and more.</p>
+    </div>
+
+    <!-- Right Side (Form) -->
+    <div class="right-section">
+        <div class="logo mb-4">
+            <a href="{{ route('password.request') }}">
+                <img src="{{ asset('assets/img/logos/codegraphi-logo.png') }}" alt="CodeGraphi Logo" style="max-width: 250px;">
+            </a>
         </div>
 
-        <!-- Forgot Password Form Section -->
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Forgot Your Password?</h2>
-            
-            <!-- Error Messages -->
-            @if($errors->any())
-                <div class="bg-red-500 text-white p-4 rounded mb-4">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <!-- Buttons -->
+        <div class="btn-section">
+            <a href="{{ route('customer.login') }}" class="btn btn-sm btn-outline-primary btn-outline-custom">Login</a>
+            <a href="{{ route('/verfy-retailer.form') }}" class="btn btn-sm btn-outline-secondary btn-outline-custom">Register</a>
+        </div>
 
-            <!-- Forgot Password Form -->
-            <form action="{{ route('password.email') }}" method="POST">
-                @csrf
-                <!-- Username Input -->
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700 font-medium">Mobile No</label>
-                    <input type="text" class="mt-1 p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500" id="username" name="mobile" required>
-                    @error('mobile')
-                        <small class="text-red-500">{{ $message }}</small>
-                    @enderror
-                </div>
+        <h3>Recover Your Password</h3>
 
-                <!-- Email Input -->
-                <div class="mb-6">
-                    <label for="email" class="block text-gray-700 font-medium">Email Address</label>
-                    <input type="email" class="mt-1 p-3 border rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" name="email" required>
-                    @error('email')
-                        <small class="text-red-500">{{ $message }}</small>
-                    @enderror
-                </div>
+        <!-- Error Display -->
+        @if($errors->any())
+            <div class="alert alert-danger text-start">
+                <ul class="mb-0 ps-3">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-                <!-- Submit Button -->
-                <button type="submit" class="button text-white font-bold py-3 rounded w-full">Send Reset Link</button>
-            </form>
+        <!-- Form -->
+        <form action="{{ route('password.email') }}" method="POST">
+            @csrf
+
+            <div class="form-group">
+                <input name="mobile" type="text" class="form-control" placeholder="Enter your Phone Number" required>
+                @error('mobile')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <input name="email" type="email" class="form-control" placeholder="Enter your Email ID" required>
+                @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-theme">Send Reset Link</button>
+            </div>
+        </form>
+
+        <!-- Footer -->
+        <div class="form-footer">
+            Already a member?
+            <a href="{{ route('customer.login') }}">Login here</a>
         </div>
     </div>
+</div>
+
+<!-- Scripts -->
+<script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+<script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

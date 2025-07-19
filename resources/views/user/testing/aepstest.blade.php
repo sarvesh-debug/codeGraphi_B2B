@@ -51,7 +51,7 @@
     <div class="card-body p-4">
         <div id="printableArea">
             <div class="text-center">
-                <img src="{{ asset('assets/img/icons/z-pay-logo.png') }}" width="20%" alt="" class="print-logo">
+                <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" width="20%" alt="" class="print-logo">
             </div>
             <h5 class="text-center my-3">Transaction Details</h5>
             <p><strong>UTR :</strong> TXN123456789</p>

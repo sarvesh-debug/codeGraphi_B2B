@@ -617,7 +617,7 @@ class bbpsController extends Controller
         $mobile = session('mobile');
         $role = session('role');
         $mode = 'IMPS';
-        // $externalRef = 'ZPAY-' . strtoupper(uniqid(date('YmdHis')));
+        // $externalRef = 'TXN-' . strtoupper(uniqid(date('YmdHis')));
         $externalRef = 'APBBPS' . date('Y') . '' . round(microtime(true) * 1000);
         // dd($externalRef);
         $this->updateCustomerBalance($mobile, $role, $externalRef);

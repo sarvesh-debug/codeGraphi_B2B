@@ -31,7 +31,7 @@
                         <option value="Retailer">Retailer</option>
                         {{-- <option value="specialRetailer">Special Retailer</option> --}}
                         <option value="distibuter">Distibuter</option>
-                        {{-- <option value="superDistibuter">Super Distibuter</option> --}}
+                        <option value="sd">Super Distibuter</option>
                     </select>
                     @error('packages')
                         <div class="text-danger">{{ $message }}</div>
@@ -66,6 +66,14 @@
                         <option value="RTGS">RTGS</option>
                         <option value="IMPS">IMPS</option>
                         <option value="NEFT">NEFT</option>
+                          <option value="ATP">Airtel</option>
+                                    <option value="BGP">BSNL</option>
+                                    <option value="BSNL00000NATHL">BSNL (BBPS)</option>
+                                    <option value="IDP" disabled>Idea (OLD)</option>
+                                    <option value="MTNL00000NAT1U">MTNL</option>
+                                    <option value="MMP" disabled>MTNL (OLD)</option>
+                                    <option value="RJP">Reliance Jio</option>
+                                    <option value="VFP">Vi</option>
                     </select>
                     @error('sub_service')
                         <div class="text-danger">{{ $message }}</div>
@@ -149,7 +157,7 @@
                     <div class="text-danger">{{ $message }}</div>
                     @enderror
                 </div>
-
+                <input type="hidden" name="packegesId" id="packegesId" value="{{$packageId}}">
                 <!-- Submit Button -->
                 <div class="col-lg-2 col-md-3 col-sm-6 col-12 form-group mt-4 mb-3 d-flex text-center justify-content-end">
                     <button type="submit" class="btn btn-success w-auto me-2"> Submit </button>
@@ -159,7 +167,7 @@
         </form>
     </div>
 
-    @if ($commissions->isNotEmpty())
+    @if ($commissions)
         <div class="card">
             <div class="card-body p-3 table-scroll">
                 <table id="datatablesSimple" class="table table-bordered">
@@ -186,7 +194,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td> 
                                 <td style="text-transform:capitalize">{{ $commission->packages }}</td>
-                                <td>{{ $commission->service }}</td>
+                                <td>{{ $commission->serviceName }}</td>
                                 <td>{{ $commission->sub_service }}</td>
                                 <td>{{ number_format($commission->from_amount, 2) }}</td>
                                 <td>{{ number_format($commission->to_amount, 2) }}</td>
@@ -229,7 +237,7 @@
         var subServiceContainer = document.getElementById('sub-service-container');
         var subServiceSelect = document.getElementById('sub_service');
         
-        if (service === 'DMT' || service === 'FundTransfer') {
+        if (service === 'DMT' || service === 'C00') {
             subServiceContainer.style.display = 'block'; // Show the sub-service select
             subServiceSelect.setAttribute('required', 'required'); // Add required when visible
         } else {
@@ -254,13 +262,14 @@
         document.getElementById("commission").value = data.commission;
         document.getElementById("tds_in").value = data.tds_in;
         document.getElementById("tds").value = data.tds;
+        document.getElementById("packegesId").value = data.packegesId;
 
         // Trigger the change event for the service dropdown
         document.getElementById("service").dispatchEvent(new Event('change'));
 
         // Set the form action dynamically for updating the commission
         let form = document.querySelector("form");
-        form.action = `/commission/commissionUpdate/${data.id}`;
+        form.action = `https://account.CodeGraphi.com/commission/commissionUpdate/${data.id}`;
         form.method = "POST";
 
         // Add a hidden input for method spoofing since Laravel does not support PUT directly in forms

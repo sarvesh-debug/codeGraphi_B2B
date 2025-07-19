@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Z Pay</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/z-pay-fav.png') }}" />
+    <title>Admin Login | CodeGraphi</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/CodeGraphi-fav.png') }}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -26,7 +26,7 @@
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-6 rounded-lg shadow-2xl max-w-lg w-full">
-        <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" class="w-20 h-20 rounded-full mx-auto mb-4" alt="ZPay Logo">
+        <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" class="w-20 h-20 rounded-full mx-auto mb-4" alt="CodeGraphi Logo">
         @if($errors->any())
         <div class="bg-red-500 text-white p-4 rounded mb-4">
             <ul>

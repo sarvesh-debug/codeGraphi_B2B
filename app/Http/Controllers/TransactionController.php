@@ -16,7 +16,7 @@ class TransactionController extends Controller
     {
         return view('user.money-transfer.send_otp',compact('mobile', 'bene_id'));
     }
-    public function showRefund()
+     public function showRefund()
     {
         return view('user.money-transfer.refund_otp');
     }

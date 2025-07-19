@@ -100,7 +100,7 @@
             </ul>
         </div>>
         {{-- <p><strong>Error Message:</strong> {{ $message }}</p> --}}
-        <a href="https://ZPay.com/" class="btn btn-custom">
+        <a href="https://CodeGraphi.com/" class="btn btn-custom">
             <i class="fas fa-arrow-left"></i> Go Back
         </a>
     </div>

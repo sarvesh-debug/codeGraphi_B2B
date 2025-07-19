@@ -1,46 +1,71 @@
 @extends('admin/include.layout')
 
 @section('content')
+
+<style>
+    .sticky-buttons {
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+        background-color: white;
+        padding: 10px 0;
+    }
+    .scroll-wrapper {
+        max-height: calc(100vh - 150px);
+        overflow-y: auto;
+    }
+</style>
+
 <div class="container-fluid px-4">
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
         <li class="breadcrumb-item active">All User</li>
     </ol>
-    <div class="btn-group" role="group" aria-label="User Filters">
-    <a href="{{ route('admin/user-list', ['role' => 'Retailer']) }}" class="btn btn-primary">
-        <i class="fas fa-store"></i> Retailers 
-        <span class="badge bg-light text-dark">{{ $totalRetailers }}</span>
-    </a>
-    <a href="{{ route('admin/user-list', ['role' => 'distibuter']) }}" class="btn btn-secondary">
-        <i class="fas fa-truck"></i> Distributors 
-        <span class="badge bg-light text-dark">{{ $totalDistributors }}</span>
-    </a>
-    <a href="{{ route('admin/user-list') }}" class="btn btn-info">
-        <i class="fas fa-users"></i> All 
-        <span class="badge bg-light text-dark">{{ $total }}</span>
-    </a>
-    <a href="{{ route('admin/user-list', ['status' => 'deactive']) }}" class="btn btn-danger">
-        <i class="fas fa-user-slash"></i> Deactive 
-        <span class="badge bg-light text-dark">{{ $totalDeactive }}</span>
-    </a>
-    <a href="{{ route('admin/user-list', ['status' => 'active']) }}" class="btn btn-success">
-        <i class="fas fa-user-check"></i> Active 
-        <span class="badge bg-light text-dark">{{ $totalActive }}</span>
-    </a>
-</div>
+
+    <div class="scroll-wrapper">
+        <div class="btn-group sticky-buttons" role="group" aria-label="User Filters">
+            <a href="{{ route('admin/user-list') }}" class="btn btn-info">
+                <i class="fas fa-users"></i> All 
+                <span class="badge bg-light text-dark">{{ $total }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['role' => 'Retailer']) }}" class="btn btn-primary">
+                <i class="fas fa-store"></i> Retailers 
+                <span class="badge bg-light text-dark">{{ $totalRetailers }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['role' => 'distibuter']) }}" class="btn btn-secondary">
+                <i class="fas fa-truck"></i> Distributors 
+                <span class="badge bg-light text-dark">{{ $totalDistributors }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['role' => 'sd']) }}" class="btn btn-info">
+                <i class="fas fa-truck"></i>Super Distributors 
+                <span class="badge bg-light text-dark">{{ $totalSd }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['role' => 'rm']) }}" class="btn btn-secondary">
+                <i class="fas fa-truck"></i> Relationship Manager
+                <span class="badge bg-light text-dark">{{ $totalRm }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['status' => 'deactive']) }}" class="btn btn-danger">
+                <i class="fas fa-user-slash"></i> Deactive 
+                <span class="badge bg-light text-dark">{{ $totalDeactive }}</span>
+            </a>
+            <a href="{{ route('admin/user-list', ['status' => 'active']) }}" class="btn btn-success">
+                <i class="fas fa-user-check"></i> Active 
+                <span class="badge bg-light text-dark">{{ $totalActive }}</span>
+            </a>
+        </div>
+
+      
 
 
-    <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
-        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-             alt="Download Icon" 
-             style="width: 16px; height: 16px; margin-right: 5px;">
+
+    <a  class="btn btn-success w-100 m-2" href="{{route('ddfile')}}">
         Export
-    </button>
-    @if (session('success'))
+    </a>
+    {{-- @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
     <div class="card-body table-scroll">
         <table id="datatablesSimple" class="table table-bordered">
@@ -48,6 +73,7 @@
                 <tr>
                     <th>SR</th>
                     <th>OnBoard Date</th>
+                    <th>Package Apply</th>
                     <th>User Id</th>
                     <th>OutLet Id</th>
                     <th>Name</th>
@@ -57,7 +83,8 @@
                     <th>Dis.Phone</th>
                     <th>Role</th>
                     <th>Status</th>
-                    <th>KYC</th>
+                    <th>AEPS KYC</th>
+                    <th>User KYC</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -85,9 +112,14 @@
                     <td>{{ $loop->count - $loop->iteration + 1 }}</td>
 
                     <td>{{ $customer->created_at }}</td>
+                    <td>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#editPackageModal{{ Str::slug($customer->username) }}">
+                            {{ $packages->where('id', $customer->packageId)->first()->packageName ?? 'Select Package' }}
+                        </a>
+                    </td>
                     <td>{{ $customer->username }}</td>
                     <td>{{ $customer->pin }}</td>
-                    @if ($customer->role=="Retailer")
+                    @if ($customer->role!="rm")
                     <td>{{ $customer->name }}
 
                         <button class="btn btn-success btn-sm rounded" data-bs-toggle="modal" data-bs-target="#mapModal{{ $customer->username}}">Map To</button>
@@ -106,7 +138,18 @@
                         
                     </td>
                     <td>{{ $customer->dis_phone }}</td>
-                    <td>{{ $customer->role }}</td>
+                    <td>
+
+                     @if (trim(strtolower($customer->role)) === 'distibuter')
+                        Distributor
+                    @elseif(trim(strtolower($customer->role)) === 'rm')
+                    Relationship Manager
+                      @elseif(trim(strtolower($customer->role)) === 'sd')
+                    Super Distributor
+                        @else
+                        Retailer
+                    @endif
+                    </td>
                     <td>
                         <form action="{{ route('user.active', $customer->id) }}" method="post" onsubmit="return confirmAction(event, '{{ $customer->status }}')">
                             @csrf 
@@ -144,6 +187,20 @@
                             <p class="text-danger">Not Verified</p>
                             @else
                            <p class="text-success">Verified</p>
+                            @endif
+
+                    </td>
+                     <td>
+                            @if($customer->fkyc==1)
+                              <p class="text-success">Verified</p>
+                           @elseif($customer->fkyc==0)
+                           <p class="text-danger">Not Apply</p>
+                            @elseif($customer->fkyc==1)
+                           <p class="text-warning">Pending</p>
+                            @elseif($customer->fkyc==-1)
+                           <p class="text-danger">Reject</p>
+                            @else
+                          <p class="text-danger">Not Verified</p>
                             @endif
 
                     </td>
@@ -219,6 +276,83 @@
                     <li class="list-group-item"><strong>Bank Name:</strong> {{ $customer->bank_name }}</li>
                 </ul>
                 <h6>Uploaded Documents</h6>
+                @if ($customer->role !== 'Retailer')
+    <!-- Verify Button -->
+    <form action="{{ route('user.kyc.verify', $customer->id) }}" method="POST" style="display:inline-block;">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Verify this user?')">Verify KYC</button>
+    </form>
+
+    <!-- Reject Button (Triggers Modal) -->
+    <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $customer->id }})">Reject KYC</button>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" style="display:none;">
+        <form id="rejectForm" action="{{ route('user.kyc.reject') }}" method="POST">
+            @csrf
+            <input type="hidden" name="customer_id" id="reject_customer_id">
+            <label for="kycRemark">Reason for rejection:</label>
+            <textarea name="kycRemark" required class="form-control"></textarea>
+            <button type="submit" class="btn btn-danger mt-2">Submit</button>
+            <button type="button" class="btn btn-secondary mt-2" onclick="closeRejectModal()">Cancel</button>
+        </form>
+    </div>
+
+    <script>
+        function openRejectModal(customerId) {
+            document.getElementById('reject_customer_id').value = customerId;
+            document.getElementById('rejectModal').style.display = 'block';
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+        }
+    </script>
+@endif
+@if ($customer->role === 'Retailer')
+    @if ($customer->fkyc === -1)
+    <!-- reKYC BUTTON -->
+    <form action="{{ route('user.rekyc', $customer->id) }}" method="POST" style="display:inline-block;">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apply Re-KYC for this user?')">Apply Re-KYC</button>
+    </form>
+    @else
+    <!-- Full KYC Button -->
+    <form action="{{ route('user.fullkyc', $customer->id) }}" method="POST" style="display:inline-block;">
+        @csrf
+        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Complete full KYC for this user?')">Continue for FULL KYC</button>
+    </form>
+    @endif
+
+
+    <!-- Reject Button (Triggers Modal) -->
+    <button class="btn btn-danger btn-sm" onclick="openRejectModal({{ $customer->id }})">Reject KYC</button>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" style="display:none;">
+        <form id="rejectForm" action="{{ route('user.rejectRetailedKyc') }}" method="POST">
+            @csrf
+            <input type="hidden" name="customer_id" id="reject_customer_id">
+            <label for="kycRemark">Reason for rejection:</label>
+            <textarea name="kycRemark" required class="form-control"></textarea>
+            <button type="submit" class="btn btn-danger mt-2">Submit</button>
+            <button type="button" class="btn btn-secondary mt-2" onclick="closeRejectModal()">Cancel</button>
+        </form>
+    </div>
+
+    <script>
+        function openRejectModal(customerId) {
+            document.getElementById('reject_customer_id').value = customerId;
+            document.getElementById('rejectModal').style.display = 'block';
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+        }
+    </script>
+@endif
+
+                
                 <ul class="list-group">
                     <li class="list-group-item">
                         <strong>Aadhaar Front:</strong>
@@ -260,9 +394,20 @@
                             Not Uploaded
                         @endif
                     </li>
+                    <li class="list-group-item">
+                        <strong>KYC Picture:</strong>
+                        @if($customer->selfie_data)
+                            <a href="{{$customer->selfie_data}}" target="_blank">
+                                <img src="{{ asset($customer->selfie_data) }}" alt="Bank Document" style="max-width: 150px; max-height: 150px;"/>
+                            </a>
+                        @else
+                            Not Uploaded
+                        @endif
+                    </li>
                 </ul>
                
             </div>
+            
         </div>
     </div>
 </div>
@@ -292,13 +437,16 @@
                                     {{-- <div class="mb-3 d-flex align-items-center">
                                         <input type="checkbox" name="dmt2" {{ $customer->dmt2 ? 'checked' : '' }} data-toggle="toggle" data-on="Enabled" data-off="Disabled">
                                         <label class="ms-2">DMT S2</label>
-                                    </div> --}}
+                                    </div> --}} 
                                 
                                     <div class="mb-3 d-flex align-items-center">
                                         <input type="checkbox" name="payout" {{ $customer->payout ? 'checked' : '' }} data-toggle="toggle" data-on="Enabled" data-off="Disabled">
                                         <label class="ms-2">Payout</label>
                                     </div>
-                                    
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <input type="checkbox" name="mprecharge" {{ $customer->mprecharge ? 'checked' : '' }} data-toggle="toggle" data-on="Enabled" data-off="Disabled">
+                                        <label class="ms-2">Mobile Recharge</label>
+                                    </div>
                                 
                                     {{-- <div class="mb-3 d-flex align-items-center">
                                         <input type="checkbox" name="cc_bill_payment" {{ $customer->cc_bill_payment ? 'checked' : '' }} data-toggle="toggle" data-on="Enabled" data-off="Disabled">
@@ -368,6 +516,39 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+    <div class="modal fade" id="editPackageModal{{ Str::slug($customer->username) }}" tabindex="-1" aria-labelledby="editPackageLabel{{ Str::slug($customer->username) }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('customer.updatePackagead', $customer->id) }}">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editPackageLabel{{ Str::slug($customer->username) }}">Select Package</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="packageId" class="form-label">Package</label>
+                            <select name="packageId" class="form-select" required>
+                                <option value="">-- Select Package --</option>
+                                @foreach($packages as $package)
+                                    <option value="{{ $package->id }}" {{ $customer->packageId == $package->id ? 'selected' : '' }}>
+                                        {{ $package->packageName }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update Package</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {{-- Mapping Distributors --}}
    <!-- Modal -->
@@ -386,7 +567,33 @@
                         <label for="id" class="form-label">Retailer ID</label>
                         <input type="text" class="form-control" id="id" name="id" value="{{$customer->username }}" readonly>
                     </div>
+                    {{-- <input type="text" value="{{$customer->role}}"> --}}
                     <div class="mb-3">
+                        @if ($customer->role=="sd")
+
+                         <label for="distributorSelect">Select RM</label>
+                        <select name="distributor" id="distributorSelect" class="form-select">
+                            <option value="" disabled selected>-- Select RM --</option>
+                            <option value="Admin" data-name="Admin">Admin</option>
+                            @foreach($rmList as $rm)
+                                <option value="{{ $rm->phone }}" data-name="{{ $rm->name }}">
+                                    {{ $rm->name }}({{$rm->username}})
+                                </option>
+                            @endforeach
+                        </select>
+                        @elseif($customer->role=="distibuter")
+
+                         <label for="distributorSelect">Select SD</label>
+                        <select name="distributor" id="distributorSelect" class="form-select">
+                            <option value="" disabled selected>-- Select Super Distributor --</option>
+                            <option value="Admin" data-name="Admin">Admin</option>
+                            @foreach($sdList as $sd)
+                                <option value="{{ $sd->phone }}" data-name="{{ $sd->name }}">
+                                    {{ $sd->name }}({{$sd->username}})
+                                </option>
+                            @endforeach
+                        </select>
+                        @else
                         <label for="distributorSelect">Select Distributor</label>
                         <select name="distributor" id="distributorSelect" class="form-select">
                             <option value="" disabled selected>-- Select Distributor --</option>
@@ -398,7 +605,7 @@
                             @endforeach
                         </select>
                     </div>
-                                        
+                        @endif                
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -407,6 +614,9 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+  
                 @endforeach
             </tbody>
         </table>
@@ -432,6 +642,49 @@
         XLSX.writeFile(workbook, "Retailer_List.xlsx");
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 
 @endsection

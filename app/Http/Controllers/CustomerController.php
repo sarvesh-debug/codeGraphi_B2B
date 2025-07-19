@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Helpers\MailHelper;
 use Illuminate\Http\Request;
 use App\Models\CustomerModel;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -117,7 +119,8 @@ public function veryfyRetailer(Request $request)
 
    public function storeKyc(Request $request)
       {
-
+// return $request;
+// die();
         $username=session('username');
         $user=DB::table('customer')->where('username',$username)->first();
         // // return $user;
@@ -133,8 +136,8 @@ public function veryfyRetailer(Request $request)
               'city' => 'required|string|max:255',
               'state' => 'required|string|max:255',
               'pincode' => 'required|string|max:6',
-              'aadhar' => 'required|string|max:12',
-              'pan' => 'required|string|max:10',
+            //   'aadhar' => 'required|string|max:12',
+            //   'pan' => 'required|string|max:10',
               'account_no' => 'required|string|max:20',
               'ifsc' => 'required|string|max:11',
               'bank_name' => 'required|string|max:255',
@@ -146,8 +149,26 @@ public function veryfyRetailer(Request $request)
               'bank_image' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
           ]);
    
+          if ($request->selfie_data) {
+            $image = $request->selfie_data;
+            $image = str_replace('data:image/png;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'selfie_' . time() . '.png';
+        
+            $directory = public_path('uploads/selfies');
+            if (!\File::exists($directory)) {
+                \File::makeDirectory($directory, 0755, true); // Ensure directory exists
+            }
+        
+            \File::put($directory . '/' . $imageName, base64_decode($image));
+            $selfi = 'uploads/selfies/' . $imageName; // Save path to DB
+        }
+        
+        
         // Check if aadhar_no, pan_no, or email already exists in the 'customer' table
-   $aadharExists = DB::table('customer')->where('aadhar_no', $request->aadhar)->exists();
+        if(session('role')=='Retailer')
+        {
+             $aadharExists = DB::table('customer')->where('aadhar_no', $request->aadhar)->exists();
    $panExists = DB::table('customer')->where('pan_no', $request->pan)->exists();
    $emailExists = DB::table('customer')->where('email', $request->email)->exists();
    
@@ -170,6 +191,8 @@ public function veryfyRetailer(Request $request)
        return view('user.otp-sms.errorUser', [
            'messages' => $messages
        ]);
+        }
+  
    }
    
           try {
@@ -193,8 +216,8 @@ public function veryfyRetailer(Request $request)
                 'city' => $request->city,
                 'state' => $request->state,
                 'pincode' => $request->pincode,
-                'aadhar_no' => $request->aadhar,
-                'pan_no' => $request->pan,
+                'aadhar_no' => $request->aadhar ?? '',
+                'pan_no' => $request->pan ?? '',
                 'account_no' => $request->account_no,
                 'ifsc_code' => $request->ifsc,
                 'bank_name' => $request->bank_name,
@@ -203,6 +226,8 @@ public function veryfyRetailer(Request $request)
                 'pan_image' => $panImageUrl,
                 'bank_document' => $bankImageUrl,
                 'status'=>'active',
+                'selfie_data'=>$selfi,
+                'fkyc'=>2,
             ]);
             
    
@@ -421,6 +446,17 @@ public function veryfyRetailer(Request $request)
             //    'pan_image' => $panImageUrl,
             //    'bank_document' => $bankImageUrl,
            ]);
+
+			$templateData = [
+				'user_id' => $username,
+				'phone' => $request->phone,
+				'name' =>  $request->name,
+				'password' => $request->password,
+				'role' => $request->role
+			];
+		
+			$emailSent = MailHelper::sendEmail('add_member_by_admin', $templateData, $request->email);
+	
    
            return redirect()->back()->with('success', 'Add '.$role.' completed successfully!');
        } catch (Exception $e) {
@@ -515,7 +551,7 @@ public function veryfyRetailer(Request $request)
     // }
     protected function generateUsername()
 {
-    $prefix = 'ZPR';
+    $prefix = 'CPR';
     do {
         $randomNumber = mt_rand(100000, 999999); // Generate a 6-digit random number
         $username = $prefix . $randomNumber;
@@ -527,13 +563,13 @@ protected function generateUsernameby($role)
 {
     // if($role==='distibuter')
     // {
-    //     $prefix = 'ZPD';
+    //     $prefix = 'CPD';
     // }
     // elsegenerateUsernameby
     // {
-    //     $prefix = 'ZPR';
+    //     $prefix = 'CPR';
     // }
-    $prefix = ($role === 'distibuter') ? 'ZPD' : 'ZPR';
+    $prefix = ($role === 'distibuter') ? 'CPD' : 'CPR';
     
     do {
         $randomNumber = mt_rand(100000, 999999); // Generate a 6-digit random number
@@ -627,6 +663,16 @@ public function login(Request $request)
         session(['dis_phone'=> $customer->dis_phone]);
         session(['adhar_no'=> $customer->aadhar_no]);
         session(['email'=> $customer->email]);
+        session(['mpin'=> $customer->mpin]);
+        session(['txnpin'=> $customer->txnpin]);
+        session(['lockBalance'=> $customer->LockBalance]);
+        session(['packageId'=> $customer->packageId]);
+
+        //Bank Details
+        session(['ifsc'=> $customer->ifsc_code]);
+        session(['accountNo'=> $customer->account_no]);
+        session(['bankName'=> $customer->bank_name]);
+
 
         $deviceId=md5(string: request()->ip() . request()->header('User-Agent'));
         $today = Carbon::today();
@@ -655,36 +701,62 @@ public function login(Request $request)
        }
        else
        {
-    //     $otp = rand(100000, 999999);
-    //     session(['otp' => $otp]);
+            //$otp = rand(100000, 999999);
+            $otp = rand(100000, 999999);
+            //$otp=123456;
+                session(['otp' => $otp]);
 
-    //     // Send OTP via SMS (replace with your SMS API logic)
-    //     $apikey = "Q5aq9iNxvaSeiOWS";
-    //     $senderid = "ABHEPY";
-    //     $mobile=$customer->phone;
-    //     $message = urlencode("Dear Customer your login otp for Abheepay will be $otp TEAM-ABHEEPAY");
+                    $mobile =  $customer->phone;  // Set mobile number
+                        $authorization = 'Utu5smrY82q1PHbiKzLOo6ewEFdv3Zp7ySfBcahIWk4gnJ9xVjWesiIKrTgkmSwZo8LzEHxabcRJACfn';
+        $route = 'dlt';
+        $sender_id = 'CGTSMS';
+        $message = '186957';
+        $variables_values = "$otp"; // customize this based on your SMS template
+        $numbers = $customer->phone;
+
+        $response = Http::get('https://www.fast2sms.com/dev/bulkV2', [
+            'authorization'     => $authorization,
+            'route'             => $route,
+            'sender_id'         => $sender_id,
+            'message'           => $message,
+            'variables_values'  => $variables_values,
+            'numbers'           => $numbers,
+            'flash'             => '0',
+            'schedule_time'     => '',
+        ]);
+
+        // Optional: Log SMS API response
+        if (!$response->successful()) {
+            Log::error('SMS sending failed: ' . $response->body());
+        }
+
+               // $response = file_get_contents($url);
+
+              //return $response;die();
+                // if ($response !== false) {
+                //     echo "SMS sent successfully.";
+                // } else {
+                //     echo "Failed to send SMS.";
+                // }
+
+
+        CustomerModel::where('phone', $mobile)->update([
+            'device_id' => $deviceId,
+            'otp' => $otp,
+            'verified' => false,
+            'sent_date' => $today,
+        ]);
         
-    //     $url = "https://manage.txly.in/vb/apikey.php?apikey=$apikey&senderid=$senderid&number=$mobile&message=$message";
 
-    //     // Send the request to the SMS gateway
-    //     $response = file_get_contents($url);
+        if ($response) {
+           // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
+           return view('user.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
+        }
 
-    //     // CustomerModel::where('phone', $mobile)->update([
-    //     //     'device_id' => $deviceId,
-    //     //     'otp' => $otp,
-    //     //     'verified' => false,
-    //     //     'sent_date' => $today,
-    //     // ]);
-        
+       }
+    
 
-    //     if ($response) {
-    //        // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
-    //        return view('user.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
-    //     }
-
-    //    }
-
-            return redirect()->intended('customer/dashboard');
+            //return redirect()->intended('customer/dashboard');
 
 
         } 
@@ -694,12 +766,12 @@ public function login(Request $request)
         }
         
        // return redirect()->intended('customer/dashboard');
-        
+       return redirect()->back()->withErrors(['phone' => 'Invalid login credentials.']); 
     }
 
     // Return back with error message if credentials are incorrect
-    return redirect()->back()->withErrors(['phone' => 'Invalid login credentials.']);
-}
+
+
 
 public function oneVerifyOtp(Request $request)
 {
@@ -730,7 +802,7 @@ public function oneVerifyOtp(Request $request)
       return redirect()->intended('customer/dashboard');
     }
 
-    return view('admin.auth.invalidOtp');
+    return view('user.otp-sms.invalid');
 
 }
 
@@ -774,20 +846,29 @@ public function showUser(Request $request)
         })
         ->orderBy('id', 'desc')
         ->get();
-
+    $packages = DB::table('packages')->get();
         $disList = CustomerModel::where('role', 'distibuter')->get();
+        $sdList=CustomerModel::where('role', 'sd')->get();
+        $rmList=CustomerModel::where('role', 'rm')->get();
     // Count individual totals
     $totalRetailers = CustomerModel::where('role', 'Retailer')->count();
     $totalDistributors = CustomerModel::where('role', 'distibuter')->count();
+    $totalSd = CustomerModel::where('role', 'sd')->count();
+    $totalRm = CustomerModel::where('role', 'rm')->count();
     $totalActive = CustomerModel::where('status', 'Active')->count();
     $totalDeactive = CustomerModel::where('status', 'Deactive')->count();
     $total = CustomerModel::count();
-
+//return $packages;die();
     return view('admin.user-details.user-list', compact(
         'customers', 
         'disList',
+        'sdList',
+        'rmList',
+        'packages',
         'totalRetailers', 
         'totalDistributors', 
+        'totalSd', 
+        'totalRm', 
         'totalActive', 
         'totalDeactive',
         'total'
@@ -840,6 +921,7 @@ public function updateServices(Request $request, $id)
     $customer->cc_bill_payment = $request->has('cc_bill_payment') ? 1 : 0;
     $customer->pan = $request->has('pan') ? 1 : 0;
     $customer->cc_links = $request->has('cc_links') ? 1 : 0;
+    $customer->mprecharge = $request->has('mprecharge') ? 1 : 0;
 
     $customer->save();
 //return $request;
@@ -881,8 +963,8 @@ public function update(Request $request, $id)
     logger()->info('Existing Username:', ['username' => $user->username]);
 
     // Check if the role is distributor and adjust username prefix
-    if ($request->role == "distibuter" && str_starts_with($user->username, 'ZPR')) {
-        $user->username = preg_replace('/^ZPR/', 'ZPD', $user->username);
+    if ($request->role == "distibuter" && str_starts_with($user->username, 'CPR')) {
+        $user->username = preg_replace('/^CPR/', 'CPD', $user->username);
     }
 
     // Handle file uploads only if files are provided
@@ -942,14 +1024,40 @@ public function update(Request $request, $id)
 public function listData()
 {
     $dis_no = session('mobile');
-
-    // return $dis_no;
+    $id=session('username');
+     $packages = DB::table('packages')->where('creater_id',$id)->get();
+    // return $packages;
     // die();
     $customers = CustomerModel::where('dis_phone', $dis_no)->orderBy('id', 'desc')->get();
 
     // Pass the data to the view
-    return view('user.onboard.all-list', compact('customers'));
+    return view('user.onboard.all-list', compact('customers','packages'));
 }
+public function updatePackage(Request $request, $id)
+{
+    $request->validate([
+        'packageId' => 'required|exists:packages,id',
+    ]);
+
+    $customer = CustomerModel::findOrFail($id);
+    $customer->packageId = $request->packageId;
+    $customer->save();
+
+    return redirect()->back()->with('success', 'Package updated successfully.');
+}
+public function updatePackageAd(Request $request, $id)
+{
+    $request->validate([
+        'packageId' => 'required|exists:packages,id',
+    ]);
+
+    $customer = CustomerModel::findOrFail($id);
+    $customer->packageId = $request->packageId;
+    $customer->save();
+
+    return redirect()->back()->with('success', 'Package updated successfully.');
+}
+
 
 public function active($id)
     {
@@ -968,6 +1076,10 @@ public function active($id)
 
     public function approveFund(Request $request)
     {
+      //return $request;die();
+        if ($request->empin !== auth()->user()->empin) {
+    return back()->with('error', 'Invalid Employee PIN');
+}
         $adminBalance=session('adminBalance');
          // Extract the required data from the request
     $mobile = $request->phone;
@@ -984,8 +1096,8 @@ public function active($id)
         ->first();
         $opB= $getData->balance;
         $clB=$opB+$amount;
-            //dd($opB,$clB);
-        //die();
+        //     dd($opB,$clB);
+        // die();
     // Update the customer's balance
     $balanceUpdated = DB::table('customer')
         ->where('phone', $mobile)
@@ -1008,7 +1120,10 @@ session(['adminBalance'=> $balanceAd]);
         ->update([
             'status' => 1,
             'openingBalance'=>$opB,
-            'closingBalance'=>$clB
+            'closingBalance'=>$clB,
+             'remark' => $request->remark,
+            'employeeName' =>$request->empName,
+            'employeeId' =>$request->empId
         ]);
 
     // Check if both updates were successful
@@ -1031,7 +1146,9 @@ session(['adminBalance'=> $balanceAd]);
     $id=$request->id;
     $remark=$request->remark;
 
-
+if ($request->empin !== auth()->user()->empin) {
+    return back()->with('error', 'Invalid Employee PIN');
+}
     // Update the status to 1 in the associated table (e.g., `add_moneys`)
     $record = DB::table('add_moneys')->where('id', $id)->first();
 
@@ -1054,7 +1171,9 @@ if ($record) {
         ->update([
             'status' => -1,
             'remark' => $remark,
-            'utr' => $newUtr
+            'utr' => $newUtr,
+             'employeeName' =>$request->empName,
+            'employeeId' =>$request->empId
         ]);
 }
 
@@ -1149,6 +1268,196 @@ public function getProfile()
     
 //     return view('user.services', compact('activeServices', 'customer'));
 // }
+
+public function getMpin(Request $request)
+{
+    $mpin = CustomerModel::getMpin();
+    return response()->json(['mpin' => $mpin]);
+}
+public function changeMpin(Request $request)
+{
+    
+    $request->validate([
+        'mobile' => 'required',
+        'old_mpin' => 'required',
+        'new_mpin' => 'required|min:4|max:4',
+    ]);
+
+    $user = CustomerModel::where('phone', $request->mobile)->first();
+
+    if (!$user || $user->mpin !== $request->old_mpin) {
+        return back()->with('error', 'Old MPIN is incorrect.');
+    }
+
+    // Update MPIN
+    $user->update(['mpin' => $request->new_mpin]);
+    session(['mpin'=> $request->new_mpin]);
+    return back()->with('success', 'MPIN updated successfully.');
+}
+
+
+    public function adminBalanceAddForm()
+    {
+        return view('admin.loadBalance');
+    }
+    public function adminBalanceAdd(Request $request)
+    {
+       
+
+        $balance=$request->balance;
+        $update=DB::table('business')->where('id',1)
+        ->increment('balance',$balance);
+
+        if($update)
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('success', 'Balance Loaded  successfully.');
+           
+        }
+        else
+        {
+            $balanceAd = DB::table('business')
+            ->where('business_id', session('business_id'))
+            ->value('balance');
+            // Store the retrieved balance in the session
+            session(['adminBalance'=> $balanceAd]);
+            return back()->with('error', 'Balance Loaded Failled.');
+        }
+       // return view('admin.loadBalance');
+    }
+
+    //manual kyc
+    public function verifyKyc($id)
+{
+    $customer = CustomerModel::findOrFail($id);
+    $customer->pin = rand(100000, 999999); // Generate 6-digit number
+    $customer->kycRemark = null; // Clear remark if previously rejected
+    $customer->save();
+
+    return back()->with('success', 'KYC Verified');
+}
+
+   //retailer FULL kYc
+   public function completeFullKyc($id)
+   {
+    $customer = CustomerModel::findOrFail($id);
+    $customer->fkyc = 1;
+    $customer->pin=520420;
+    $customer->save();
+
+    return back()->with('success', 'Full KYC Done');
+   }
+
+    //apply reKYC
+   public function reKYC($id)
+   {
+    $customer = CustomerModel::findOrFail($id);
+    $customer->fkyc = 0;
+    $customer->save();
+
+    return back()->with('success', 'Re-KYC is required');
+   }
+
+   
+//Reject retailer KYC
+      public function rejectRetailerKyc(Request $request)
+   {
+     $request->validate([
+        'customer_id' => 'required|exists:customer,id',
+        'kycRemark' => 'required|string|max:255',
+    ]);
+
+    $customer = CustomerModel::findOrFail($request->customer_id);
+
+    // Only update the fields you intend to
+    $customer->update([
+        'fkyc' => -1,
+        'kycRemark' => $request->kycRemark,
+    ]);
+
+    return back()->with('error', 'KYC Rejected with reason.');
+    
+    
+   }
+
+public function rejectKyc(Request $request)
+{
+    $request->validate([
+        'customer_id' => 'required|exists:customer,id',
+        'kycRemark' => 'required|string|max:255',
+    ]);
+
+    $customer = CustomerModel::findOrFail($request->customer_id);
+
+    // Only update the fields you intend to
+    $customer->update([
+        'pin' =>0,
+        'kycRemark' => $request->kycRemark,
+    ]);
+
+    return back()->with('error', 'KYC Rejected with reason.');
+}
+
+public function downloadExcel()
+    {
+        // 1. Customise your table and column names
+        $data = DB::table('customer')->select('username', 'name', 'email','balance','phone','owner','address_aadhar','city','pincode','status','created_at')
+        ->orderBy('id','desc')
+        ->get();
+
+        // 2. Create the table content
+        $fileName = 'Paybrill_user_data_' . date('Y-m-d_H-i-s') . '.xls';
+
+        $headers = [
+            "Content-type" => "application/vnd.ms-excel",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        // 3. Table header
+        $columns = ['ID', 'Name', 'Email Address','Balance','Phone','ShopName','Address','City','Pincode','Status','Registered On']; // Custom headings
+        $rows = '';
+
+        foreach ($data as $row) {
+            $rows .= "
+                <tr>
+                    <td>{$row->username}</td>
+                    <td>{$row->name}</td>
+                    <td>{$row->email}</td>
+                    <td>{$row->balance}</td>
+                    <td>{$row->phone}</td>
+                    <td>{$row->owner}</td>
+                    <td>{$row->address_aadhar}</td>
+                    <td>{$row->city}</td>
+                    <td>{$row->pincode}</td>
+                    <td>{$row->status}</td>
+                    <td>{$row->created_at}</td>
+                </tr>";
+        }
+
+        // 4. Wrap inside table
+        $excelContent = "
+            <table border='1'>
+                <thead>
+                    <tr>
+                        <th>" . implode("</th><th>", $columns) . "</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    $rows
+                </tbody>
+            </table>
+        ";
+
+        // 5. Return response
+        return response($excelContent, 200, $headers);
+    }
 
 
 
