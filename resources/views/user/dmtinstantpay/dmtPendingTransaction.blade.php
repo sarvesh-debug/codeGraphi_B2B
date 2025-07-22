@@ -34,7 +34,7 @@
     </form> --}}
 
     <div class="card m-2 mb-5">
-        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
             <h3 class="card-heading mb-3 mb-md-0 text-center text-md-start">Pending Transaction List</h3>
         </div>
         <div class="card-body">

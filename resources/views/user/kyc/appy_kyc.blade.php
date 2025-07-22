@@ -6,16 +6,25 @@
 
 @section('content')
 
+
+<style>
+    .gradient-header {
+    background: linear-gradient(135deg, #e60000, #000066); /* red to dark blue */
+    color: white;
+}
+
+</style>
+
 <div class="controller mt-3 mx-5">
     <div class="row">
         <!-- Content Section -->
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <!-- Content container -->
             <div id="kt_app_content_container" class="app-container container-fluid">
-                <div class="card col-md-6 mx-auto shadow-lg border-0">
+                <div class="card col-md-6 mx-auto  shadow-lg border-0">
                     <!-- Card Header -->
-                    <div class="card-header bg-success text-white text-center py-3">
-                        <h4 class="mb-0">Apply For KYC</h4>
+                    <div class="card-header gradient-header text-white text-center py-3">
+                        <h4 class="mb-0 text-white">Apply For KYC</h4>
                     </div>
 
                     <!-- Card Body -->
@@ -105,7 +114,7 @@
 
                             <!-- Submit Button -->
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success px-4">Submit</button>
+                                <button type="submit" class="btn gradient-header px-4">Submit</button>
                             </div>
                         </form>
                     </div>

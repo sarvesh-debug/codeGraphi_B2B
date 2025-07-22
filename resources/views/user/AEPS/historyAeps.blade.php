@@ -15,9 +15,9 @@
     @endif
 
     <div class="mb-5">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3 class="text-xs sm:text-sm md:text-3xl lg:text-3xl">Cash Withdrawal History</h3>
-            <button id="exportExcel" class="btn btn-success">Export to Excel</button>
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h3 class="text-xs sm:text-sm md:text-3xl lg:text-3xl text-white">Cash Withdrawal History</h3>
+            <button id="exportExcel" class="btn btn-success" style="background-color: #05125a;">Export to Excel</button>
         </div>
         <div class="card-body ">
             <!-- Date Filter Form -->
@@ -35,7 +35,7 @@
                            class="form-control">
                 </div>
                 <div class="col-md-2 mt-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Filter</button>
                 </div>
             </form>
 

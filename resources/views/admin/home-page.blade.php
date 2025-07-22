@@ -130,7 +130,7 @@ $payAmtTotal=$acceptAmt+$pendingAmt+$rejectAmt;
     
 
     /* Gradient Backgrounds */
-    .gradient-1 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    /* .gradient-1 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
     .gradient-2 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
     .gradient-3 { background: linear-gradient(135deg, #fad0c4, #ffd1ff); }
     .gradient-4 { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
@@ -141,7 +141,49 @@ $payAmtTotal=$acceptAmt+$pendingAmt+$rejectAmt;
     .gradient-9 { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
     .gradient-10 { background: linear-gradient(135deg, #fccb90, #d57eeb); }
     .gradient-11 { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
-    .gradient-12 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+    .gradient-12 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); } */
+
+
+/* Professional & Rich Gradient Backgrounds */
+.gradient-1 {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+} /* Soft pink to peach */
+.gradient-2 {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+} /* Lavender purple */
+.gradient-3 {
+  background: linear-gradient(135deg, #ffecd2, #fcb69f);
+} /* Warm sandy orange */
+.gradient-4 {
+  background: linear-gradient(135deg, #89f7fe, #66a6ff);
+} /* Aqua blue */
+.gradient-5 {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+} /* Golden orange */
+.gradient-6 {
+  background: linear-gradient(135deg, #84fab0, #8fd3f4);
+} /* Fresh green-blue */
+.gradient-7 {
+  background: linear-gradient(135deg, #cfd9df, #e2ebf0);
+} /* Clean light steel */
+.gradient-8 {
+  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+} /* Pastel violet to blue */
+.gradient-9 {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+} /* Pink to red */
+.gradient-10 {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+} /* Sky blue to cyan */
+.gradient-11 {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+} /* Green to teal */
+.gradient-12 {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+} /* Blue to rich violet */
+
+
+
 </style>
 
 <div class="container mt-4">

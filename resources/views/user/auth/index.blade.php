@@ -94,6 +94,7 @@
 
         .btn-theme:hover {
             background-color: #16315d;
+            color: white;
         }
 
         .form-footer {
@@ -181,7 +182,7 @@
                 <a href="{{ route('password.request') }}" class="float-end">Forgot Password?</a>
             </div>
 
-            <button type="submit" class="btn btn-theme">Login</button>
+            <button type="submit" class="btn btn-theme" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Login</button>
         </form>
 
         <div class="form-footer mt-4">

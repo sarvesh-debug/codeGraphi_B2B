@@ -56,11 +56,30 @@
                 <input type="number" class="form-control" id="confirm-password" name="balance" placeholder="Amount" required>
             </div>
             
-            <button type="submit" class="btn btn-block w-100">Add Balance</button>
+            {{-- <button type="submit" class="btn btn-block w-100">Add Balance</button> --}}
+            <button type="submit" class="btn gradient-btn btn-block w-100 text-white fw-semibold py-2">
+                Add Balance
+            </button>
+
         </form>
     </div>
 
 </div>
+
+<style>
+    .gradient-btn {
+    background: linear-gradient(135deg, #ff0000, #1e3c72);
+    border: none;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.gradient-btn:hover {
+    background: linear-gradient(135deg, #1e3c72, #ff0000);
+    transform: scale(1.03);
+}
+
+</style>
 
 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -68,15 +87,22 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
-            <div class="modal-footer justify-content-center">
+            {{-- <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+            </div> --}}
+
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn gradient-btn btn-sm text-white fw-semibold px-4 py-2" data-bs-dismiss="modal">
+                    Close
+                </button>
             </div>
+
         </div>
     </div>
 </div>

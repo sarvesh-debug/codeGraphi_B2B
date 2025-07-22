@@ -1,11 +1,13 @@
 @extends('admin/include.layout') 
 
+
 @section('content')
 <div class="container mt-5">
     <div class="card shadow-sm">
-        <div class="card-header bg-success text-white text-center">
-            <h3  style="color:aliceblue; font-weight: bold;">Update Latest News and Emergency Update</h3>
+       <div class="card-header text-white text-center" style="background: linear-gradient(135deg, #3a1c71, #d4192c, #3a1c71);">
+            <h3 style="color: aliceblue; font-weight: bold;">Update Latest News and Emergency Update</h3>
         </div>
+
         <div class="card-body">
             {{-- @if(session('success'))
                 <div class="alert alert-success" role="alert">
@@ -38,10 +40,31 @@
                     <input type="text" name="tsn_no" id="tsn_no" class="form-control" value="{{$getData->tsn_no}}" placeholder="Enter TSN number" required>
                     <div class="invalid-feedback">Please enter the TSN number.</div>
                 </div>
-                <div class="text-center">
+                {{-- <div class="text-center">
                     <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-            </form>
+                </div> --}}
+               <div class="text-center">
+            <button type="submit" class="btn text-white py-2 px-4 w-40 gradient-btn">
+                    Submit
+                </button>
+            </div>
+
+    <style>
+        .gradient-btn {
+            background: linear-gradient(135deg, #ff0000, #1e3c72);
+            border: none;
+            border-radius: 6px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .gradient-btn:hover {
+            background: linear-gradient(135deg, #1e3c72, #ff0000);
+            transform: scale(1.03);
+        }
+    </style>
+
+
+        </form>
             
         </div>
     </div>
@@ -52,14 +75,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

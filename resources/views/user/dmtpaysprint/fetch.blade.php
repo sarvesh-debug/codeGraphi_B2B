@@ -8,8 +8,8 @@
         <!-- Remitter Profile Section -->
         
 <div class="card col-md-6 mx-auto shadow-lg border-0">
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Transaction</h4>
+    <div class="card-header bg-success text-white text-center py-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+        <h4 class="mb-0 text-white">Transaction</h4>
     </div>
     <div class="card-body p-4">
         <form action="{{ route('1fetch.beneficiary') }}" method="POST">
@@ -24,7 +24,7 @@
                 <label for="benename" class="form-label">Beneficiary Name</label>
                 <input type="text" class="form-control" name="benename" required>
             </div> --}}
-            <button type="submit" class="btn btn-success w-100">Fetch</button>
+            <button type="submit" class="btn btn-success w-100 p-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Fetch</button>
         </form>
     </div>
 </div>
@@ -32,8 +32,8 @@
         <!-- Latest Transactions Section -->
         <div class="col-md-6">
             <div class="card shadow-lg border-0 h-100">
-                <div class="card-header bg-gradient-success text-white text-center py-3">
-                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
+                <div class="card-header bg-gradient-success text-white text-center py-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                    <h5 class="mb-0 text-white"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
                 </div>
                 <div class="card-body p-4">
                  @if(!empty($latestTransactions) && count($latestTransactions) > 0)

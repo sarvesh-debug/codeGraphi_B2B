@@ -38,8 +38,8 @@
             <input type="password" name="password" class="form-control">
         </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
-        <a href="{{ route('employees.index') }}" class="btn btn-secondary">Back</a>
+        <button type="submit" class="btn btn-primary py-2 px-4" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Update</button>
+        <a href="{{ route('employees.index') }}" class="btn btn-secondary py-2 px-4">Back</a>
     </form>
 </div>
 @endsection

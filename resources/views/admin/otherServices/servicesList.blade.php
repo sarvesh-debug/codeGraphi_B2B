@@ -7,7 +7,7 @@
         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home</a></li>
         <li class="breadcrumb-item active">Contacts</li>
     </ol>
-<a href="{{route('admin.showServices')}}" class="btn btn-sm btn-success">Add Service</a>
+<a href="{{route('admin.showServices')}}" class="btn btn-sm btn-success" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none; margin:5px;">Add Service</a>
     {{-- @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif --}}
@@ -73,14 +73,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

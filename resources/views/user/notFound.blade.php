@@ -70,6 +70,6 @@
          class="coming-soon-image">
     <p class="coming-soon-text">We’re working hard to bring this service to you. Please check back later!</p>
 
-    <a href="{{ route('customer/dashboard') }}" class="btn back-btn">← Back to Dashboard</a>
+    <a href="{{ route('customer/dashboard') }}" class="btn back-btn p-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">← Back to Dashboard</a>
 </div>
 @endsection

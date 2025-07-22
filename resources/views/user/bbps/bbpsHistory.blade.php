@@ -29,12 +29,12 @@
                    class="form-control">
         </div>
         <div class="col-12 col-lg-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100 p-1.5 lg:mt-0 mt-2">Filter</button>
+            <button type="submit" class="btn btn-primary w-100 p-1.5 lg:mt-0 mt-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Filter</button>
         </div>
     </form>
 
     <div class="card m-2 mb-5">
-        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
             <h3 class="card-heading mb-3 mb-md-0 text-center text-md-start">
                 @if ($method=='C00')
                 PrePaid Mobile
@@ -73,7 +73,7 @@
 
                 @endif
                History</h3>
-            <button id="exportTransactions" class="btn btn-download"> <i class="fa-solid fa-download"></i> Download</button>
+            <button id="exportTransactions" class="btn btn-download" style="background-color: #051880;"> <i class="fa-solid fa-download"></i> Download</button>
         </div>
         <div class="card-body">
             <div class="table-responsive">

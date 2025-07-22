@@ -808,7 +808,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
                 <div class="modal-body">
                     @if(session('success'))
                         <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80" class="d-block mx-auto">
-                        <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                        <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
     
                     @elseif(session('error'))
                         <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80" class="d-block mx-auto">
@@ -816,7 +816,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
                     @endif
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
                 </div>
             </div>
         </div>

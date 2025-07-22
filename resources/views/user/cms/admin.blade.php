@@ -11,7 +11,7 @@
 
     <!-- START CMS CARD -->
     <div class="card shadow-lg rounded-4 mb-4 border-0">
-        <div class="card-header bg-gradient bg-success text-white fw-bold rounded-top">
+        <div class="card-header bg-gradient bg-success text-white fw-bold rounded-top" style="margin: 10px;">
             🚀 Start CMS Transaction
         </div>
         <div class="card-body">
@@ -36,9 +36,13 @@
 
     <!-- FILTER + EXPORT -->
     <div class="card shadow rounded-4 mb-4 border-0">
-        <div class="card-header bg-primary text-white fw-bold rounded-top">
+        {{-- <div class="card-header bg-primary text-white fw-bold rounded-top">
             🔍 Filter & Export
-        </div>
+        </div> --}}
+        <div class="card-header text-white fw-bold rounded-top" style="background: linear-gradient(135deg, #3a1c71, #c51224, #c51224); margin:10px;">
+         🔍 Filter & Export
+         </div>
+
         <div class="card-body">
             <form class="row g-3" method="GET" action="{{ route('cms.admin.transactions') }}">
                 <div class="col-md-4">
@@ -85,7 +89,7 @@
                     @forelse($transactions as $tx)
                         <tr>
                             <td>{{ $tx->refid }}</td>
-                            <td><span class="badge bg-info">{{ $tx->event }}</span></td>
+                            <td><span class="badge" style="background-color:rgb(2, 2, 48);">{{ $tx->event }}</span></td>
                             <td>₹{{ $tx->amount }}</td>
                             <td>{{ $tx->biller_name }}</td>
                             <td>{{ $tx->mobile_no }}</td>
@@ -103,7 +107,7 @@
     <form method="POST" action="{{ route('cms.status.submit') }}">
         @csrf
         <input type="hidden" name="refid" value="{{ $tx->refid }}">
-        <button type="submit" class="btn btn-sm btn-outline-info">Check Status</button>
+        <button type="submit" class=" btn-sm btn-outline-info">Check Status</button>
     </form>
 
     @if(session('status_response_' . $tx->refid))

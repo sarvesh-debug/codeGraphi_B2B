@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>All Packages</h2>
-        <a href="{{ route('packages.create') }}" class="btn btn-primary">+ Create Package</a>
+        <a href="{{ route('packages.create') }}" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">+ Create Package</a>
     </div>
 
     {{-- Flash Message --}}
@@ -46,7 +46,7 @@
                                     <td>{{ \Carbon\Carbon::parse($package->updated_at)->format('d M Y') }}</td>
 
                                     <td class="text-end">
-                                        <a href="{{ route('commission-list', $package->id) }}" class="btn btn-info btn-sm">View</a>
+                                        <a href="{{ route('commission-list', $package->id) }}" class="btn btn-info btn-sm" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">View</a>
                                         <a href="{{ route('packages.edit', $package->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         {{-- <form action="{{ route('packages.destroy', $package->id) }}" method="POST" class="d-inline"
                                               onsubmit="return confirm('Are you sure you want to delete this package?');">
@@ -75,14 +75,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

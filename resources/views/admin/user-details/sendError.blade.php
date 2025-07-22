@@ -30,7 +30,7 @@
     @if(isset($status) && $status === 'success')
     <div class="card text-center" style="width: 50%; padding: 30px;">
         <div class="card-body">
-            <h5 class="card-title text-success">Wallet Transfer Successful ✅</h5>
+            <h5 class="card-title text-dark">Wallet Transfer Successful ✅</h5>
             <p class="card-text">
                 Your wallet transfer has been processed successfully! Thank you for using our service. 😊
             </p>

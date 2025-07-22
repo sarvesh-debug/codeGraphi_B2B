@@ -160,7 +160,7 @@
                 <input type="hidden" name="packegesId" id="packegesId" value="{{$packageId}}">
                 <!-- Submit Button -->
                 <div class="col-lg-2 col-md-3 col-sm-6 col-12 form-group mt-4 mb-3 d-flex text-center justify-content-end">
-                    <button type="submit" class="btn btn-success w-auto me-2"> Submit </button>
+                    <button type="submit" class="btn btn-success w-auto me-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;"> Submit </button>
                     <button type="reset" class="btn btn-secondary w-auto" onclick="resetForm()">Reset</button>
                 </div>
             </div>
@@ -206,7 +206,7 @@
                                 <td>{{ $commission->tds_in }}</td>
                                 <td>
                                     <!-- <a href="{{ route('commission.edit', $commission->id) }}" class="btn btn-warning btn-sm">Edit</a> -->
-                                    <button class="btn btn-warning btn-sm" onclick="editCommission({{ json_encode($commission) }})">Edit</button>
+                                    <button class="btn btn-warning btn-sm" onclick="editCommission({{ json_encode($commission) }})" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none; margin:5px;">Edit</button>
                                       <form action="{{ route('commission.destroy', $commission->id) }}" method="POST" onsubmit="return confirmDelete();" style="display: inline-block;">
                                           @csrf
                                           @method('DELETE')

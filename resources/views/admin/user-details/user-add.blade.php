@@ -4,9 +4,34 @@
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 50vh; padding-top: 20px;">
     <div class="col-md-6">
         <div class="card shadow-lg border-0 rounded-lg">
-            <div class="card-header bg-success text-white text-center">
+            {{-- <div class="card-header bg-dark text-white text-center">
                 <h3 class="mb-0" style="color:aliceblue; font-weight: bold;" >New Member</h3>
+            </div> --}}
+
+            <div class="card-header brand-logo-gradient ">
+                <h3 class="mb-0 text-white">New Member</h3>
             </div>
+
+            <style>
+                .brand-logo-gradient {
+                    background: linear-gradient(135deg, #e60000, #000066); /* red to blue */
+                    color: white;
+                    text-align: center;
+                    padding: 10px 15px;
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+
+                .brand-logo-gradient:hover {
+                    background: linear-gradient(135deg, #e60000, #000066); /* red to blue */
+                    color: white;
+                    text-align: center;
+                    padding: 10px 15px;
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                }
+            </style>
+
             <div class="card-body">
                 {{-- @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
@@ -70,7 +95,7 @@
                     </div>
                     
                     <div class="text-center">
-                        <button type="submit" class="btn btn-success w-100">Submit</button>
+                        <button type="submit" class="btn brand-logo-gradient p-2 w-100">Submit</button>
                     </div>
                 </form>
             </div>
@@ -84,18 +109,33 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm gradient-btn py-2 px-4" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .gradient-btn {
+    background: linear-gradient(135deg, #ff0000, #1e3c72);
+    border: none;
+    border-radius: 6px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.gradient-btn:hover {
+    background: linear-gradient(135deg, #1e3c72, #ff0000);
+    transform: scale(1.03);
+}
+
+</style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

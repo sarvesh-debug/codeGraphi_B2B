@@ -3,8 +3,8 @@
 @section('content')
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header">
-            <h5>Fund Requests</h5>
+        <div class="card-header" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h5 style="color: white;">Fund Requests</h5>
             {{-- <ul class="nav nav-tabs card-header-tabs">
                
                 <li class="nav-item">
@@ -30,11 +30,11 @@
         </div>
     @endif --}}
         <div class="card-body">
-            <form class="d-flex mb-4" action="{{ route('getFundRequests') }}" method="GET">
+            <form class="d-flex mb-4 mt-3" action="{{ route('getFundRequests') }}" method="GET">
                 <input type="date" class="form-control me-2" name="start_date" value="{{ request('start_date') }}">
                 <input type="date" class="form-control me-2" name="end_date" value="{{ request('end_date') }}">
                 <input type="text" class="form-control me-2" name="search" placeholder="Enter Search Value" value="{{ request('search') }}">
-                <button class="btn btn-primary me-2" type="submit">Search</button>
+                <button class="btn btn-primary me-2" type="submit" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Search</button>
                 <button class="btn btn-success" onclick="exportToExcel()" type="button">Export</button>
             </form>
             
@@ -253,14 +253,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

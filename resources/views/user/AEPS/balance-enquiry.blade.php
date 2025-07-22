@@ -40,7 +40,7 @@
                     <!-- <div class="card-header bg-success text-white text-center py-3">
                         <h4 class="mb-0"><span class="text-success1">AEPS</span> <span class="text-info1">Balance Enquiry</span></h4>
                     </div> -->
-                    <div class="card-header">
+                    <div class="card-header" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                         <h4 class="mb-0"><span class="card-heading"> AEPS Balance Enquiry </h4>
                     </div>
 
@@ -218,7 +218,7 @@
 </div>
 
 <!-- Submit -->
-<button type="submit" id="" class="btn btn-primary mt-3" >Submit</button>
+<button type="submit" id="" class="btn btn-primary mt-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
 
         </form>
     </div>

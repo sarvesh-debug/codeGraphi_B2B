@@ -9,10 +9,32 @@
     </ol>
 
     <!-- Generate Lead Button -->
+    {{-- <form method="POST" action="{{ url('/generate-lead') }}" class="mb-3">
+        @csrf
+        <button type="submit" class="btn  gradient-btn">Apply New </button>
+    </form> --}}
+
     <form method="POST" action="{{ url('/generate-lead') }}" class="mb-3">
         @csrf
-        <button type="submit" class="btn btn-primary">Apply New </button>
+        <button type="submit" class="btn gradient-btn text-white fw-bold px-4 py-2">
+            Apply New
+        </button>
     </form>
+
+    <style>
+        .gradient-btn {
+        background: linear-gradient(135deg, #ff0000, #1e3c72);
+        border: none;
+        border-radius: 8px;
+        transition: background 0.4s ease, transform 0.2s ease;
+    }
+
+    .gradient-btn:hover {
+        background: linear-gradient(135deg, #1e3c72, #ff0000);
+        transform: scale(1.03);
+    }
+
+    </style>
 
     <!-- Error Display -->
     @if(session('error'))
@@ -22,7 +44,7 @@
     <!-- Lead Links Table -->
     @if(isset($leads) && $leads->isNotEmpty())
         <div class="card">
-            <div class="card-header bg-success text-white">Generated Links</div>
+            <div class="card-header bg-success text-white" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Generated Links</div>
             <div class="card-body table-scroll">
                 <table class="table table-bordered">
                     <thead class="table-light">
