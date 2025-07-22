@@ -77,8 +77,12 @@
                            class="form-control">
                 </div>
                 <div class="col-md-2 d-flex">
-                    <!-- Filter Button -->
-                    <button type="submit" class="btn btn-primary me-2 w-100">Filter</button>
+                    {{-- <!-- Filter Button -->
+                    <button type="submit" class="btn btn-primary me-2 w-100">Filter</button> --}}
+                    <button type="submit" class="btn text-white me-2 w-100" style="background: linear-gradient(135deg, #3a1c71, #d41124, #d41124); border: none;">
+                        Filter
+                    </button>
+
                     <!-- Export Button -->
                 
                     <!-- Export Button -->
@@ -149,7 +153,7 @@
                     <td>{{ $data['data']['accountNumber'] ?? "N/A" }}</td>
                     <td>{{ $transaction->created_at }}</td>
                     <td>
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#responseModal{{ $transaction->id }}">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#responseModal{{ $transaction->id }}" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                             View Response
                         </button>
                     </td>

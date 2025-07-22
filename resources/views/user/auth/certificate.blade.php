@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+  <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/codegraphi_favcon.jpeg') }}" />
+
   <style>
     @page {
       size: A4;
@@ -71,7 +74,8 @@
 
 <main class="certificate-container text-center mt-4">
   <div class="heading">
-    <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="Logo" class="logo w-24 h-24 sm:w-20 sm:h-20 mx-auto rounded-lg shadow-md">
+    <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="Logo"
+     style="width: 160px; height: 60px;" class="logo mx-auto rounded-lg shadow-md">
     <h1 class="text-xl sm:text-lg md:text-2xl font-bold text-blue-700 uppercase">Authorized Banking Point</h1>
     <p class="text-sm sm:text-xs md:text-base text-gray-600 uppercase">Certificate of Authorization</p>
   </div>
@@ -111,7 +115,7 @@
 </main>
 
 <!-- Download Button -->
-<button id="download-btn" class="download-btn absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-5 py-2 sm:px-3 sm:py-1 text-sm sm:text-xs rounded-lg shadow-md hover:bg-blue-800">
+<button id="download-btn" class="download-btn absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-5 py-2 sm:px-3 sm:py-1 text-sm sm:text-xs rounded-lg shadow-md hover:bg-blue-800" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none; padding:10px;">
   Download Certificate as PDF
 </button>
 

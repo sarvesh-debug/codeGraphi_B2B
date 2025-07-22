@@ -30,10 +30,16 @@
 </div> --}}
 
 
-    <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
+    {{-- <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
        
         Export
+    </button> --}}
+
+    <button type="button" class="btn w-100 m-2 text-white" onclick="downloadExcel()" style="background: linear-gradient(135deg, #3a1c71, #c02535, #ce4a57); font-weight: 600;">
+        Export
     </button>
+
+
     {{-- @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -138,7 +144,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -176,14 +182,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

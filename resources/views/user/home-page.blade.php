@@ -433,19 +433,41 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 			<!-- Web View (Visible on larger screens) -->
 			<div class="web-view">
 				<div class="row mb-3">
+					{{-- <div class="col-lg-3 col-md-4 col-6 mb-4">
+						<div class="card gradient-credit fixed-card">
+							<div class="card-body">
+								<a href="#">
+									<h3 class="card-title mb-2 service-text text-white">Today Transactions</h3>
+									<h3 class="card-title mb-2 service-text text-white">₹ {{$total_trans}}</h3>
+								</a>
+							</div>
+						</div>
+					</div> --}}
+
+					<style>
+						.gradient-credit {
+							background: linear-gradient(135deg, #e60000, #000066); /* red to dark blue */
+							border-radius: 10px;
+							color: white;
+							box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+						}
+
+					</style>
+
 					<div class="col-lg-3 col-md-4 col-6 mb-4">
 						<div class="card gradient-credit fixed-card">
 							<div class="card-body">
 								<a href="#">
 									<h3 class="card-title mb-2 service-text text-white">Today Transactions</h3>
-									{{-- <h3 class="card-title mb-2 service-text">₹ {{$total_trans}}</h3> --}}
 									<h3 class="card-title mb-2 service-text text-white">₹ {{$total_trans}}</h3>
 								</a>
 							</div>
 						</div>
 					</div>
+
+
 					<div class="col-lg-3 col-md-4 col-6 mb-4">
-						<div class="card gradient-electricity fixed-card">
+						<div class="card gradient-credit gradient-electricity fixed-card">
 							<div class="card-body">
 								<a href="#">
 									<h3 class="card-title mb-2 service-text text-white">Today Payout</h3>
@@ -454,8 +476,9 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							</div>
 						</div>
 					</div>
+
 					<div class="col-lg-3 col-md-4 col-6 mb-4">
-						<div class="card gradient-dmt fixed-card">
+						<div class="card gradient-credit gradient-dmt fixed-card">
 							<div class="card-body">
 								<a href="#">
 									<h3 class="card-title mb-2 service-text text-white">Wallet TopUp</h3>
@@ -466,7 +489,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-4 col-6 mb-4">
-						<div class="card gradient-water fixed-card">
+						<div class="card gradient-credit gradient-water fixed-card">
 							<div class="card-body">
 								<a href="#">
 									<h3 class="card-title mb-2 service-text text-white">Today Earning</h3>
@@ -598,6 +621,16 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 
 </style>
 
+<style>
+	.gradient-icon {
+    background: linear-gradient(135deg, #e60000, #000066); /* red to blue */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+</style>
+
 
 @if (session('role')=='Retailer')
 
@@ -621,7 +654,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-fingerprint fa-3x text-dark"></i>
+							  <i class="fas fa-fingerprint fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">AEPS</h3>
 					  </a>
@@ -633,7 +666,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-fingerprint fa-3x text-dark"></i>
+							  <i class="fas fa-fingerprint fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">AEPS</h3>
 					  </a>
@@ -652,7 +685,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-exchange-alt fa-3x text-dark"></i>
+							  <i class="fas fa-exchange-alt fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">D M T S1</h3>
 					  </a>
@@ -664,7 +697,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-exchange-alt fa-3x text-dark"></i>
+							  <i class="fas fa-exchange-alt fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">D M T S1</h3>
 					  </a>
@@ -684,7 +717,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-exchange-alt fa-3x text-dark"></i>
+							  <i class="fas fa-exchange-alt fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">D M T </h3>
 					  </a>
@@ -696,7 +729,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 						  <div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-exchange-alt fa-3x  text-dark"></i>
+							  <i class="fas fa-exchange-alt fa-3x  gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">D M T </h3>
 					  </a>
@@ -791,7 +824,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 							<div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-mobile-alt fa-3x text-dark"></i>
+							  <i class="fas fa-mobile-alt fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">Mobile Recharge</h3>
 					  </a>
@@ -803,7 +836,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 							  </div>
 						  </div> -->
 							<div class="card-title d-flex align-items-center justify-content-center">
-							  <i class="fas fa-mobile-alt fa-3x text-dark"></i>
+							  <i class="fas fa-mobile-alt fa-3x gradient-icon"></i>
 						  </div>
 						  <h3 class="card-title mb-2 service-text">Mobile Recharge</h3>
 					  </a>
@@ -847,7 +880,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('getBroadbandISP')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-wifi fa-3x text-dark"></i>
+							<i class="fas fa-wifi fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Broadband</h3>
 					</a>
@@ -876,7 +909,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('insuranceRecharge')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-shield-alt fa-3x text-dark"></i>
+							<i class="fas fa-shield-alt fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Insurance</h3>
 					</a>
@@ -890,7 +923,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
         <div class="card-body">
             <a href="{{ route('fastTagRecharge') }}">
                 <div class="card-title d-flex align-items-center justify-content-center">
-                    <i class="fa-solid fa-car fa-3x text-dark"></i> <!-- changed icon -->
+                    <i class="fa-solid fa-car fa-3x gradient-icon"></i> <!-- changed icon -->
                 </div>
                 <h3 class="card-title mb-2 mt-2 service-text">FASTag</h3> <!-- changed text -->
             </a>
@@ -920,7 +953,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 					<a href="{{route('mobileBill')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
 							<!-- <i class="fas fa-phone-alt fa-3x"></i> -->
-                            <i class="fa-solid fa-mobile-button fa-3x text-dark"></i>
+                            <i class="fa-solid fa-mobile-button fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Postpaid</h3>
 					</a>
@@ -934,7 +967,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('creditCardRecharge')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-credit-card fa-3x text-dark"></i>
+							<i class="fas fa-credit-card fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Credit Card</h3>
 					</a>
@@ -948,7 +981,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('electricityBill')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-bolt fa-3x  text-dark"></i>
+							<i class="fas fa-bolt fa-3x  gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Electricity</h3>
 					</a>
@@ -963,7 +996,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('waterBill')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-tint fa-3x text-dark"></i>
+							<i class="fas fa-tint fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Water</h3>
 					</a>
@@ -977,7 +1010,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('landlineBill')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-							<i class="fas fa-phone fa-3x text-dark"></i>
+							<i class="fas fa-phone fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Landline</h3>
 					</a>
@@ -991,7 +1024,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
         <div class="card-body">
             <a href="{{ route('dthRecharge') }}">
                 <div class="card-title d-flex align-items-center justify-content-center">
-                    <i class="fas fa-satellite-dish fa-3x text-dark"></i> <!-- DTH Icon -->
+                    <i class="fas fa-satellite-dish fa-3x gradient-icon"></i> <!-- DTH Icon -->
                 </div>
                 <h3 class="card-title mb-2 mt-2 service-text">DTH</h3>
             </a>
@@ -1006,7 +1039,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 				<div class="card-body">
 					<a href="{{route('gasRecharge')}}">
 						<div class="card-title d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-bottle-droplet fa-3x text-dark"></i>
+                            <i class="fa-solid fa-bottle-droplet fa-3x gradient-icon"></i>
 						</div>
 						<h3 class="card-title mb-2 mt-2 service-text">Gas Bill</h3>
 					</a>
@@ -1020,7 +1053,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('cms.admin.transactions') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-file-invoice-dollar fa-3x text-dark"></i>
+          <i class="fa-solid fa-file-invoice-dollar fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">CMS</h3>
       </a>
@@ -1034,7 +1067,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('leads.index') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-credit-card fa-3x text-dark"></i>
+          <i class="fa-solid fa-credit-card fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">CC Apply</h3>
       </a>
@@ -1048,7 +1081,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('leads.index') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-         <i class="fa-solid fa-cash-register fa-3x text-dark"></i>
+         <i class="fa-solid fa-cash-register fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">POS</h3>
       </a>
@@ -1062,7 +1095,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-building-columns fa-3x text-dark"></i>
+          <i class="fa-solid fa-building-columns fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">M-ATM</h3>
       </a>
@@ -1076,7 +1109,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-fingerprint fa-3x text-dark"></i>
+          <i class="fa-solid fa-fingerprint fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Aadhar Pay</h3>
       </a>
@@ -1090,7 +1123,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-bus fa-3x text-dark"></i>
+          <i class="fa-solid fa-bus fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Bus Booking</h3>
       </a>
@@ -1104,7 +1137,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-train-subway fa-3x text-dark"></i>
+          <i class="fa-solid fa-train-subway fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Train Booking</h3>
       </a>
@@ -1118,7 +1151,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-plane-departure fa-3x text-dark"></i>
+          <i class="fa-solid fa-plane-departure fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Flight Booking</h3>
       </a>
@@ -1131,7 +1164,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-suitcase-rolling fa-3x text-dark"></i>
+          <i class="fa-solid fa-suitcase-rolling fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Tour Package</h3>
       </a>
@@ -1145,7 +1178,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-hand-holding-usd fa-3x text-dark"></i>
+          <i class="fa-solid fa-hand-holding-usd fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Loan Services</h3>
       </a>
@@ -1159,7 +1192,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-bed fa-3x text-dark"></i>
+          <i class="fa-solid fa-bed fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">Hotel Booking</h3>
       </a>
@@ -1173,7 +1206,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-qrcode fa-3x text-dark"></i>
+          <i class="fa-solid fa-qrcode fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">UPI QR Generator</h3>
       </a>
@@ -1186,7 +1219,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="card-body">
       <a href="{{ route('pageNotFound') }}">
         <div class="card-title d-flex align-items-center justify-content-center">
-          <i class="fa-solid fa-wallet fa-3x text-dark"></i>
+          <i class="fa-solid fa-wallet fa-3x gradient-icon"></i>
         </div>
         <h3 class="card-title mb-2 mt-2 service-text">PPI</h3>
       </a>
@@ -1242,7 +1275,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
 								  <img src="{{ $service->logo_name }}" class="service-icon" />
 							  </div>
 						  </div>
-						  <h3 class="card-title mb-2 service-text">{{ $service->service }}</h3>
+						  <h3 class="card-title mb-2 service-text gradient-icon">{{ $service->service }}</h3>
 					  </a>
 				  </div>
 			  </div>
@@ -1891,7 +1924,7 @@ $services = \App\Models\OtherService::where('status', 1)->get();
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="kycModalLabel">KYC Required</h5>
+                <h5 class="modal-title " id="kycModalLabel" style="color: #000066;">KYC Required</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -1967,16 +2000,42 @@ $services = \App\Models\OtherService::where('status', 1)->get();
         <img id="preview"  style="display:none; width:100%; border-radius:8px;" alt="Selfie Preview">
     </div>
     <div class="text-center">
-        <button type="button" class="btn btn-primary btn-sm" onclick="openCamera()">📷 Take Selfie</button>
-        <label class="btn btn-success btn-sm mb-0">
+        <button type="button" class="btn btn-primary p-1 btn-sm" onclick="openCamera()" style="background-color: green;">📷 Take Selfie</button>
+        {{-- <label class="btn btn-success btn-sm mb-0">
             📁 Choose from Gallery
             <input type="file" accept="image/*" onchange="previewImage(event)" style="display:none;">
-        </label>
+        </label> --}}
+		<style>
+.btn-custom {
+    background: linear-gradient(135deg, #ff0000, #1e3c72); /* red to deep blue */
+    color: white;
+    border: none;
+    padding: px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #1e3c72, #ff0000); /* reversed gradient on hover */
+	color: white;
+    transform: scale(1.02);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<label class="btn btn-custom btn-sm mb-0 py-2">
+    📁 Choose from Gallery
+    <input type="file" accept="image/*" onchange="previewImage(event)" style="display:none;">
+</label>
+
+
     </div>
     <input type="hidden" name="selfie_data" id="selfie_data">
 </div>
 
-            <button class="btn btn-success">Submit Kyc Data</button>
+            <button class="btn btn-success btn-custom py-2">Submit Kyc Data</button>
         </form>
             </div>
         </div>

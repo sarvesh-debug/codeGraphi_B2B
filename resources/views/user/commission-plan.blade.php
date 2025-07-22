@@ -22,7 +22,7 @@
         <div class="card    m-3">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1 text-center h2">
-                    <span class="text-success1">Commission</span> <span class="text-info1">& Charges</span>
+                    <span class="text-success1" style="color: rgb(228, 11, 11);">Commission</span> <span class="text-info1" style="color: rgb(4, 4, 85);">& Charges</span>
                 </h4>
             </div>
             {{-- start --}}

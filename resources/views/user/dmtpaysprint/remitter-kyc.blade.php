@@ -81,7 +81,7 @@ $mobile = session()->get('mobile');
         <div class="form-group m-2">
           
             <button onclick="CaptureAvdm();" class="btn btn-custom btn-danger">Capture</button>
-        <button type="submit" class="btn btn-submit ">Submit Query</button>
+        <button type="submit" class="btn btn-submit " style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit Query</button>
         </div>
     </form>
 </div>

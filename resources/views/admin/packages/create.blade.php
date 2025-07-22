@@ -3,8 +3,8 @@
 @section('content')
 <div class="container mt-5">
     <div class="card shadow rounded">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">Create New Package</h4>
+        <div class="card-header bg-primary text-white" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h4 class="mb-0" style="color: white;">Create New Package</h4>
         </div>
         <div class="card-body">
             {{-- Display validation errors --}}
@@ -71,7 +71,7 @@
 
                 {{-- Submit --}}
                 <div class="text-end">
-                    <button type="submit" class="btn btn-success">Create Package</button>
+                    <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Create Package</button>
                     <a href="{{ route('packages.index') }}" class="btn btn-secondary">Back</a>
                 </div>
             </form>

@@ -32,8 +32,8 @@
             <!-- Mobile Recharge Form -->
             <div class="w-full lg:w-[45%] mb-4 flex justify-center align-center ">
                 <div class="bg-white shadow-lg rounded-lg w-full">
-                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg">
-                        <strong>Mobile Recharge</strong>
+                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                        <strong style="color: white">Mobile Recharge</strong>
                     </div>
                     <div class="p-6">
                         <form action="{{route('mobileRechargePay')}}" method="post">
@@ -138,7 +138,7 @@
                                     oninput="this.value = this.value.replace(/\D/g, '').slice(0,4)" />
                             </div>
 
-                            <button type="submit" class="btn btn-success  w-full text-primary bg-indigo-100 py-2 px-4 rounded-lg">Submit</button>
+                            <button type="submit" class="btn btn-success  w-full text-white bg-indigo-100 py-2 px-4 rounded-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -147,8 +147,8 @@
             <!-- Browse Plans -->
             <div class="w-full lg:w-[45%] mb-4 flex justify-center align-center ">
                 <div class="bg-white shadow-lg rounded-lg">
-                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg">
-                        <strong>Browse Plans</strong>
+                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                        <strong style="color: white">Browse Plans</strong>
                     </div>
                     <div class="p-6">
                         <p class="text-sm text-gray-500">
@@ -167,7 +167,7 @@
                 <div class="modal-body">
                     @if(session('success'))
                         <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80" class="d-block mx-auto">
-                        <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                        <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
     
                         @if(session('data'))
                             <div class="alert alert-light text-start mt-3 p-2">
@@ -184,7 +184,7 @@
                     @endif
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
                 </div>
             </div>
         </div>

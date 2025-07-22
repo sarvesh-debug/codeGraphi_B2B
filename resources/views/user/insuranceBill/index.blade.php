@@ -32,8 +32,8 @@
             <!-- Mobile Recharge Form -->
             <div class="w-full lg:w-[45%] mb-4 flex justify-center align-center ">
                 <div class="bg-white shadow-lg rounded-lg w-full">
-                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg">
-                        <strong>Insurance Bill Pay</strong>
+                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                        <strong style="color: white">Insurance Bill Pay</strong>
                     </div>
                     <div class="p-6">
                         <form action="{{route('insuranceBillFetch')}}" method="post">
@@ -132,7 +132,7 @@ function selectBiller(id, name) {
                                     <a href="#" id="browse-plans-link">Browse Plans</a>
                                 </small>
                             </div> --}}
-                            <button type="submit" class="btn btn-success  w-full text-primary bg-indigo-100 py-2 px-4 rounded-lg">Submit</button>
+                            <button type="submit" class="btn btn-success  w-full  bg-indigo-100 py-2 px-4 rounded-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -141,8 +141,8 @@ function selectBiller(id, name) {
             <!-- Browse Plans -->
             <div class="w-full lg:w-[45%] mb-4 flex justify-center align-center ">
                 <div class="bg-white shadow-lg rounded-lg">
-                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg">
-                        <strong>Fetch Bill</strong>
+                    <div class="bg-indigo-100 text-black p-4 rounded-t-lg" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                        <strong style="color: white;">Fetch Bill</strong>
                     </div>
                     <div class="p-6">
                         <p class="text-sm text-gray-500">
@@ -192,7 +192,7 @@ function selectBiller(id, name) {
                 <div class="modal-body">
                     @if(session('success'))
                         <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80" class="d-block mx-auto">
-                        <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                        <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
     
                     @elseif(session('error'))
                         <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80" class="d-block mx-auto">
@@ -200,7 +200,7 @@ function selectBiller(id, name) {
                     @endif
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
                 </div>
             </div>
         </div>

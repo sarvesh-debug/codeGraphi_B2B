@@ -54,7 +54,7 @@
                 <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" style="border-radius: 50%;" alt="CodeGraphi Logo" class="logo">
 
                 <!-- Welcome Content -->
-                <h1>Welcome to CodeGraphi!</h1>
+                <h1>Welcome to CodeGraphi22!</h1>
                 <p>Dear <b>{{$username}}</b>,</p>
                 <p>Your RT number is <span class="redirect-info">{{ $rt_number }}</span>.</p>
                 <p class="mt-3">You will be redirected shortly...</p>

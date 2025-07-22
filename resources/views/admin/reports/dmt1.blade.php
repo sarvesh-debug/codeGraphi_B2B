@@ -76,8 +76,13 @@
                            class="form-control">
                 </div>
                 <div class="col-md-2 d-flex">
+                    {{-- <!-- Filter Button -->
+                    <button type="submit" class="btn btn-primary me-2 w-100">Filter</button> --}}
                     <!-- Filter Button -->
-                    <button type="submit" class="btn btn-primary me-2 w-100">Filter</button>
+                    <button type="submit" class="btn text-white me-2 w-100" style="background: linear-gradient(135deg, #3a1c71, #ca0b1e, #ca0b1e); border: none;">
+                        Filter
+                    </button>
+
                     <!-- Export Button -->
                     <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
                         Export
@@ -199,7 +204,7 @@
                     </td>
                   
                    <td>
-  <a href="{{ route('DuplicateRcptAd', ['id' => $transaction->id]) }}" class="btn btn-primary">
+  <a href="{{ route('DuplicateRcptAd', ['id' => $transaction->id]) }}" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
     Print
   </a>
 </td>

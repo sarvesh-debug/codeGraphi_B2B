@@ -45,7 +45,7 @@
             {{-- <div id="kt_app_content_container" class="app-container container-fluid"> --}}
                 <!-- <div class="card  col-lg-6 col-md-8 col-12 gap-3"> -->
                 <div class="card col-lg-6 col-md-8 col-12 mb-3">
-                    <div class="card-header">
+                    <div class="card-header" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                         <h4 class="mb-0"><span class="card-heading"> AEPS Cash Withdrawal </h4>
                     </div>
 
@@ -245,7 +245,7 @@
 </div>
 
 <!-- Submit -->
-<button type="submit" id="" class="btn btn-primary mt-3" >Submit</button>
+<button type="submit" id="" class="btn btn-primary mt-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
 
         </form>
     </div>
@@ -258,8 +258,8 @@
          <!-- <div class="col-md-4 mt-2"> -->
          <div class="col-lg-4 col-md-4 col-12 lg:d-flex  md:d-flex justify-content-center mb-5">
             <div class="mb-5">
-                <div class="card-header bg-gradient-success text-white text-center py-3">
-                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Latest Transactions</h5>
+                <div class="card-header bg-gradient-success text-white text-center py-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+                    <h5 class="mb-0 text-white"><i class="fas fa-receipt me-2 text-white"></i>Latest Transactions</h5>
                 </div>
                 <div class="card-body p-4 mb-5">
                     @if($latestTransactions && count($latestTransactions) > 0)

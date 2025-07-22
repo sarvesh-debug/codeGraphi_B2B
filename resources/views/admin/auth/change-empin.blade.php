@@ -3,8 +3,8 @@
 @section('content')
 <div class="container mt-5">
     <div class="card col-md-6 offset-md-3">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Change Employee PIN</h5>
+        <div class="card-header bg-primary text-white" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h5 class="mb-0 text-white">Change Employee PIN</h5>
         </div>
         <div class="card-body">
 
@@ -32,7 +32,7 @@
                     <input type="text" name="confirm_empin" class="form-control" maxlength="4" required>
                 </div>
 
-                <button type="submit" class="btn btn-success">Update Empin</button>
+                <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Update Empin</button>
             </form>
         </div>
     </div>
@@ -46,14 +46,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

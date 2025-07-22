@@ -47,7 +47,7 @@
     <div id="loadingOverlay">
         <div class="loader"></div>
     </div>
-    <div class="card-header">
+    <div class="card-header" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
         <h4 class="card-heading mb-0">Daily Login Form</h4>
     </div>
     <div class="card-body p-4">
@@ -98,7 +98,7 @@
 </div>
 
 <!-- Submit -->
-<button type="submit" id="" class="btn btn-primary mt-3" >Submit</button>
+<button type="submit" id="" class="btn btn-primary mt-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
 
         </form>
     </div>

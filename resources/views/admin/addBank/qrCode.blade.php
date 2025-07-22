@@ -3,9 +3,10 @@
 @section('content')
 <div class="container mt-5 d-flex justify-content-center">
     <div class="card shadow-sm col-md-4">
-        <div class="card-header bg-success text-white text-center">
-            <h3 style="color: aliceblue; font-weight: bold;">Add QR Details</h3>
-        </div>
+        <div class="card-header text-white text-center" style="background: linear-gradient(135deg, #1f0353, #e20b21, #d36f79);">
+        <h3 style="color: aliceblue; font-weight: bold;">Add QR Details</h3>
+    </div>
+
         <div class="card-body">
             <form action="{{ route('bankdetails.storeQr') }}" enctype="multipart/form-data" method="POST" class="needs-validation" novalidate>
                 @csrf
@@ -16,9 +17,16 @@
                     <div class="invalid-feedback">Please choose a QR code image.</div>
                 </div>
 
-                <div class="text-center">
+                {{-- <div class="text-center">
                     <button type="submit" class="btn btn-success">Submit</button>
+                </div> --}}
+
+                <div class="text-center">
+                    <button type="submit" class="btn text-white w-100" style="background: linear-gradient(135deg, #3a1c71, #c91022, #c91022); border: none;">
+                        Submit
+                    </button>
                 </div>
+
             </form>
         </div>
     </div>
@@ -31,14 +39,14 @@
             <div class="modal-body">
                 @if(session('success'))
                     <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
-                    <h5 class="mt-2 text-success">{{ session('success') }}</h5>
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
                 @elseif(session('error'))
                     <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
                     <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
                 @endif
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
             </div>
         </div>
     </div>

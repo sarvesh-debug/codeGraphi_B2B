@@ -20,7 +20,7 @@
         <!-- Remitter Profile Section -->
         <div class="col-md-6 mt-3">
             <div class="card shadow-lg border-0">
-                <div class="card-header py-3">
+                <div class="card-header py-3" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                     <h4 class="card-heading mb-0"><i class="fas fa-user-circle me-2"></i>Remitter Profile</h4>
                 </div>
                 <div class="card-body p-4">
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success py-2 px-4" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                                 <i class="me-2"></i>Submit
                             </button>
                         </div>

@@ -40,7 +40,7 @@
             <label>Confirm Password <span class="text-danger">*</span></label>
             <input type="password" name="password_confirmation" class="form-control" placeholder="Re-enter password" required>
         </div>
-        <button type="submit" class="btn btn-success">Create Employee</button>
+        <button type="submit" class="btn btn-success" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Create Employee</button>
         <a href="{{ route('employees.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

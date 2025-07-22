@@ -40,7 +40,7 @@
         </div>
             <!-- Submit Button -->
             <div class="d-grid">
-                <button type="submit" class="btn btn-primary fw-semibold">
+                <button type="submit" class="btn btn-primary fw-semibold p-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
                     🚀 Transfer Now
                 </button>
             </div>

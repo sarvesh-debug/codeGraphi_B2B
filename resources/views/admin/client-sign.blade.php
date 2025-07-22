@@ -211,7 +211,7 @@
             <input type="hidden" name="balance" value="0">
             <input type="hidden" name="role" value="Retailer">
 
-            <button type="submit" class="btn btn-theme">Register</button>
+            <button type="submit" class="btn btn-theme" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Register</button>
         </form>
 
         <p class="none-2">Already a member? <a href="{{ route('customer.login') }}" class="text-decoration-underline">Login here</a></p>
