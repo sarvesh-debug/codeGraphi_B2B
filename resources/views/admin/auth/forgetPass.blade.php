@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login | ZPay</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/z-pay-fav.png') }}" />
+    <title>User Login | CodeGraphi</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/CodeGraphi-fav.png') }}" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .button { background-color: #007BFF; }
@@ -18,9 +18,9 @@
         <!-- Centered Brand Section -->
         <div class="flex flex-col items-center text-center mb-8">
             <!-- Centered Logo -->
-            <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" style="border-radius: 50%;" alt="ZPay Logo" class="w-20 h-20 mb-4">
+            <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" style="border-radius: 50%;" alt="CodeGraphi Logo" class="w-20 h-20 mb-4">
         <h1 class="text-blue-600 text-4xl md:text-6xl font-bold">
-                <span style="color: #0f0f0f">Z </span><span style="color: #01060c">Pay</span>
+                <span style="color: #0f0f0f">Pay</span><span style="color: #01060c">Brill</span>
             </h1>
             <p class="text-gray-600 text-lg font-semibold mt-2">Simplifying Your Financial Transactions</p>
         </div>

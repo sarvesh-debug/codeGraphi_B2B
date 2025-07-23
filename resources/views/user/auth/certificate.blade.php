@@ -8,10 +8,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Banking Point Certificate</title>
-  <title>ZPay OTP Verification</title>
+  <title>CodeGraphi OTP Verification</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/codegraphi_favcon.jpeg') }}" />
 
   <style>
     @page {
@@ -71,14 +74,15 @@
 
 <main class="certificate-container text-center mt-4">
   <div class="heading">
-    <img src="{{ asset('assets/img/icons/zPay_cer.jpg') }}" alt="Logo" class="logo w-24 h-24 sm:w-20 sm:h-20 mx-auto rounded-lg shadow-md">
+    <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="Logo"
+     style="width: 160px; height: 60px;" class="logo mx-auto rounded-lg shadow-md">
     <h1 class="text-xl sm:text-lg md:text-2xl font-bold text-blue-700 uppercase">Authorized Banking Point</h1>
     <p class="text-sm sm:text-xs md:text-base text-gray-600 uppercase">Certificate of Authorization</p>
   </div>
 
   <div class="details text-sm sm:text-xs md:text-base text-gray-700 mt-4 leading-relaxed">
     <p>This is to certify that</p>
-    <p><span class="font-bold text-blue-700">{{ $customer->name }}</span> is an authorized Retailer of <span class="font-bold">ZPay</span>.</p>
+    <p><span class="font-bold text-blue-700">{{ $customer->name }}</span> is an authorized Retailer of <span class="font-bold">CodeGraphi</span>.</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
       <div>
@@ -101,17 +105,17 @@
 
   <div class="signature mt-6">
     <hr class="w-24 mx-auto border-t-2 border-blue-700">
-    <p class="text-sm sm:text-xs md:text-base font-bold">ZPay</p>
+    <p class="text-sm sm:text-xs md:text-base font-bold">CodeGraphi</p>
     <p class="text-xs sm:text-[10px] md:text-sm text-gray-600">Chief Sales Officer</p>
   </div>
 
   <div class="footer mt-4 text-xs sm:text-[10px] text-gray-500">
-    <p>*Terms and conditions: The appointment is subject to acceptance of the terms and conditions of ZPay and subject to change. The Banking point shall only function as per terms set out in the service agreement with ZPay.</p>
+    <p>*Terms and conditions: The appointment is subject to acceptance of the terms and conditions of CodeGraphi and subject to change. The Banking point shall only function as per terms set out in the service agreement with CodeGraphi.</p>
   </div>
 </main>
 
 <!-- Download Button -->
-<button id="download-btn" class="download-btn absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-5 py-2 sm:px-3 sm:py-1 text-sm sm:text-xs rounded-lg shadow-md hover:bg-blue-800">
+<button id="download-btn" class="download-btn absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-blue-700 text-white px-5 py-2 sm:px-3 sm:py-1 text-sm sm:text-xs rounded-lg shadow-md hover:bg-blue-800" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none; padding:10px;">
   Download Certificate as PDF
 </button>
 

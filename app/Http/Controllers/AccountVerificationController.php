@@ -103,7 +103,6 @@ class AccountVerificationController extends Controller
     ]);
     }
 
-
     public function verifyUPI(Request $request)
     {
         $response = Http::withHeaders([

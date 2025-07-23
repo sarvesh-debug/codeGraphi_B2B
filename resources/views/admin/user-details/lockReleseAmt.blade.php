@@ -30,17 +30,21 @@
 </div> --}}
 
 
-    <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
-        <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-             alt="Download Icon" 
-             style="width: 16px; height: 16px; margin-right: 5px;">
+    {{-- <button type="button" class="btn btn-success w-100 m-2" onclick="downloadExcel()">
+       
+        Export
+    </button> --}}
+
+    <button type="button" class="btn w-100 m-2 text-white" onclick="downloadExcel()" style="background: linear-gradient(135deg, #3a1c71, #c02535, #ce4a57); font-weight: 600;">
         Export
     </button>
-    @if (session('success'))
+
+
+    {{-- @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
     <div class="card-body table-scroll">
         <table id="datatablesSimple" class="table table-bordered">
@@ -140,7 +144,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -172,5 +176,46 @@
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 
 @endsection

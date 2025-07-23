@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\dmtinstantpayController;
+use App\Http\Controllers\infoController;
+use App\Http\Controllers\nifiPayoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KycController;
@@ -18,7 +21,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+Route::post('/webhook/nifi-callback', [nifiPayoutController::class, 'handleCallback']);
 
 Route::get('/admin/kyc-list', [KycController::class, 'getAllData'])->name('admin.kyc-list');
+Route::get('/transcation/list', [infoController::class, 'indexAdminAPI']);
+Route::get('/pending/transcation/list', [dmtinstantpayController::class, 'pendingTransaction_api']);
+Route::post('/receive-pending/data',[dmtinstantpayController::class,'pendingResponse']);
+
 

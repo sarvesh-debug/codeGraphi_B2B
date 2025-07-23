@@ -14,12 +14,12 @@
         </div>
     @endif
 
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Cash Withdrawal History</h3>
-            <button id="exportExcel" class="btn btn-success">Export to Excel</button>
+    <div class="mb-5">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h3 class="text-xs sm:text-sm md:text-3xl lg:text-3xl text-white">Cash Withdrawal History</h3>
+            <button id="exportExcel" class="btn btn-success" style="background-color: #05125a;">Export to Excel</button>
         </div>
-        <div class="card-body">
+        <div class="card-body ">
             <!-- Date Filter Form -->
             <form method="GET" action="{{ route('aeps.history') }}" class="row mb-4">
                 <div class="col-md-5">
@@ -34,8 +34,8 @@
                            value="{{ request('end_date') ? \Carbon\Carbon::parse(request('end_date'))->format('Y-m-d\TH:i') : '' }}" 
                            class="form-control">
                 </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                <div class="col-md-2 mt-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Filter</button>
                 </div>
             </form>
 
@@ -66,7 +66,7 @@
                                     <td class="px-2 py-2">{{ $withdrawal->id }}</td>
                                     <td class="px-2 py-2">{{ $withdrawal->mobile }}</td>
                                     <td class="px-2 py-2">{{ $data['data']['ipayId'] ?? "0" }}</td>
-                                    <td class="px-2 py-2">{{ json_decode($withdrawal->response_data)->status }}</td>
+                                    <td class="px-2 py-2">{{ json_decode($withdrawal->response_data)->status ?? ''}}</td>
                                     <td class="px-2 py-2">{{ $data['data']['transactionValue'] ?? "0" }}</td>
                                     <td class="px-2 py-2">₹{{ number_format($withdrawal->commissions, 2) }}</td>
                                     <td class="px-2 py-2">₹{{ number_format($withdrawal->opening_balance, 2) }}</td>

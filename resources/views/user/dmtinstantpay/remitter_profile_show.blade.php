@@ -15,8 +15,8 @@
         <!-- Remitter Profile Card -->
         <div class="col-md-6">
             <div class="card mt-4">
-                <div class="card-header">
-                    <h5>Remitter Profile</h5>
+                <div class="card-header ">
+                    <h5 class="card-heading">Remitter Profile</h5>
                 </div>
                 <div class="card-body">
                     <p><strong>Mobile Number:</strong> {{ $responseData['data']['mobileNumber'] }}</p>
@@ -31,7 +31,7 @@
         <div class="col-md-6">
             <div class="card mt-4">
                 <div class="card-header">
-                    <h5>Transaction Limits</h5>
+                    <h5 class="card-heading">Transaction Limits</h5>
                 </div>
                 <div class="card-body">
                     <p><strong>Limit Per Transaction:</strong> ₹{{ $responseData['data']['limitPerTransaction'] }}</p>
@@ -46,7 +46,7 @@
     <!-- Beneficiaries Table Card -->
     <div class="card mt-4">
         <div class="card-header">
-            <h5>Beneficiaries <a href="{{ route('dmt-beneficiaryRegistration', ['mobileNumber' => $responseData['data']['mobileNumber']]) }}" class="btn btn-success"> Add Beneficiary</a>
+            <h5 class="card-heading">Beneficiaries <a href="{{ route('dmt-beneficiaryRegistration', ['mobileNumber' => $responseData['data']['mobileNumber']]) }}" class="btn btn-success"> Add Beneficiary</a>
             </h5>
         </div>
         <div class="card-body">
@@ -79,6 +79,7 @@
                                     <input type="text" hidden value="{{ $beneficiary['account'] ?? '' }}" name="account">
 
                                     <input type="text" hidden value="{{ $beneficiary['ifsc'] ?? '' }}" name="ifsc">
+                                    <input type="text" hidden value="{{ $beneficiary['name'] ?? '' }}" name="beneName">
                                     <input type="hidden" name="referenceKey" value="{{ $responseData['data']['referenceKey'] }}">
                                     <button type="submit" class="btn btn-primary">Send</button>
                                 </form>
@@ -121,6 +122,7 @@
                   <input type="text" hidden value="{{ $beneficiary['account'] ?? '' }}" name="account">
 
                   <input type="text" hidden value="{{ $beneficiary['ifsc'] ?? '' }}" name="ifsc">
+                  <input type="text"  value="{{ $beneficiary['name'] ?? '' }}" name="baneName">
                     
                         <input type="text" hidden  name="referenceKey" id="referenceKey" class="form-control" value="{{ $responseData['data']['referenceKey'] }}" readonly>
                     <button type="submit" class="btn btn-success w-100">Send Money</button>
@@ -143,6 +145,8 @@
                     @csrf
                     <p>Are you sure you want to delete this beneficiary?</p>
                     <input type="hidden" name="beneficiaryId" id="beneficiaryId">
+                    <input type="hidden" name="remMobile" value=" {{$responseData['data']['mobileNumber'] }} ">
+
                     <button type="submit" class="btn btn-danger w-100">Delete</button>
                 </form>
             </div>

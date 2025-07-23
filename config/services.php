@@ -31,4 +31,13 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'digifintel' => [
+    'email' => env('DIGIFINTEL_EMAIL'),
+    'password' => env('DIGIFINTEL_PASSWORD'),
+    'userkey' => env('DIGIFINTEL_USERKEY'),
+    'ip' => env('DIGIFINTEL_IP'),
+    'base_url' => env('DIGIFINTEL_BASE_URL'),
+],
+
+
 ];

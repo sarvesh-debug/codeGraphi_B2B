@@ -67,7 +67,7 @@
                 <input type="password" class="form-control" id="confirm-password" name="password_confirmation" placeholder="Confirm new password" required>
             </div>
             
-            <button type="submit" class="btn btn-block w-100">Update Password</button>
+            <button type="submit" class="btn btn-block w-100 p-2" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Update Password</button>
         </form>
     </div>
 </div>

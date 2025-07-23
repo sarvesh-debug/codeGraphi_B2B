@@ -22,11 +22,11 @@
         <div class="card    m-3">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1 text-center h2">
-                    <span class="text-success1">Commission</span> <span class="text-info1">& Charges</span>
+                    <span class="text-success1" style="color: rgb(228, 11, 11);">Commission</span> <span class="text-info1" style="color: rgb(4, 4, 85);">& Charges</span>
                 </h4>
             </div>
             {{-- start --}}
-            <div class="card my-1">
+            {{-- <div class="card my-1">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">AePS Cash Withdrawal Commission</h4>
                 </div>
@@ -46,7 +46,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($aeps as $index => $commission)
+                                        @foreach ($all as $index => $commission)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $commission->from_amount }}</td>
@@ -62,11 +62,19 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- endcard --}}
             <div class="card my-1">
                 <div class="card-header align-items-center d-flex">
-                    <h4 class="card-title mb-0 flex-grow-1">Money Transfer Commission</h4>
+                    <h4 class="card-title mb-0 flex-grow-1">Apply for  
+                       @if (trim(strtolower(session('role'))) === 'distibuter')
+                      Distributor
+                  @elseif(trim(strtolower(session('role'))) === 'rm')
+                  Relationship Manager
+                      @else
+                      Retailer
+                  @endif 
+                    </h4>
                 </div>
                 <div class="card-body">
                     <div class="live-preview">
@@ -77,28 +85,30 @@
                                         <tr>
                                             <th>Sl no.</th>
                                             <th>Service</th>
+                                            <th>Sub-Service</th>
                                             <th>From Amount</th>
                                             <th>To Amount</th>
                                             <th>Charge</th>
-                                           
+                                            <th>Commission</th>
                                             <th>TDS</th>
                                             <th>Charge In</th>
-                                            
+                                            <th>Commission In</th>
                                             <th>TDS In</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($neft as $index => $commission)
+                                        @foreach ($all as $index => $commission)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
+                                                <td>{{ $commission->serviceName}}</td>
                                                 <td>{{ $commission->sub_service}}</td>
                                                 <td>{{ $commission->from_amount }}</td>
                                                 <td>{{ $commission->to_amount }}</td>
                                                 <td>{{ $commission->charge }}</td>
-                                               
+                                                <td>{{ $commission->commission }}</td>
                                                 <td>{{ $commission->tds }}</td>
                                                 <td>{{ $commission->charge_in }}</td>
-                                                
+                                                <td>{{ $commission->commission_in}}</td>
                                                 <td>{{ $commission->tds_in }}</td>
                                             </tr>
                                         @endforeach
@@ -111,7 +121,7 @@
             </div>
             {{-- end card --}}
                {{-- startcard --}}
-               <div class="card my-1">
+               {{-- <div class="card my-1">
                 <div class="card-header align-items-center d-flex">
                     <h4 class="card-title mb-0 flex-grow-1">Fund Transfer</h4>
                 </div>
@@ -155,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             {{-- end card --}}
         </div>
     </div>

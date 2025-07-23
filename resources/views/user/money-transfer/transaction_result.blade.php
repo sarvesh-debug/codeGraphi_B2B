@@ -74,7 +74,7 @@
 
             // Transaction Data
             const transactionData = @json($transactionData); // PHP data passed to JS
-            const title = "ZPay Transaction Slip";
+            const title = "CodeGraphi Transaction Slip";
             const transactionDate =new Date().toLocaleDateString('en-GB', {
     day: 'numeric',
     month: 'short',

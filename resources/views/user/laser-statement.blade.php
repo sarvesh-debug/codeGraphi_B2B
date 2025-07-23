@@ -2,23 +2,23 @@
 
 @section('content')
 <div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+    <ol class="breadcrumb mb-4 mt-3">
         <li class="breadcrumb-item"><a href="#">Home</a></li>
         <li class="breadcrumb-item active">Ledger Statement</li>
     </ol>
 
     <!-- Transaction Summary Section -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-3 col-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <h5 class="card-title">Total Transactions</h5>
+                    <h5 class="card-title">Total Trans</h5>
                     <p class="card-text">₹ {{ $totalAmount ?? 0 }}</p>
                 </div>
             </div>  
         </div>
         @foreach ($individualTotals as $source => $amount)
-        <div class="col-md-3 my-1">
+        <div class="col-md-3 col-6 my-1">
             <div class="card text-center">
                 <div class="card-body">
                     <h5 class="card-title">{{ ucwords(str_replace('_', ' ', $source)) }}</h5>
@@ -69,9 +69,9 @@
                     <th>TXN No</th>
                     <th>Status</th>
                     <th>Opening Bal</th>
-                    {{-- <th>Commission</th> --}}
-                    {{-- <th>Charges</th>
-                    <th>Tds</th> --}}
+                    <th>Commission</th> 
+                     <th>Charges</th>
+                    <th>Tds</th> 
                      {{-- <th>Type</th> --}}
                      <th>Credit</th>
                      <th>Debit</th>
@@ -92,13 +92,33 @@
                     <td>{{ $transaction['desc'] }}</td>
                    
                     <td>{{ $transaction['trans_id'] }}</td>
-                    <td style="color: {{ $transaction['status'] === 'Success' ? 'green' : 'red' }};">
-                        {{ $transaction['status'] }}
-                    </td>
+                    @php
+                    $status = strtolower($transaction['status'] ?? 'unknown');
+                
+                    switch ($status) {
+                        case 'success':
+                            $color = 'green';
+                            break;
+                        case 'pending':
+                            $color = 'orange'; // or 'gold' or '#ffc107'
+                            break;
+                        case 'failed':
+                            $color = 'red';
+                            break;
+                        default:
+                            $color = 'gray';
+                            break;
+                    }
+                @endphp
+                
+                <td style="color: {{ $color }};">
+                    {{ strtoupper($status) }}
+                </td>
+                
                     <td>₹{{$transaction['openingB']}}</td>
-                    {{-- <td style="color:green">₹{{$transaction['commission']}}</td> --}}
-                    {{-- <td style="color:red">₹{{$transaction['charges']}}</td>
-                    <td style="color:red">₹{{$transaction['tds']}}</td> --}}
+                    <td style="color:green">₹{{$transaction['commission']}}</td> 
+                     <td style="color:red">₹{{$transaction['charges']}}
+                    <td style="color:red">₹{{$transaction['tds']}}</td> 
                     {{-- <td>{{ $transaction['type'] }}</td> --}}
                     <td style="color:green">₹{{ $transaction['credit'] }}</td>
                     <td style="color:red">₹{{ $transaction['debit'] }}</td>

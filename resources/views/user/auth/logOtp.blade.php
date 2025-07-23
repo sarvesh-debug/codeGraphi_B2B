@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPay OTP Verification</title>
+    <title>CodeGraphi OTP Verification</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -90,8 +90,8 @@
 </head>
 <body>
     <div class="otp-container">
-        <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" alt="AbeePay Logo">
-        <h1>Z Pay</h1>
+        <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="code graphi logo">
+        <h1>CodeGraphi</h1>
         <h2>OTP Verification</h2>
         <p>We have sent an OTP to your Contact No <strong>{{ 'XXXXXX' . substr($mobile, -4) }}</strong>. Please enter it below.</p>
 

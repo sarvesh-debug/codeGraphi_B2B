@@ -43,7 +43,7 @@ class walletToWalletController extends Controller
         $receiverUsername = $request->input('reciver');
         $amount = $request->input('amount');
         $remark = $request->input('remark', '');
-        $transId = 'ZPAY' . uniqid(); // Generate unique transaction ID
+        $transId = 'TXN' . uniqid(); // Generate unique transaction ID
     
         // Fetch sender and receiver data
         $senderData = DB::table('customer')->where('username', $senderUsername)->lockForUpdate()->first();
@@ -266,7 +266,7 @@ public function adminTransRel(Request $request)
     $amount = $request->input('amount');
     $transaction_type = $request->input('transaction_type');
     $remark = $request->input('remark');
-    $transId = 'ZPAY' . uniqid(); // Generate a unique transaction ID
+    $transId = 'TXN' . uniqid(); // Generate a unique transaction ID
 
     try {
         if ($adminWallet < $amount) {
@@ -340,10 +340,11 @@ public function adminTransRel(Request $request)
        // dd($inserted);
         //return "Done";
         // Redirect to success page with a success message
-        return view('users.onboard.add-wallet', [
-            'message' => 'Successfully transferred wallet money.',
-            'transaction_id' => $transId,
-        ]);
+        // return view('users.onboard.add-wallet', [
+        //     'message' => 'Successfully transferred wallet money.',
+        //     'transaction_id' => $transId,
+        // ]);
+        return back()->with('success', 'Balance Loaded successfully.');
     } catch (\Exception $e) {
         // Handle exceptions and rollback changes if necessary
         return back()->with('error', 'An error occurred during the transaction: ' . $e->getMessage());
@@ -365,24 +366,34 @@ public function walletHistoryAdmin()
 
 public function lockRealese(Request $request)
 {
-    
-    $balance = $request->input('currentBalance');
     $sender = $request->input('sender');
-    $receiver = $request->input('receiver'); // Fixed typo
-    $amount = $request->input('amount');
+    $receiver = $request->input('receiver');
+    $amount = (float) $request->input('amount');
     $transaction_type = $request->input('transaction_type');
     $remark = $request->input('remark');
-    
-    
-    // dd($balance,$amount,$lock,$release,$receiver);
-    // die();
-    //$transId = 'AbheePay' . uniqid(); // Unique transaction ID
+
+    // Fetch balances
+    $balanceLc = DB::table('customer')
+        ->where('username', $receiver)
+        ->value('LockBalance');
+
+    $balanceChk = DB::table('customer')
+        ->where('username', $receiver)
+        ->value('balance');
+
+    // Handle case where user doesn't exist
+    if (is_null($balanceLc) || is_null($balanceChk)) {
+        return back()->with('error', 'Receiver account not found.');
+    }
 
     try {
         DB::beginTransaction(); // Start transaction
 
         if ($transaction_type === 'Debit') {
-            $lock=$balance-$amount;
+            if ($balanceChk <= 0 || $amount > $balanceChk) {
+                return back()->with('error', 'Insufficient balance for debit transaction.');
+            }
+
             // Lock balance and reduce available balance
             DB::table('customer')
                 ->where('username', $receiver)
@@ -392,7 +403,10 @@ public function lockRealese(Request $request)
                 ->where('username', $receiver)
                 ->decrement('balance', $amount);
         } elseif ($transaction_type === 'Credit') {
-            $release=$amount;
+            if ($balanceLc <= 0 || $amount > $balanceLc) {
+                return back()->with('error', 'Insufficient locked balance for credit transaction.');
+            }
+
             // Release locked balance and increase available balance
             DB::table('customer')
                 ->where('username', $receiver)
@@ -406,13 +420,11 @@ public function lockRealese(Request $request)
         }
 
         DB::commit(); // Commit transaction
-
-        return redirect()->back()->with('success', 'Successfully' );
+        return redirect()->back()->with('success', 'Transaction successfully completed.');
     } catch (\Exception $e) {
         DB::rollback(); // Rollback on failure
         return back()->with('error', 'An error occurred during the transaction: ' . $e->getMessage());
     }
 }
-
 
 }

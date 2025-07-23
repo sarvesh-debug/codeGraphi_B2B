@@ -1,17 +1,26 @@
 @extends('user/include.layout')
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
 @section('content')
 <div class="container-fluid px-4">
-    <ol class="breadcrumb mb-4">
+    <ol class="breadcrumb mb-4 mt-3">
         <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
         <li class="breadcrumb-item active">All User</li>
     </ol>
-    <button type="button" class="btn btn-success w-100" onclick="downloadExcel()">
+    <!-- <button type="button" class="card-header text-end" onclick="downloadExcel()">
         <img src="https://freeiconshop.com/wp-content/uploads/edd/download-flat.png" 
-             alt="Download Icon" 
+             alt="Icon" 
              style="width: 16px; height: 16px; margin-right: 5px;">
         Export
-    </button>
+    </button> -->
+
+    <div class="row">
+        <div class="col d-flex justify-content-end me-2">
+            <button type="button" class="btn btn-download" onclick="downloadExcel()"> 
+                <i class="fa-solid fa-download"></i> Download
+            </button>
+        </div>
+    </div>
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -31,8 +40,8 @@
                     <th>Owner</th>
                     <th>Balance</th>
                     <th>Role</th>
+                    <th>Package Apply</th>
                     <th>Status</th>
-
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -47,6 +56,7 @@
                     <th>Shop</th>
                     <th>Balance</th>
                     <th>Role</th>
+                    <th>Package Apply</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -63,9 +73,23 @@
                     <td>{{ $customer->owner }}</td>
                     <td>
     ₹{{ number_format($customer->balance, 2) }}
-    <button class="btn btn-success btn-sm rounded" data-bs-toggle="modal" data-bs-target="#transactionModal{{ $customer->id }}">➕</button>
+    <button class="btn btn-add btn-sm rounded" data-bs-toggle="modal" data-bs-target="#transactionModal{{ $customer->id }}"><i class="fa-solid fa-plus"></i></button>
 </td>
-                    <td>{{ $customer->role }}</td>
+                    <td>
+                        @if (trim(strtolower($customer->role)) === 'distibuter')
+                        Distributor
+                    {{-- @elseif(trim(strtolower($customer->role)) === 'rm')
+                    Relationship Manager --}}
+                        @else
+                        Retailer
+                    @endif
+                    </td>
+                  <td>
+    <a href="#" data-bs-toggle="modal" data-bs-target="#editPackageModal{{ $customer->id }}">
+        {{ $packages->where('id', $customer->packageId)->first()->packageName ?? 'Select Package' }}
+    </a>
+</td>
+
                     <td>  <form action="{{ route('user.active', $customer->id) }}" method="post" onsubmit="return confirmAction(event, '{{ $customer->status }}')">
                         @csrf 
                         @method('POST')
@@ -91,6 +115,7 @@
                             return confirmation; // Return true if confirmed, false otherwise
                         }
                     </script></td>
+                 
                     <td>
                        
                         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal{{ $customer->id }}">View</button>
@@ -304,6 +329,40 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="editPackageModal{{ $customer->id }}" tabindex="-1" aria-labelledby="editPackageLabel{{ $customer->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('customer.updatePackage', $customer->id) }}">
+        @csrf
+        @method('PUT')
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPackageLabel{{ $customer->id }}">Select Package</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="packageId" class="form-label">Package</label>
+                    <select name="packageId" class="form-select" required>
+                        <option value="">-- Select Package --</option>
+                        @foreach($packages as $package)
+                            <option value="{{ $package->id }}" {{ $customer->packageId == $package->id ? 'selected' : '' }}>
+                                {{ $package->packageName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Update Package</button>
+            </div>
+        </div>
+    </form>
+  </div>
+</div>
+
                 @endforeach
             </tbody>
         </table>
@@ -330,5 +389,6 @@
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 @endsection

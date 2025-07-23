@@ -3,9 +3,9 @@
 @section('content')
 <div class="container mt-5">
     <div class="card">
-        <div class="card-header">
-            <h5>Fund Requests</h5>
-            <ul class="nav nav-tabs card-header-tabs">
+        <div class="card-header" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">
+            <h5 style="color: white;">Fund Requests</h5>
+            {{-- <ul class="nav nav-tabs card-header-tabs">
                
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('getFundRequests')}}">Pending</a>
@@ -13,12 +13,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('getFundRequests.History')}}">History</a>
                 </li>
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link" href="#">Rejected</a>
-                </li> --}}
-            </ul>
+                </li>
+            </ul> --}}
         </div>
-        @if(session('success'))
+        {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -28,13 +28,13 @@
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
-    @endif
+    @endif --}}
         <div class="card-body">
-            <form class="d-flex mb-4" action="{{ route('getFundRequests') }}" method="GET">
+            <form class="d-flex mb-4 mt-3" action="{{ route('getFundRequests') }}" method="GET">
                 <input type="date" class="form-control me-2" name="start_date" value="{{ request('start_date') }}">
                 <input type="date" class="form-control me-2" name="end_date" value="{{ request('end_date') }}">
                 <input type="text" class="form-control me-2" name="search" placeholder="Enter Search Value" value="{{ request('search') }}">
-                <button class="btn btn-primary me-2" type="submit">Search</button>
+                <button class="btn btn-primary me-2" type="submit" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Search</button>
                 <button class="btn btn-success" onclick="exportToExcel()" type="button">Export</button>
             </form>
             
@@ -112,26 +112,17 @@
                                     <span class="badge bg-secondary">Unknown</span>
                                 @endif
                             </td>
-                            <td>
-                                @if($request->status == 0)
-                                    <!-- Approve Form -->
-                                    <form action="{{ route('approveFund') }}" method="POST" style="display: inline;">
-                                        @csrf
-                                        <input type="hidden" name="id" value="{{ $request->id }}">
-                                        <input type="hidden" name="id_code" value="{{ $request->id_code }}">
-                                        <input type="hidden" name="phone" value="{{ $request->phone }}">
-                                        <input type="hidden" name="amount" value="{{ $request->amount }}">
-                                        <button type="submit" class="btn btn-info btn-sm">Approve</button>
-                                    </form>
-                            
-                                    <!-- Reject Button -->
-                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#mapModal{{ $request->id }}">Reject</button>
-                                @elseif($request->status == -1)
-                                    <span class="btn btn-secondary btn-sm">Rejected</span>
-                                @else
-                                    <span class="btn btn-success btn-sm">Approved</span>
-                                @endif
-                            </td>
+                           <td>
+    @if($request->status == 0)
+        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#acceptModal{{ $request->id }}">Accept</button>
+        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $request->id }}">Reject</button>
+    @elseif($request->status == -1)
+        <span class="btn btn-secondary btn-sm">Rejected</span>
+    @else
+        <span class="btn btn-success btn-sm">Approved</span>
+    @endif
+</td>
+
                             
                         </tr>
 
@@ -162,35 +153,79 @@
 
 
                         {{-- Mapping Distributors --}}
-   <!-- Modal -->
-   <div class="modal fade" id="mapModal{{ $request->id }}" tabindex="-1" aria-labelledby="mapModalLabel{{ $request->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mapModalLabel{{ $request->id}}">Reject  {{ $request->id}}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            {{-- {{ route('update.transaction', $customer->id) }} --}}
-            <form action="{{route('rejectFund',$request->id)}}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="id" class="form-label">Fund ID</label>
-                        <input type="text" class="form-control" id="id" name="id" value="{{$request->id }}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="id" class="form-label">Remarks</label>
-                        <input type="text" class="form-control" id="id" name="remark" required>
-                    </div>
-                                        
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
+ <!-- Accept Modal -->
+<div class="modal fade" id="acceptModal{{ $request->id }}" tabindex="-1" aria-labelledby="acceptModalLabel{{ $request->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ route('approveFund', $request->id) }}" method="POST">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title">Accept Fund Request #{{ $request->id }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+               <div class="mb-3">
+            <label for="acceptRemark{{ $request->id }}" class="form-label">Amount</label>
+            <input type="text" class="form-control" name="amount" value="{{ $request->amount }}" placeholder="Enter remarks" readonly required>
+          </div>
+          <div class="mb-3">
+            <label for="acceptRemark{{ $request->id }}" class="form-label">Remarks</label>
+            <input type="text" class="form-control" name="remark" id="acceptRemark{{ $request->id }}" placeholder="Enter remarks" required>
+          </div>
+          <div class="mb-3">
+            <label for="acceptRemark{{ $request->id }}" class="form-label">Emp Pin</label>
+            <input type="text" class="form-control" name="empin" id="empin" maxlength="4" placeholder="Enter Pin" required>
+          </div>
+        </div>
+
+                                         <input type="hidden" name="id" value="{{ $request->id }}">
+                                         <input type="hidden" name="empName" value="{{ auth()->user()->name }}">
+                                         <input type="hidden" name="empId" value="{{ auth()->user()->username }}">
+                                        <input type="hidden" name="id_code" value="{{ $request->id_code }}">
+                                        <input type="hidden" name="phone" value="{{ $request->phone }}">
+                                      
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">Accept</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal{{ $request->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $request->id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="{{ route('rejectFund', $request->id) }}" method="POST">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title">Reject Fund Request #{{ $request->id }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="rejectRemark{{ $request->id }}" class="form-label">Remarks</label>
+            <input type="text" class="form-control" name="remark" id="rejectRemark{{ $request->id }}" placeholder="Enter rejection reason" required>
+          </div>
+           <input type="hidden" name="id" value="{{ $request->id }}">
+            <input type="hidden" name="empName" value="{{ auth()->user()->name }}">
+<input type="hidden" name="empId" value="{{ auth()->user()->username }}">
+            <div class="mb-3">
+            <label for="acceptRemark{{ $request->id }}" class="form-label">Emp Pin</label>
+            <input type="text" class="form-control" name="empin" id="empin" placeholder="Enter Pin" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger">Reject</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
                         @endforeach
                     </tbody>
                 </table>
@@ -212,5 +247,46 @@
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 
 @endsection

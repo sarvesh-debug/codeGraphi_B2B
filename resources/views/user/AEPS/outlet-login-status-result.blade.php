@@ -1,7 +1,7 @@
 @extends('user/include.layout')
 
 @section('content')
-<div class="controller mt-3 mx-5">
+<div class="controller mt-3 mx-4">
     <div class="row">
         @include('user.AEPS.navbar')
         <div class="col-12 col-md-10 col-lg-8 mx-auto">

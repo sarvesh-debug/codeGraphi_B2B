@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Models\VeriidyAccount;
-
+use App\Helpers\ApiHelper;
 class dmtinstantpayController extends Controller
 {
 
@@ -39,12 +39,13 @@ class dmtinstantpayController extends Controller
     } 
     public function showSendMoneyForm(Request $request)
 {
-    // return $request;
+    //return $request;die();
      $mobile = $request->input('mobile');
     $account = $request->input('account');
     $ifsc = $request->input('ifsc');
+    $beneName = $request->input('beneName');
     $referenceKey = $request->input('referenceKey');
-    return view('user.dmtinstantpay.send-money-form', compact('mobile', 'account', 'ifsc', 'referenceKey'));
+    return view('user.dmtinstantpay.send-money-form', compact('mobile', 'account', 'ifsc', 'beneName','referenceKey'));
 }
 
   
@@ -86,6 +87,8 @@ class dmtinstantpayController extends Controller
     
     public function remitterProfile(Request $request)
 {
+    // return $request;
+    // die();
     // Validate the user input
     $request->validate([
         'mobileNumber' => 'required|digits:10',
@@ -104,13 +107,13 @@ class dmtinstantpayController extends Controller
         'mobileNumber' => $mobileNumber,
         'outlet' => $customerOutletId
     ]);
-// return $response->json();
+// return $response;
 //  die();
 
     // Check for a successful response
 
         $responseData = $response->json();
-        $wadh = $responseData['data']['pidOptionWadh'];
+        $wadh = $responseData['data']['pidOptionWadh'] ?? '';
         session(['wadh' => $wadh]);
         // echo session('wadh');
         // die();
@@ -305,7 +308,8 @@ public function remitterKyc(Request $request)
 
 public function beneficiaryRegistration(Request $request)
 {
-    
+    $mobile=session('mobile');
+    $realAmount=4;
     $customerOutletId = intval(session('outlet'));
     $request->validate([
         
@@ -344,6 +348,38 @@ public function beneficiaryRegistration(Request $request)
 // die();
         // Check if status is OTP sent successfully
         if (isset($data['statuscode']) && $data['statuscode'] === 'OTP') {
+            //$apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'Bank Account Verification');
+            $balance = DB::table('customer')
+     ->where('phone', $mobile)
+     ->value('balance');
+     $retailerClosing=$balance;
+            
+
+             
+     // Store the retrieved balance in the session
+    //  session(['balance'=> $balance]);
+
+     DB::table('getcommission')->insert([
+        'retailermobile' => $mobile,
+        'service' => 'Account Verify',
+        'sub_services' => 'Account_Verify',
+         'externalRef' => 'TXN' . mt_rand(1000000000, 9999999999), // TXN + 10 digits
+
+        'amount'=>3,
+        'commission'=>0,
+        'tds' => 0,
+        'opening_bal' => $retailerClosing,
+        'closing_bal' => $retailerClosing -3,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    DB::table('customer')
+            ->where('phone', $mobile)
+            ->decrement('balance',3);
+    $balance1 = DB::table('customer')
+     ->where('phone', $mobile)
+     ->value('balance');
+    session(['balance'=> $balance1]);
             return view('user.dmtinstantpay.beneficiaryRegistrationSuccess', [
                 'beneficiaryId' => $data['data']['beneficiaryId'],
                 'referenceKey' => $data['data']['referenceKey'],
@@ -412,6 +448,7 @@ public function beneficiaryRegistrationVerify(Request $request)
         // Pass the entire response to the view
         return view('user.dmtinstantpay.beneficiaryRegistrationResponse', [
             'response' => $data,
+            'remitterMobileNumber' =>$mobile
         ]);
 
     } catch (\Exception $e) {
@@ -443,14 +480,28 @@ public function generateTransactionOtp(Request $request)
     // ]);
 
     $amountTr=$request->input('amount');
-    $getAmount=session('balance');
+    $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    $totalAmount=$getAmount;
+    $lockAmount=session('lockBalance');
     $getAmount-=50;
-// return $getAmount;
+ 
+// dd($totalAmount,$getAmount);
 // die();
+
+if ($totalAmount < $amountTr)
+{
+    
+    return back()->with('alert', 'Insufficient balance.');
+
+}
+else
+{
     if($getAmount > $amountTr)  //450 > 400
     {
-        $mobile = $request->input('mobile');
-
+       
+        $mobile = $request->input('mobile');    
     // Define API endpoint and headers
     $url = env('liveUrl').'v1/dmt/generateTransactionOtp';
     $headers = [
@@ -485,6 +536,7 @@ public function generateTransactionOtp(Request $request)
                 'account'=>$request->input('account'),
                 'ifsc'=>$request->input('ifsc'),
                 'amount'=> $request->input('amount'),
+                'beneName'=> $request->input('beneName'),
             ]);
         }
 
@@ -509,6 +561,9 @@ public function generateTransactionOtp(Request $request)
 
 
     }
+}
+
+    
 
     
 }
@@ -521,16 +576,31 @@ public function transaction(Request $request)
     //$mobile = $request->input('mobileNumber');
     $mobile = $request->input('mobileNumber');
     $amountTr=$request->input('amount');
-    $getAmount=session('balance');
-    $opb=$getAmount;
-    $getAmount-=50;
+   // $getAmount=session('balance');
+   
 // return $getAmount;
 // die();
-    if($getAmount > $amountTr)  //450 > 400
-    {
 
+    $getAmount=DB::table('customer')
+    ->where('username', session('username'))
+    ->value('balance');
+    $opb=$getAmount;
+    $getAmount-=50;  
+    // return $getAmount;
+    // die();
+$balanceAd = ApiHelper::getBalance(env('Business_Email'));
+
+$balance = $balanceAd['wallet'];
+// return $balance;
+// die();
+ 
+if ($balance >= $amountTr && $getAmount > $amountTr) 
+    //if($getAmount > $amountTr)  //450 > 400
+    {
         
-        $externalRef = 'ZPAY' . date('Y') . '' . round(microtime(true) * 1000);
+        // return "Hello";
+        // die();
+        $externalRef = 'TXN' . date('Y') . '' . round(microtime(true) * 1000);
 
         // Define API endpoint and headers
         $url = env('liveUrl').'v1/dmt/dmtTransaction';
@@ -562,7 +632,8 @@ public function transaction(Request $request)
             DB::table('transactions_dmt_instant_pay')->insert([
                 'remitter_mobile_number' => $pry_mobile,
                 'second_no'=>$mobile,
-                'reference_key' => $request->input('transferMode'),
+              //  'reference_key' => $request->input('transferMode'),
+              'reference_key' => $externalRef,
                 'customer_outlet_id' => $customerOutletId,  // Store customerOutletId
                 'response_data' => json_encode($data),
                 'opening_balance' =>$opb,
@@ -571,12 +642,10 @@ public function transaction(Request $request)
                 'updated_at' => now(),
             ]);
             $mode=$request->input('transferMode');
-            if($data['statuscode']=="TXN")
-            {
-                //$this->updateCustomerBalance(session('mobile'),'mode');
-                $this->updateCustomerBalance(session('mobile'), $mode,$role,$externalRef);
+            if ($response['statuscode'] === "TXN" || $response['statuscode'] === "TUP") {
+                $this->updateCustomerBalance(session('mobile'), $mode, $role, $externalRef);
             }
-    
+            
             return view('user.dmtinstantpay.transactionSuccess', [
                 'response' => $data,
             ]);
@@ -601,11 +670,11 @@ public function transaction(Request $request)
 }
 
 public function demotest()
-{
+{ 
     $mobile=session('mobile');
     $role=session('role');
     $mode='IMPS';
-    $externalRef = 'ZPAY-' . strtoupper(uniqid(date('YmdHis')));
+    $externalRef = 'TXN-' . strtoupper(uniqid(date('YmdHis')));
    // dd($externalRef);
     $this->updateCustomerBalance($mobile,$mode,$role,$externalRef);
 
@@ -614,230 +683,189 @@ public function demotest()
 
 
 }
-private function updateCustomerBalance($mobile,$mode,$role,$externalRef)
-{ //dd('hello');
-    //die()
-    $closing_bl = 0;;
-    $getDisComm=0;
-    $ff=0;
-    $comA=0;
-    $tds=0;
-    // Fetch the latest transaction for the given mobile number
-    $lastRecord = DB::table('transactions_dmt_instant_pay')
-        ->where('remitter_mobile_number', $mobile)
-        ->latest('created_at') // Sort by created_at to get the most recent record
-        ->first();
-        // dd($lastRecord);
-        // die();
-
-    if ($lastRecord) {
-        // Decode the response data from the latest transaction
-        $response_data = json_decode($lastRecord->response_data, true);
-
-        // Check if payableValue exists and update the balance
-        if (isset($response_data['data']['txnValue'])  && isset($response_data['statuscode']) && $response_data['statuscode'] === 'TXN') {
-            $payableValue = $response_data['data']['txnValue'];
-            
-
-            $getCommission = DB::table('commission_plan')
-            ->where('packages', $role)
-            ->where('service', 'DMT')
-            ->where('sub_service',$mode)
-            ->get();
-
-            $commissionAmount = 0;
-            $comA=0;
-            $tds=0;
-            // return $getCommission;
-            // die();
-            foreach ($getCommission as $commission) {
-                // Check if the payable value falls within the commission range
-                if ($payableValue >= $commission->from_amount && $payableValue <= $commission->to_amount) {
-                   
-                    // Initialize variables
-                    $commissionAmount = 0;
-                    $comA = 0;
-                    $tds = 0;
-            
-                    // Calculate charge (percentage or fixed)
-                    if ($commission->charge_in === 'Percentage') {
-                        $commissionAmount = $payableValue * $commission->charge / 100;
-                    } else { // Fixed amount
-                        $commissionAmount = $commission->charge;
-                    }
-            
-                    // Calculate commission (percentage or fixed)
-                    if ($commission->commission_in === 'Percentage') {
-                        $comA = $commissionAmount * $commission->commission / 100;
-                    } else { // Fixed amount
-                        $comA = $commission->commission;
-                    }
-            
-                    // Calculate TDS (percentage or fixed)
-                    if ($commission->tds_in === 'Percentage') {
-                        $tds = $comA * $commission->tds / 100;
-                    } else { // Fixed amount
-                        $tds = $commission->tds;
-                    }
-            
-                    // Update the payable value
-                    $payableValue += ($commissionAmount);
-            
-                    // Exit the loop once the relevant commission range is found and applied
-                    break;
-                }
-            }
-           
-        //dd($commission->commission);
-        // $opening_bl=$response_data['data']['txnValue'];
-        // $closing_bl=$payableValue;
 
 
-        $opening_bl=session('balance');
-        $closing_bl=session('balance')-$payableValue;
-
-        
-        
-            // // Update the customer's balance
-            // DB::table('customer')
-            //     ->where('phone', $mobile)
-            //     ->decrement('balance', $payableValue);
-
-
-                $getDis = DB::table('customer')
-                ->where('phone', $mobile)
-                ->first(); // Fetch the first record
-
-
-               
-            if ($getDis) {
-                
-                $disPhone=$getDis->dis_phone;
-
-            if ($getDis && is_null($getDis->dis_phone)) {
-                $getDisComm =0;
-                $newpayableValue=$payableValue;
-            } else {
-               // echo "Dis not Done";
-               $getDisComm += $payableValue * 0.01/100;
-               $newpayableValue=$payableValue+$getDisComm;
-              
-            }
-        }
-        else
-        {
-
-        }
-        // Update the distibuter's balance
-        DB::table('customer')
-        ->where('phone', $disPhone)
-        ->increment('balance', $getDisComm);
-
-        $disData = DB::table('customer')
-        ->where('phone', $disPhone)->first();
-        
-if($disData)
+private function updateCustomerBalance($mobile, $mode,$role,$externalRef)
 {
-    $opB=$disData->balance;
-    $clB=$opB+$getDisComm;
-    $dis_no= $disPhone;
-    $ret_no=$mobile;
-    $comm=$getDisComm;
-    $service='DMT1';
-    DB::table('dis_commission')->insert([
-        'dis_no' => $dis_no,
-        'services'=>$service,
-        'retailer_no' =>$ret_no ,
-        'commission' => $comm, // Store customerOutletId
-        'opening_balance' => $opB,
-        'closing_balance' => $clB,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-}
+   
 
-         // Update the customer's balance
-        
+    $transaction = DB::table('transactions_dmt_instant_pay')
+        ->where('remitter_mobile_number', $mobile)
+        ->latest('created_at')
+        ->first();
 
+    if (!$transaction) return;
 
+    $response_data = json_decode($transaction->response_data, true);
+    if (!isset($response_data['data']['txnValue']) || !in_array($response_data['statuscode'], ['TXN', 'TUP'])) return;
 
-        $latestTransaction = DB::table('transactions_dmt_instant_pay')
-    ->where('remitter_mobile_number', $mobile)
-    ->latest('created_at') // Fetch the latest record based on created_at
-    ->first();
+    $txnAmount = $response_data['data']['txnValue'];
+    $realAmount = $response_data['data']['txnValue'];
+    // Retailer info
+    $retailer = DB::table('customer')->where('phone', $mobile)->first();
+    if (!$retailer) return;
 
-if ($latestTransaction) {
-        DB::table('transactions_dmt_instant_pay')
-        ->where('id', $latestTransaction->id)
-        // Ensure this condition matches the correct record
-        ->update([
-            'opening_balance' => $opening_bl,
-            'closing_balance' => $closing_bl,
-            'charges'=>$commissionAmount,
-            'tds'=>$tds,
-            'commission'=>$comA
-        ]);
+    // Distributor & Super Distributor info
+    $distributor = DB::table('customer')->where('phone', $retailer->dis_phone)->first();
+    $superDistributor = $distributor ? DB::table('customer')->where('phone', $distributor->dis_phone)->first() : null;
+
+    // Retailer Commission
+    $retailerData = $this->calculateCommission($txnAmount, 'retailer', $mode, $retailer->packageId);
+    $retailerCommission = $retailerData['commission'];
+    $charge = $retailerData['charge'];
+    $tds = $retailerData['tds'];
+
+    // Distributor Commission
+    $distributorCommission = 0;
+    $distributorData = ['commission' => 0];
+    if ($distributor) {
+        $distributorData = $this->calculateCommission($txnAmount, 'distibuter', $mode, $distributor->packageId);
+        $distributorCommission = $distributorData['commission'];
     }
 
-    $nowOp=$closing_bl;
-    $nowCl=$closing_bl+($comA-$tds);
-    $coms=$comA;
-    //dd($nowCl,$nowOp,$coms);
-    
+    // Super Distributor Commission
+    $superCommission = 0;
+    $superData = ['commission' => 0];
+    if ($superDistributor) {
+        $superData = $this->calculateCommission($txnAmount, 'sd', $mode, $superDistributor->packageId);
+        $superCommission = $superData['commission'];
+    }
+
+    // Commission Differences
+    $distributorEarning = max(0, $retailerCommission - $distributorCommission);
+    $superEarning = max(0, $distributorCommission - $superCommission);
+
+    // 1. Retailer Balance Update
+    $retailerOpening = $retailer->balance;
+    $retailerClosing = $retailerOpening - $txnAmount - $charge;
+    $retailerFinalBalance = $retailerClosing + ($retailerCommission - $tds);
+
+    DB::table('customer')->where('phone', $mobile)->update(['balance' => $retailerFinalBalance]);
+
+    DB::table('transactions_dmt_instant_pay')->where('id', $transaction->id)->update([
+        'opening_balance' => $retailerOpening,
+        'closing_balance' => $retailerClosing,
+        'commission' => $retailerCommission,
+        'charges' => $charge,
+        'tds' => $tds,
+    ]);
 
     DB::table('getcommission')->insert([
         'retailermobile' => $mobile,
-        'service'=>'Money Transfer',
-        'sub_services' => 'IMPS', // Store customerOutletId
-        'opening_bal' => $nowOp,
-        'commission' => ($comA-$tds),
+        'service' => 'Money Transfer',
+        'sub_services' => $mode,
+        'externalRef' =>$externalRef,
+        'amount'=>$txnAmount,
+        'commission' => $retailerCommission,
         'tds' => $tds,
-        'externalRef'=>$externalRef,
-        'amount' => $payableValue,
-        'closing_bal' => $nowCl,
+        'opening_bal' => $retailerClosing,
+        'closing_bal' => $retailerClosing + ($retailerCommission - $tds),
         'created_at' => now(),
         'updated_at' => now(),
     ]);
-    DB::table('customer')
-    ->where('phone', $mobile)
-    ->decrement('balance', $newpayableValue-($comA-$tds));
-     //DMT Balance Update
+
+    // 2. Distributor Balance Update
+    if ($distributor && $distributorEarning > 0) {
+        $disOpening = $distributor->balance;
+        $disClosing = $disOpening + $distributorEarning;
+
+        DB::table('customer')->where('phone', $distributor->phone)->update(['balance' => $disClosing]);
+
+        DB::table('dis_commission')->insert([
+            'dis_no' => $distributor->phone,
+            'services' => 'DMT1',
+            'retailer_no' => $mobile,
+            'commission' => $distributorEarning,
+            'opening_balance' => $disOpening,
+            'closing_balance' => $disClosing,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    // 3. Super Distributor Balance Update
+    if ($superDistributor && $superEarning > 0) {
+        $superOpening = $superDistributor->balance;
+        $superClosing = $superOpening + $superEarning;
+
+        DB::table('customer')->where('phone', $superDistributor->phone)->update(['balance' => $superClosing]);
+
+        DB::table('dis_commission')->insert([
+            'dis_no' => $superDistributor->phone,
+            'services' => 'DMT1',
+            'retailer_no' => $mobile,
+            'commission' => $superEarning,
+            'opening_balance' => $superOpening,
+            'closing_balance' => $superClosing,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
      $balance = DB::table('customer')
      ->where('phone', $mobile)
      ->value('balance');
      // Store the retrieved balance in the session
      session(['balance'=> $balance]);
 
-     
-     DB::table('business')
-     ->where('business_id', session('business_id'))
-     ->decrement('balance', $newpayableValue-($comA-$tds));    
+    $apiBalance = ApiHelper::decreaseBalance(env('Business_Email'), $realAmount, 'DMT');
+//     dd([
+//     'Retailer Commission' => $retailerCommission,
+//     'Retailer TDS' => $tds,
+//     'Retailer Charge' => $charge,
+//     'Distributor Earning' => $distributorEarning,
+//     'Super Distributor Earning' => $superEarning,
+//     'Retailer Final Balance' => $retailerClosing + ($retailerCommission - $tds),
+// ]);
 
-$balanceAd = DB::table('business')
-->where('business_id', session('business_id'))
-->value('balance');
-// Store the retrieved balance in the session
-session(['adminBalance'=> $balanceAd]);
 
-            // Store the last transaction amount in the session
-            session(['totalPayableValue' => $newpayableValue-($comA-$tds)]);
-        } else {
-            session(['totalPayableValue' => 0]); // No payable value in the last transaction
-        }
-    } else {
-        session(['totalPayableValue' => 0]); // No transactions found
-    }
-    
-   
-   //dd('ok');
-   
-   // dd($opB,$clB,$dis_no,$ret_no,$comm,$service,$disData,$disPhone,$getDis->dis_phone,$ff,$payableValue,$newpayableValue,$commission->charge,$commission->charge_in,$mode,$commissionAmount,$commissionAmount,$comA,$tds,$getDis,$getDisComm);
 }
+private function calculateCommission($amount, $role, $mode, $packageId)
+{
+    $commissionRows = DB::table('commission_plan')
+        ->where('packages', $role)
+        ->where('service', 'DMT')
+        ->where('sub_service', $mode)
+        ->where('packegesId', $packageId)
+        ->get();
 
+    $charge = 0;
+    $commission = 0;
+    $tds = 0;
 
+    foreach ($commissionRows as $row) {
+                if ($amount >= $row->from_amount && $amount <= $row->to_amount) {
+                    
+                    // Calculate charge
+                    $charge = $row->charge_in === 'Percentage'
+                        ? ($amount * $row->charge / 100)
+                        : $row->charge;
+            
+                    // Calculate commission
+                    $commission = $row->commission_in === 'Percentage'
+                        ? ($amount * $row->commission / 100)
+                        : $row->commission;
+            
+                    // Calculate TDS
+                    $tds = $row->tds_in === 'Percentage'
+                        ? ($commission * $row->tds / 100)
+                        : $row->tds;
+            
+                    break; // Stop after finding the first match
+                }
+            }
+
+    return [
+        'charge' => $charge,
+        'commission' => $commission,
+        'tds' => $tds,
+    ];
+}
 
 public function beneficiaryDelete(Request $request)
 {
+   //return $request;die();
+    $remMobile=$request->remMobile;
     // Get the outlet ID from session
     $customerOutletId = intval(session('outlet'));
 
@@ -853,7 +881,7 @@ public function beneficiaryDelete(Request $request)
     // Prepare the request body
     $body = [
         'outlet' =>$customerOutletId,
-        'remitterMobileNumber' => $mobile,
+        'remitterMobileNumber' => $remMobile,
         'beneficiaryId' => $request->input('beneficiaryId'),
     ];
 
@@ -869,14 +897,14 @@ public function beneficiaryDelete(Request $request)
             $beneficiaryId = $data['data']['beneficiaryId'] ?? null;
             $referenceKey = $data['data']['referenceKey'] ?? null;
             $status =$data['status'] ?? '';
-    // return $status;
-    // die();
+            session()->put('referenceKey', $referenceKey);    
             return view('user.dmtinstantpay.deleteOtp', [
                 'response' => $data,
                 'status' =>$status,
                 'beneficiaryId' => $request->input('beneficiaryId'),
                 'referenceKey' => $referenceKey,
                 'mobile' => $mobile,
+                'remMobile'=>$remMobile,
             ]);
         }
 
@@ -899,9 +927,9 @@ public function beneficiaryDelete(Request $request)
    
 public function DeleteVerify(Request $request)
 {
-    //return $request;
+    //return $request;die();
     $customerOutletId = intval(session('outlet'));
-
+    $remMobile=$request->input('beneMobile');
     $mobile = $request->input('mobile');
 
     // Define API endpoint and headers
@@ -914,18 +942,19 @@ public function DeleteVerify(Request $request)
     // Prepare the request body with user input
     $body = [
         'outlet'=>$customerOutletId,
-        'remitterMobileNumber' => $mobile,
+        'remitterMobileNumber' => $remMobile,
         'beneficiaryId'=>$request->input('beneficiaryId'),
         'otp' => $request->input('otp'),
-        'referenceKey' => $request->input('referenceKey'),
+        'referenceKey' =>session('referenceKey'),
     ];
     $response = Http::withHeaders($headers)->post($url, $body);
     $data = $response->json();
-//    return $data;
+//    return $response;
 //    die();
 
     return view('user.dmtinstantpay.deleteVerifyResult', [
-        'response' => $data
+        'response' => $data,
+        'remitterMobileNumber' =>$remMobile
     ]);
 
 
@@ -953,13 +982,34 @@ public function getAllTransactions(Request $request)
 
     // Retrieve filtered data
     $transactions = $query->orderBy('created_at', 'desc')->get();
-
+//return $transactions;die();
     // Return the view with the filtered transactions
     return view('user.dmtinstantpay.transactionHistory', [
         'transactions' => $transactions,
     ]);
 }
 
+public function DuplicateRcpt(Request $request)
+{
+    $id=$request->id;
+    //return $id;die();
+
+     $response = DB::table('transactions_dmt_instant_pay')
+               ->where('id', $id)->first();
+               //return $response;die();
+    return view('user.dmtinstantpay.dplReciept',compact('response'));
+}
+
+public function DuplicateRcptAd(Request $request)
+{
+    $id=$request->id;
+    //return $id;die();
+
+     $response = DB::table('transactions_dmt_instant_pay')
+               ->where('id', $id)->first();
+               //return $response;die();
+    return view('admin.reports.dmtRcpt',compact('response'));
+}
 
 // public function getAllTransactions()
 // {
@@ -977,6 +1027,135 @@ public function getAllTransactions(Request $request)
 //     return view('user.dmtinstantpay.transactionHistory', ['transactions' => $transactions]);
 // }
 
+
+public function pendingTransaction(Request $request)
+{
+    $mobile = session('mobile');
+
+    // Fetch transaction record
+    $pendingRecord = DB::table('transactions_dmt_instant_pay')
+        ->where('remitter_mobile_number', $mobile)
+        ->get();
+
+    $transactions = [];
+
+    foreach ($pendingRecord as $record) {
+        // Decode response_data
+        $responseData = json_decode($record->response_data, true);
+
+        // Check if statuscode is "TXN"
+        if (isset($responseData['statuscode']) && $responseData['statuscode'] === "TUP") {
+            $transactions[] = [
+                'id' => $record->id,
+                'remitter_mobile' => $record->remitter_mobile_number,
+                'beneficiary_account' => $responseData['data']['beneficiaryAccount'] ?? null,
+                'beneficiary_ifsc' => $responseData['data']['beneficiaryIfsc'] ?? null,
+                'beneficiary_name' => $responseData['data']['beneficiaryName'] ?? null,
+                'txn_value' => $responseData['data']['txnValue'] ?? null,
+                'txn_reference_id' => $responseData['data']['txnReferenceId'] ?? null,
+                'external_ref' => $responseData['data']['externalRef'] ?? null,
+                'pool_reference_id' => $responseData['data']['poolReferenceId'] ?? null,
+                'opening_balance' => $record->opening_balance,
+                'closing_balance' => $record->closing_balance,
+                'charges' => $record->charges,
+                'commission' => $record->commission,
+                'tds' => $record->tds,
+                'created_at' => $record->created_at
+            ];
+        }
+    }
+
+    // Return JSON if the request is an API call
+    if ($request->wantsJson()) {
+        return response()->json([
+            'success' => true,
+            'transactions' => $transactions
+        ]);
+    }
+
+    // Return data for Blade view
+    return view('user.dmtinstantpay.dmtPendingTransaction', compact('transactions'));
+}
+
+public function pendingTransaction_api()
+{
+    
+
+    
+
+    // Fetch transaction record
+    $pendingRecord = DB::table('transactions_dmt_instant_pay')
+    ->orderBy('id', 'desc') // Sort by ID in descending order
+    ->get();
+
+
+    $transactions = [];
+
+    foreach ($pendingRecord as $record) {
+        // Decode response_data
+        $responseData = json_decode($record->response_data, true);
+        
+        // Ensure response_data contains 'data' key
+        $data = $responseData['data'] ?? [];
+
+        // Check if statuscode is "TXN"
+        if (isset($responseData['statuscode']) && $responseData['statuscode'] === "TUP") {
+            $transactions[] = [
+                'id' => $record->id,
+                'remitter_mobile' => $record->remitter_mobile_number,
+                'beneficiary_account' => $data['beneficiaryAccount'] ?? null,
+                'beneficiary_ifsc' => $data['beneficiaryIfsc'] ?? null,
+                'beneficiary_name' => $data['beneficiaryName'] ?? null,
+                'txn_value' => $data['txnValue'] ?? null,
+                'txn_reference_id' => $data['txnReferenceId'] ?? null,
+                'external_ref' => $data['externalRef'] ?? null,
+                'pool_reference_id' => $data['poolReferenceId'] ?? null,
+                'opening_balance' => $record->opening_balance,
+                'closing_balance' => $record->closing_balance,
+                'charges' => $record->charges,
+                'commission' => $record->commission,
+                'tds' => $record->tds,
+                'created_at' => $record->created_at
+            ];
+        }
+    }
+
+    // Return JSON response
+    return response()->json([
+        'success' => true,
+        'message' => count($transactions) > 0 ? 'Pending transactions found' : 'No pending transactions available',
+        'transactions' => $transactions
+    ]);
+}
+
+public function pendingResponse(Request $request)
+{
+    \Log::info('Received Pending DMT Data:', $request->all());
+
+    // Extract top-level externalRef
+    $topLevelExternalRef = $request->externalRef;
+
+    // Optional: Also extract nested externalRef inside data key if needed
+    $nestedExternalRef = $request->input('data.externalRef');
+
+    // For safety, log both
+    \Log::info("Top Level externalRef: " . $topLevelExternalRef);
+    \Log::info("Nested externalRef from data: " . $nestedExternalRef);
+
+    // Use the top-level externalRef to update the record
+    $updatePending = DB::table('transactions_dmt_instant_pay')
+        ->where('reference_key', $topLevelExternalRef)
+        ->update([
+            'response_data' => json_encode($request->all())
+        ]);
+
+    // Optional: Return a confirmation response
+    return response()->json([
+        'success' => true,
+        'message' => 'Pending transaction data received and stored.',
+        'externalRef' => $topLevelExternalRef
+    ]);
+}
 
 
 }

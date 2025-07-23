@@ -5,7 +5,7 @@
     <div class="card">
         <div class="card-header">
             <h5>Fund Requests</h5>
-            <ul class="nav nav-tabs card-header-tabs">
+            {{-- <ul class="nav nav-tabs card-header-tabs">
                
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('getFundRequests')}}">Pending</a>
@@ -13,12 +13,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('getFundRequests.History')}}">History</a>
                 </li>
-                {{-- <li class="nav-item">
-                    <a class="nav-link" href="#">Rejected</a>
-                </li> --}}
-            </ul>
+                
+            </ul> --}}
         </div>
-        @if(session('success'))
+        {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -28,7 +26,7 @@
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
-    @endif
+    @endif --}}
         <div class="card-body">
             <form class="d-flex mb-4" action="{{ route('getFundRequests') }}" method="GET">
                 <input type="date" class="form-control me-2" name="start_date" value="{{ request('start_date') }}">
@@ -55,6 +53,7 @@
                             <th>Proof</th>
                             <th>Raise Date</th>
                             <th>Remark</th>
+                            <th>Employee</th>
                            
                             
                             <th>Status</th>
@@ -76,7 +75,7 @@
                             <th>Proof</th>
                             <th>Raise Date</th>
                             <th>Remark</th>
-                           
+                           <th>Employee</th>
                             
                             <th>Status</th>
                            <th>Action</th>
@@ -99,8 +98,8 @@
                             <td><a href="#" data-bs-toggle="modal" data-bs-target="#proofModal{{ $request->id }}">View Proof</a></td>
                             <td>{{ \Carbon\Carbon::parse($request->created_at)->format('d-m-Y') }}</td>
                             <td>{{ $request->remark }}</td>
-                            {{-- <td>{{ $request->admin_remark }}</td>
-                            <td>{{ $request->employee }}</td> --}}
+                            {{-- <td>{{ $request->admin_remark }}</td>--}}
+                            <td>{{ $request->employeeName }}</td> 
                             <td>
                                 @if ($request->status == 0)
                                     <span class="badge bg-warning">Pending</span>
@@ -212,5 +211,46 @@
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
 
 @endsection

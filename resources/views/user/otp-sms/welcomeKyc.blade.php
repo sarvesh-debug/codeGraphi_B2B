@@ -43,24 +43,33 @@
         <div class="d-flex justify-content-center">
             <div class="col-md-8 text-center welcome-card">
                 <!-- Logo Section -->
-                <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" style="border-radius: 50%;" alt="ZPay Logo" class="logo">
+                <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" style="border-radius: 50%;" alt="CodeGraphi Logo" class="logo">
 
                 <!-- Welcome Content -->
-                <h1>Welcome to Z Pay!</h1>
+                <h1>Welcome to CodeGraphi!</h1>
                 <h2>Full KYC !</h2>
                 <p>Dear <b>{{$username}}</b>,</p>
                 <p>Your RT number is <span class="redirect-info">{{ $rt_number }}</span>.</p>
+                <p>Please wait team is reviewing, after review will show the data</p>
             
 
-                <!-- Redirect Information -->
-                <div class="" role="status">
+
+            @if (session('role')=='Retailer')
+             <!-- Redirect Information -->
+                <!-- <div class="" role="status">
                     <span class="">Click For Full Kyc</span>
                     <a href="{{ route('user/kyc-form') }}" class="btn btn-success">Click </a>
-                </div>
+                </div> -->
+            @endif
+                <!-- Redirect Information -->
+                <!-- <div class="">
+                    <span class="">Click For Full Kyc</span>
+                    <a href="{{ route('customer/dashboard') }}" class="btn btn-success">Back </a>
+                </div> -->
             </div>
         </div>
         <footer>
-            &copy; 2024 zpaypvtltd.com All rights reserved.
+            &copy; 2025 CodeGraphi.com All rights reserved.
         </footer>
     </div>
 

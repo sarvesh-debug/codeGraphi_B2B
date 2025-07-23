@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active">Edit User</li>
     </ol>
 
-    @if (session('success'))
+    {{-- @if (session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
@@ -18,7 +18,7 @@
     <div class="alert alert-danger">
         {{ session('error') }}
     </div>
-    @endif
+    @endif --}}
 
     <div class="card">
         <div class="card-header">
@@ -239,7 +239,20 @@
                     @error('role')
                     <small class="text-danger">{{ $message }}</small>
                     @enderror
-                </div>    
+                </div> 
+                @elseif($user->role == 'sd')
+                    <div class="form-group mb-3">
+                    <label for="role">Role</label>
+                   
+                    <select class="form-control" id="role" name="role" required>
+                        {{-- <option value="User" {{ $user->role == 'User' ? 'selected' : '' }}>User</option> --}}
+                        {{-- <option value="Retailer" {{ $user->role == 'Retailer' ? 'selected' : '' }}>Retailer</option> --}}
+                        <option value="sd" {{ $user->role == 'sd' ? 'selected' : '' }}>Super Distributor</option>
+                    </select>
+                    @error('role')
+                    <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div> 
                 @else
                 <div class="form-group mb-3">
                     <label for="role">Role</label>
@@ -264,4 +277,47 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-body">
+                @if(session('success'))
+                    <img src="https://cdn-icons-png.flaticon.com/512/5610/5610944.png" alt="Success" width="80">
+                    <h5 class="mt-2 text-dark">{{ session('success') }}</h5>
+                @elseif(session('error'))
+                    <img src="https://media.giphy.com/media/TqiwHbFBaZ4ti/giphy.gif" alt="Failed" width="80">
+                    <h5 class="mt-2 text-danger">{{ session('error') }}</h5>
+                @endif
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal" style="background: linear-gradient(to right, #0a22aa, #b62512); color: white; border: none;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if(session('success') || session('error'))
+            var modal = new bootstrap.Modal(document.getElementById('statusModal'));
+            modal.show();
+        @endif
+    });
+
+    (function () {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+
 @endsection

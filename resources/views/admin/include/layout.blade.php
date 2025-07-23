@@ -1,4 +1,8 @@
+@php
+use Illuminate\Support\Facades\DB;
+$pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
 
+@endphp
 <!DOCTYPE html>
 <html
   lang="en"
@@ -21,7 +25,7 @@
     <title>Dashboard - Analytics</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/icons/z-pay-fav.png') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/codegraphi_favcon.jpeg') }}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <!-- Fonts -->
@@ -74,7 +78,7 @@
           <div class="app-brand demo">
             <a href="{{route('admin.dashboard')}}" class="app-brand-link">
               <span class="app-brand-text demo menu-text fw-bolder ms-2">
-                <img src="{{ asset('assets/img/icons/z-pay-logo.png') }}" width="200px" height=""  alt="">
+                <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" width="200px" height=""  alt="">
               </span>
             </a>
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -91,6 +95,7 @@
             </li>
 
             <!-- Example of submenu -->
+              @if (Auth::user()->role=='admin')
             <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAURJREFUSEvF1L8rRXEYx/HXTWaEwSiZLIpVRgulKBaLzWLwa7QopURS/gRZ5FcW/wAlGWQiIykMKKX8OKdc3c69557bOW6+2znn+3zen+fp85ycKp9clfVVCujFIjp+DF1gDsdJBisBjGKTIjOfGMRBOUgSoB43aIgRuUMb3uIgSYDQ4U7CGPpwlBYwjeUEwBRW0wIGsJ8A6MdhWkAdrtEUI3CPdrykBYR1I9gqIRCmaAi7WVKUr+3B0s8efOASszj5iz1I0ij7PSmmmcTD4nKAZswEm9oVzLkTjRHaI85xihU8lHITBxgLBNeDfIcpquQ8YRx70culAJPBr2GtEtUSd4axXfg+CmjFFWpSAl4RavyOKwrYwERK8XzZfGBwIf8QBdyiJSPgDN1xgHfUZgQ8F4Yj2sFXRvEi4/+6aH/STNU7+AYkwS0ZwQsJ3gAAAABJRU5ErkJggg=="/>
@@ -139,6 +144,7 @@
                  
                 </ul>
               </li>
+              @endif
             
 
               {{-- <li class="menu-item">
@@ -170,54 +176,41 @@
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAMNJREFUSEvtlU0KwjAQRl+vYcGFG+3Kc+jGG7kRpV248nwuBEU8hTLFlJQWksmPKDjLMPleZr5MUpA5isz6fBSwAWpgEVHVAzgBe6NhV3AFyghxe+sO2MqCDXgmEheZOzDJCei0NSZXwBFYeVbaamsAkj8DzqEAlwfmMK683gXSmPwH4Ort97fI5/ZNgYtPohkBzRwsgQOwDgW4PPDU7dIGk5wSMPrYSW+lxyli9LmWD6cB5hGE2/vDEZ02NCYHcX8f8AKtTiAZznncCgAAAABJRU5ErkJggg=="/>
                   <div data-i18n="Layouts">
-                      Wallet</div>
+                    Fund Requests </div>
                 </a>
   
                 <ul class="menu-sub">
-                  {{-- <li class="menu-item">
-                    <a href="{{route('admin/wallet/credit-debit')}}" class="menu-link">
-                      <div data-i18n="Without menu">Wallet Credit & Debit</div>
-                    </a>
-                  </li>
-                  <li class="menu-item">
-                    <a href="{{route('admin/wallet/credit-lock')}}" class="menu-link">
-                      <div data-i18n="Without navbar">Wallet Lock & Release</div>
-                    </a>
-                  </li> --}}
+                
                   <li class="menu-item">
                     <a href="{{route('getFundRequests')}}" class="menu-link">
-                      <div data-i18n="Without navbar">Fund Requests</div>
+                      <div data-i18n="Without navbar">Pending</div>
                     </a>
                   </li>
                   <li class="menu-item">
-                    <a href="{{ route('bankdetails.edit', ['id' => '1']) }}" class="menu-link">
-                        <div data-i18n="Without menu">Bank Account</div>
-                    </a>
-                </li>
-                
-              
-                  <li class="menu-item">
-                    <a href="{{route('bankdetails.Qr')}}" class="menu-link">
-                      <div data-i18n="Without menu">QR Code</div>
+                    <a href="{{route('getFundRequests.History')}}" class="menu-link">
+                      <div data-i18n="Without navbar">History</div>
                     </a>
                   </li>
+                 
                  
                 </ul>
               </li>
 
 
-              <li class="menu-item">
+              {{-- <li class="menu-item">
               <a href="{{route('commission-list')}}" class="menu-link">
                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1btKBEEQheFvETUTczHwBcRUBC+BGAhmPoWBoKYarKGgRr6HKAYiKBiZ+gCCCBuLkYmXbRlh6O3ZadZdTLbD4lT93aemahoGfBoDrm8IqHW4bNEtlmsz8gR3WAnSMuArLzdb9VO7V8AHbrDWBfcnwC6O0cR+BSQbsFS8NPgazgU2MIlHTOcCgm4C51GzFzFWWPKMObziEutR8Wts4u03nhq0GTwlbhV8X8AD9nCU0EyhVY6nAON4TyTv4ATzuMdIQhNin3WA7ba/p1Fyyve4NyFlC2dVgKo5eMFswvcAGC16k+pz9ld00LbjsIvvVaOQDQgFroqhSvneF0D2figJO17Qz2UX1shqvIt6uWVtzvCP9v8WfQPMWC8Z5nK9/gAAAABJRU5ErkJggg=="/>
                <div data-i18n="Analytics">Commission Plans</div>
              </a>
-            </li>
-            {{-- <li class="menu-item">
-              <a href="{{route('admin.panHistory')}}" class="menu-link">
-               <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1btKBEEQheFvETUTczHwBcRUBC+BGAhmPoWBoKYarKGgRr6HKAYiKBiZ+gCCCBuLkYmXbRlh6O3ZadZdTLbD4lT93aemahoGfBoDrm8IqHW4bNEtlmsz8gR3WAnSMuArLzdb9VO7V8AHbrDWBfcnwC6O0cR+BSQbsFS8NPgazgU2MIlHTOcCgm4C51GzFzFWWPKMObziEutR8Wts4u03nhq0GTwlbhV8X8AD9nCU0EyhVY6nAON4TyTv4ATzuMdIQhNin3WA7ba/p1Fyyve4NyFlC2dVgKo5eMFswvcAGC16k+pz9ld00LbjsIvvVaOQDQgFroqhSvneF0D2figJO17Qz2UX1shqvIt6uWVtzvCP9v8WfQPMWC8Z5nK9/gAAAABJRU5ErkJggg=="/>
-               <div data-i18n="Analytics">Pan Card</div>
-             </a>
             </li> --}}
+             @if (Auth::user()->role=='admin')
+            <li class="menu-item">
+              <a href="{{route('packages.index')}}" class="menu-link">
+               <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAR1JREFUSEvt1btKBEEQheFvETUTczHwBcRUBC+BGAhmPoWBoKYarKGgRr6HKAYiKBiZ+gCCCBuLkYmXbRlh6O3ZadZdTLbD4lT93aemahoGfBoDrm8IqHW4bNEtlmsz8gR3WAnSMuArLzdb9VO7V8AHbrDWBfcnwC6O0cR+BSQbsFS8NPgazgU2MIlHTOcCgm4C51GzFzFWWPKMObziEutR8Wts4u03nhq0GTwlbhV8X8AD9nCU0EyhVY6nAON4TyTv4ATzuMdIQhNin3WA7ba/p1Fyyve4NyFlC2dVgKo5eMFswvcAGC16k+pz9ld00LbjsIvvVaOQDQgFroqhSvneF0D2figJO17Qz2UX1shqvIt6uWVtzvCP9v8WfQPMWC8Z5nK9/gAAAABJRU5ErkJggg=="/>
+               <div data-i18n="Analytics">Commission Package</div>
+             </a>
+            </li>
+            @endif
               <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAALRJREFUSEvd1kEKwjAQheG/dxEEvY5HaXeCVAQX7VF6nQqeRgm0oDXNmzQNSLNMJvNlhtC0IPMoMufHB5yAG7AX+AW4qgP6gB44qI3DegW0oVgf8DIkrwFXgRtBZCng9jVAqZAUwOWWSCogkTWAKfKVcylgvjgKGNctN2tEoyrYHmCpKKlF2wN8Fa3aov8HDF/unxDZopgHZ5r9ARw/J+eezDuwizz+EzgDnQIi84bDs/9VvAHHQzQZ5bZMoQAAAABJRU5ErkJggg=="/>
@@ -236,23 +229,28 @@
                       <div data-i18n="Without navbar">DMT</div>
                     </a>
                   </li>
-                  {{-- <li class="menu-item">
-                    <a href="{{route('admin/reports/credit-card-bill-payment')}}" class="menu-link">
-                      <div data-i18n="Without navbar">CC Payout</div>
+                   <li class="menu-item">
+                    <a href="{{route('payoutReport')}}" class="menu-link">
+                      <div data-i18n="Without navbar">Payout</div>
                     </a>
-                  </li> --}}
+                  </li> 
+                  <li class="menu-item">
+                    <a href="{{route('bbpsReport')}}" class="menu-link">
+                      <div data-i18n="Without navbar">BBPS</div>
+                    </a>
+                  </li> 
                   <li class="menu-item">
                     <a href="{{route('ledger.statement')}}" class="menu-link">
                       <div data-i18n="Without navbar">All Transaction</div>
                     </a>
                   </li>
-                  {{-- <li class="menu-item">
-                    <a href="{{route('admin/reports/dth-recharge')}}" class="menu-link">
-                      <div data-i18n="Without navbar">DTH Recharge</div>
+               <li class="menu-item">
+                    <a href="{{route('admin.reports.tds')}}" class="menu-link">
+                      <div data-i18n="Without navbar">TDS Reports</div>
                     </a>
                   </li>
                  
-                  <li class="menu-item">
+                   {{--   <li class="menu-item">
                     <a href="{{route('admin/reports/mobile-recharge')}}" class="menu-link">
                       <div data-i18n="Without navbar">Mobile Recharge</div>
                     </a>
@@ -280,6 +278,32 @@
                  
                 </ul>
               </li>
+
+               @if (Auth::user()->role=='admin')
+              <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" width="24" height="24" alt="Employee Icon"/>
+                <div data-i18n="Layouts">Employee Manage</div>
+              </a>
+
+  
+                <ul class="menu-sub">
+                
+                  <li class="menu-item">
+                    <a href="{{route('employees.index')}}" class="menu-link">
+                      <div data-i18n="Without navbar">List</div>
+                    </a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="{{route('getFundRequests.History')}}" class="menu-link">
+                      <div data-i18n="Without navbar">History</div>
+                    </a>
+                  </li>
+                 
+                 
+                </ul>
+              </li>
+              @endif
               {{-- <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAActJREFUSEu11curjlEUBvDfEREGCsllwEAxkpFyN/AnMECUci0jZSaXqTIgiTJAiL9BuWSAkVJKEiUSI+USBrxL71f77PY++yvn25O33rXW86z1rLX2HjPiMzZifMMSPMDGLJn72NJKcFiCPxWgZnzJYTrm4X0Puhn3KgSb8LC3LcJn/E59SwSPsAYXMRWHGjKc55/UB/EYGyYi2I2rLV0b9sC4PvBJK5iJV4hS/+d8wHJ8D5CU4ET342QFOYIO9BKEy9oukcudjAsq/oF1Oie4je2FgI9Y3Wkc3/QswXPMKcTcwK6cIKbnDI5kATtxs5Lpvr6S1Hyuk+cYfuYEA6cfmJFELCxkPzBHFe8S32+Y3RrTX5iWOC1G9KB0coJo7KwaQUh0FoczpHFjl9n24kr27wKOliS6g22VJq/qiD8VmvwMcwsxt7Aj70GM1fGKFCFRNDQ2dQrW4dIEYxrjfioniEV7i/kVkmF/x320tLRoATAZV8UeXBtkU7rsnvaLFZv6pnOMcsdNRlLK116KZd2k7ccTrG+Nacx9yPW6d1zZbfiLij4r8LK3xRX/ZZjruoQ1qQ9OiSAenHh40nMXW1udbz55LYCWfeQEfwGGhkoZUGgCkAAAAABJRU5ErkJggg=="/>
@@ -334,18 +358,36 @@
                  
                 </ul>
               </li> --}}
-
+ @if (Auth::user()->role=='admin')
               <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
-                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAJBJREFUSEvtlE0OQDAUhD+nsBYWDiK2LuMQTiSxcA4r1m5BiIq/Iq1KmrTbduZ7b9KMh+HjGfbnd0AGFECsuFkD5EAp9McNesBXNBeyDghlgGG5UI3upD8aOYCL6PEDu4gsiGjqkeBxzvsHLRDJuigFKk1AAtRXAPHFNP1X+dxz27IzDvhq8p2Pau+/HsZ+wAifXyEZA1BA5wAAAABJRU5ErkJggg=="/>
+                  <i class="bx bx-cog me-2"></i>
                   <div data-i18n="Layouts">
-                      Other Services</div>
+                      Settings</div>
                 </a>
   
                 <ul class="menu-sub">
                   <li class="menu-item">
+                    {{-- <a href="{{ route('bankdetails.edit', ['id' => '1']) }}" class="menu-link"> --}}
+                      <a href="{{ route('showBank') }}" class="menu-link">
+                        <div data-i18n="Without menu">Bank Account</div>
+                    </a>
+                </li>
+                
+              
+                  <li class="menu-item">
+                    <a href="{{route('bankdetails.Qr')}}" class="menu-link">
+                      <div data-i18n="Without menu">QR Code</div>
+                    </a>
+                  </li>
+                  <li class="menu-item">
                     <a href="{{route('otherServices.form')}}" class="menu-link">
                       <div data-i18n="Without menu">Latest News </div>
+                    </a>
+                  </li>
+                  <li class="menu-item">
+                    <a href="{{route('otherServices.form')}}" class="menu-link">
+                      <div data-i18n="Without menu">Logo & Mobile</div>
                     </a>
                   </li>
                   <li class="menu-item">
@@ -378,6 +420,7 @@
                  
                 </ul>
               </li>
+              @endif
               {{-- <li class="menu-item">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAQlJREFUSEvt1b8uBFEcxfHPNiJq3oBeVGqN6BARr6AVelpCtvEMohB/opJ4BiHxGNQoMFem2Nydu/eOzXR72/n9zvfOOWcyPR2fXsf6JoCswymL5nCGtVrhHnt4zypGA02AGTxjPpp9xRK+2kCaADu4SIis47Z+9pMB/Wk3AQ5wnFjex+m4gE1cJQAbuBnXomm8YCESCrks42NcQNgPLerXLfquwr1DsCdu0agckhm0ueC/AFvYxUpEeqze7BzXbW4Qt+iktmKUxmHVvqNSyCBgG5eFi6t4yNR1KIOnqoKLhYAgHiDhpHIYAnxiqhDwhtmS2UGLcp9+rFf0LykaKrlpamYCyLrXuUW/h78lGZeAMYAAAAAASUVORK5CYII="/>
@@ -417,14 +460,16 @@
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
               <div class="navbar-nav align-items-center">
                 <div class="nav-item d-flex align-items-center">
-                  <i class="bx bx-search fs-4 lh-0"></i>
-                  <input type="text" class="form-control border-0 shadow-none" placeholder="Search..." aria-label="Search..." />
+                
+                  <li><b>Wallet Amount ₹ {{session('adminBalance')}}</b> <a href="{{route('adminBalanceAddForm')}}" class="btn btn-sm btn-success">+</a> </li>
                 </div>
               </div>
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
                 <!-- User -->
-                <li>Wallet Amount ₹ {{session('adminBalance')}}</li>
+                
+                <li style="margin-right: 50px"><a href="{{route('getFundRequests')}}"><i class="bx bx-bell me-2"><b style="color: red"><sup>{{$pendingCount}}</sup></b></i></a></li>
+                <li>{{(Auth::user()->name)}} </li>
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
@@ -441,8 +486,8 @@
                             </div>
                           </div>
                           <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">Admin</span>
-                            <small class="text-muted">Admin</small>
+                            <span class="fw-semibold d-block">{{(Auth::user()->name)}} </span>
+                            <small class="text-muted">{{(Auth::user()->username)}} </small>
                           </div>
                         </div>
                       </a>
@@ -463,6 +508,12 @@
                       </a>
                     </li>
                     <li>
+                      <a class="dropdown-item" href="{{route('empin.form')}}">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">EMP Pin Chnage</span>
+                      </a>
+                    </li>
+                     <li>
                       <a class="dropdown-item" href="{{route('admin.logout')}}">
                         <i class="bx bx-power-off me-2"></i>
                         <span class="align-middle">Log Out</span>
@@ -512,6 +563,38 @@
 
 
   </div>
+
+  <!-- Only include this script in production environment -->
+{{-- @if (app()->environment('production')) --}}
+
+    <!-- Script to disable right-click and certain keyboard shortcuts -->
+    <script>
+        // Disable right-click context menu
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault(); // Prevent default right-click menu
+        });
+
+        // Disable specific key combinations used to open DevTools
+        document.addEventListener('keydown', function (e) {
+            // Block F12 key (usually opens Developer Tools)
+            if (e.keyCode === 123) {
+                e.preventDefault();
+            }
+
+            // Block Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (Inspect, Console, etc.)
+            if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                e.preventDefault();
+            }
+
+            // Block Ctrl+U (View Page Source)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+{{-- @endif --}}
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>

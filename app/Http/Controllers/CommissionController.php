@@ -30,6 +30,7 @@ class CommissionController extends Controller
             'charge_in' => 'required|string|in:Flat,Percentage',
             'commission_in' => 'required|string|in:Flat,Percentage',
             'tds_in' => 'required|string|in:Flat,Percentage',
+            'packegesId' =>'required',
         ]);
 // return $request;
 // die();
@@ -47,6 +48,7 @@ class CommissionController extends Controller
                 'charge_in' => $validatedData['charge_in'],
                 'commission_in' => $validatedData['commission_in'],
                 'tds_in' => $validatedData['tds_in'],
+                'packegesId' => $validatedData['packegesId'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -138,13 +140,64 @@ class CommissionController extends Controller
 //         // return redirect()->back()->with('success', 'Commission saved successfully!');
 //     }
 
-    public function index()
+public function index($packageId)
 {
-    $commissions = DB::table('commission_plan')->get();
-    //$commissions = Commission::with('customer')->whereHas('customer')->get();
-    // return $commissions;
-    // die();
-    return view('admin.commissionPlans.index', compact('commissions'));
+    // If you're filtering commissions based on the package ID:
+    // $commissions = DB::table('commission_plan')
+    //                 ->where('packegesId', $packageId)
+    //                 ->get();
+//  
+//$packageId = 6;
+// $commissions = DB::table('commission_plan as cp')
+//     ->join('commissionservices as cs', DB::raw('cp.service COLLATE utf8mb4_general_ci'), '=', DB::raw('cs.serviceName COLLATE utf8mb4_general_ci'))
+//     ->where('cp.packegesId', $packageId)
+//     ->select('cp.*', 'cs.serviceName', 'cs.CommCode')
+//     ->get();
+
+
+// dd($commissions);
+
+$commissions = DB::select("
+    SELECT 
+        cp.*, 
+        cs.serviceName, 
+        cs.CommCode
+    FROM 
+        commission_plan AS cp
+    JOIN 
+        commissionservices AS cs 
+        ON BINARY cp.service = BINARY cs.CommCode
+    WHERE 
+        cp.packegesId = ?
+", [$packageId]);
+
+ //return $commissions;die();
+
+    return view('admin.commissionPlans.index', compact('commissions', 'packageId'));
+}
+
+public function indexRT($packageId)
+{
+    
+    // If you're filtering commissions based on the package ID:
+    // $commissions = DB::table('commission_plan')
+    //                 ->where('packegesId', $packageId)
+    //                 ->get();
+    $commissions = DB::select("
+    SELECT 
+        cp.*, 
+        cs.serviceName, 
+        cs.CommCode
+    FROM 
+        commission_plan AS cp
+    JOIN 
+        commissionservices AS cs 
+        ON BINARY cp.service = BINARY cs.CommCode
+    WHERE 
+        cp.packegesId = ?
+", [$packageId]);
+
+    return view('user.packages.createCommission', compact('commissions', 'packageId'));
 }
 
 public function edit($id)
@@ -174,6 +227,7 @@ public function update(Request $request, $id){
         'charge_in' => 'required|string|in:Flat,Percentage',
         'commission_in' => 'required|string|in:Flat,Percentage',
         'tds_in' => 'required|string|in:Flat,Percentage',
+        'packegesId'=>'required',
     ]);
 
     // Use query builder to update the record in the database
@@ -189,14 +243,19 @@ public function update(Request $request, $id){
         'charge_in' => $validated['charge_in'],
         'commission_in' => $validated['commission_in'],
         'tds_in' => $validated['tds_in'],
+        'packegesId' => $validated['packegesId'],
         'updated_at' => now(),
     ]);
 
     // Check if the update was successful
     if ($updated) {
-        return redirect()->route('commission-list')->with('success', 'Commission updated successfully!');
+       return redirect()->route('commission-list', ['packageId' => $validated['packegesId']])
+                 ->with('success', 'Commission updated successfully!');
+
     } else {
-        return redirect()->route('commission-list')->with('error', 'Failed to update commission plan.');
+       return redirect()->route('commission-list', ['packageId' => $validated['packegesId']])
+                 ->with('error', 'Failed to update commission plan.');
+
     }
 
 }
@@ -206,13 +265,30 @@ public function getAllCommission()
 {
 
     $role=session('role');
-    
+    $packageId=session('packageId');
      $aeps = DB::table('commission_plan')->where('service', 'AEPS')->where('packages',$role)->get();
      $neft = DB::table('commission_plan')->where('service', 'DMT')->where('packages',$role)->get();
      $fund = DB::table('commission_plan')->where('service', 'FundTransfer')->where('packages',$role)->get();
+
+$all = DB::select("
+    SELECT 
+        cp.*, 
+        cs.serviceName, 
+        cs.CommCode
+    FROM 
+        commission_plan AS cp
+    JOIN 
+        commissionservices AS cs 
+        ON BINARY cp.service = BINARY cs.CommCode
+    WHERE 
+        cp.packegesId = ? 
+        AND cp.packages = ?
+", [$packageId, $role]);
+
+    //  $all = DB::table('commission_plan')->where('packages',$role)->where('packegesId',session('packageId'))->get();
    
-   
-     return view('user.commission-plan', compact('aeps','neft','fund'));
+  // return $commissions;die();
+     return view('user.commission-plan', compact('aeps','neft','fund','all'));
     
   
 }

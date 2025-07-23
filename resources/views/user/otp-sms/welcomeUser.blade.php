@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to ZPay</title>
+    <title>Welcome to CodeGraphi</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- Google Fonts -->
@@ -51,10 +51,10 @@
         <div class="d-flex justify-content-center">
             <div class="col-md-8 text-center welcome-card">
                 <!-- Logo Section -->
-                <img src="{{ asset('assets/img/icons/abhipaym.jpg') }}" style="border-radius: 50%;" alt="ZPay Logo" class="logo">
+                <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" style="border-radius: 50%;" alt="CodeGraphi Logo" class="logo">
 
                 <!-- Welcome Content -->
-                <h1>Welcome to Z Pay!</h1>
+                <h1>Welcome to CodeGraphi22!</h1>
                 <p>Dear <b>{{$username}}</b>,</p>
                 <p>Your RT number is <span class="redirect-info">{{ $rt_number }}</span>.</p>
                 <p class="mt-3">You will be redirected shortly...</p>
@@ -66,14 +66,14 @@
             </div>
         </div>
         <footer>
-            &copy; 2024 zpaypvtltd.com All rights reserved.
+            &copy; 2025 CodeGraphi.com All rights reserved.
         </footer>
     </div>
 
     <!-- Redirect Script -->
     <script>
         setTimeout(function() {
-            window.location.href = "https://zpaypvtltd.com";
+            window.location.href = "https://CodeGraphi.com/";
         }, 5000); // Redirect after 5 seconds
     </script>
 </body>

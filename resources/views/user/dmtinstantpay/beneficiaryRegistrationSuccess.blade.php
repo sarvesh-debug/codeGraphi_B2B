@@ -2,8 +2,8 @@
 @extends('user/include.layout')
 @section('content')
 <div class="card col-md-6 mx-auto shadow-lg border-0 mt-5">
-    <div class="card-header bg-success text-white text-center py-3">
-        <h4 class="mb-0">Register Beneficiary OTP</h4>
+    <div class="card-header py-3">
+        <h4 class="card-heading">Register Beneficiary OTP</h4>
     </div>
     <div class="card-body p-4">
         <p>{{$status}}</p>

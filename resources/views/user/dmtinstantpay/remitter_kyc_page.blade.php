@@ -53,9 +53,9 @@
         <div id="loadingOverlay">
             <div class="loader"></div>
         </div>
-    <div class="card-header bg-success text-white text-center py-3">
-        <h1 class="mb-0">KYC Via Biometric</h1>
-        <h4 class="mb-0">Remitter KYC</h4>
+    <div class="card-header py-3">
+        <h1 class="card-heading mb-0">KYC Via Biometric</h1>
+        <h4 class="card-heading mb-0">Remitter KYC</h4>
     </div>
     <div class="card-body p-4">
         <form action="{{ route('dmt.remitter.kyc') }}" method="POST">

@@ -48,7 +48,7 @@
 
             <div class="card-body p-4" id="printableArea">
                 <div class="text-center">
-                    <img src="{{ asset('assets/img/icons/z-pay-logo.png') }}" width="20%" alt="Logo" class="print-logo">
+                    <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" width="20%" alt="Logo" class="print-logo">
                 </div>
                 <h5 class="text-center my-3">AEPS Withdrawal Receipt</h5>
                 <h6><strong>Retailler Details</strong></h6>
