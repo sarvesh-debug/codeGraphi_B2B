@@ -294,11 +294,7 @@ $pendingCount = DB::table('add_moneys')->where('status', 0)->count('amount');
                       <div data-i18n="Without navbar">List</div>
                     </a>
                   </li>
-                  <li class="menu-item">
-                    <a href="{{route('getFundRequests.History')}}" class="menu-link">
-                      <div data-i18n="Without navbar">History</div>
-                    </a>
-                  </li>
+                
                  
                  
                 </ul>

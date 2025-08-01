@@ -1499,35 +1499,35 @@ public function tdsReport(Request $request)
         }
     }
  // payment1
-    $dmt1 = DB::table('nifi_payouts')->get();
-    foreach ($dmt1 as $row) {
-        if ($row->tds > 0) {
-            $user = $this->getUsernameByMobile($row->mobile);
-            if (!$shouldInclude($user)) continue;
-            $tdsTransactions[] = [
-                'username' => $user->username ?? 'N/A',
-                'name' => $user->name ?? 'N/A',
-                'service' => 'Payment1',
-                'pan_no' => $user->pan_no ?? 'N/A',
-                'tds' => $row->tds,
-            ];
-        }
-    }
+    // $dmt1 = DB::table('nifi_payouts')->get();
+    // foreach ($dmt1 as $row) {
+    //     if ($row->tds > 0) {
+    //         $user = $this->getUsernameByMobile($row->mobile);
+    //         if (!$shouldInclude($user)) continue;
+    //         $tdsTransactions[] = [
+    //             'username' => $user->username ?? 'N/A',
+    //             'name' => $user->name ?? 'N/A',
+    //             'service' => 'Payment1',
+    //             'pan_no' => $user->pan_no ?? 'N/A',
+    //             'tds' => $row->tds,
+    //         ];
+    //     }
+    // }
     // DMT2
-    $dmt2 = DB::table('transactions_d_m_t1')->get();
-    foreach ($dmt2 as $row) {
-        if ($row->tds > 0) {
-            $user = $this->getUsernameByMobile($row->mobile);
-            if (!$shouldInclude($user)) continue;
-            $tdsTransactions[] = [
-                'username' => $user->username ?? 'N/A',
-                'name' => $user->name ?? 'N/A',
-                'service' => 'DMT2',
-                'pan_no' => $user->pan_no ?? 'N/A',
-                'tds' => $row->tds,
-            ];
-        }
-    }
+    // $dmt2 = DB::table('transactions_d_m_t1')->get();
+    // foreach ($dmt2 as $row) {
+    //     if ($row->tds > 0) {
+    //         $user = $this->getUsernameByMobile($row->mobile);
+    //         if (!$shouldInclude($user)) continue;
+    //         $tdsTransactions[] = [
+    //             'username' => $user->username ?? 'N/A',
+    //             'name' => $user->name ?? 'N/A',
+    //             'service' => 'DMT2',
+    //             'pan_no' => $user->pan_no ?? 'N/A',
+    //             'tds' => $row->tds,
+    //         ];
+    //     }
+    // }
 
     // Sort by TDS (optional)
     usort($tdsTransactions, fn($a, $b) => $b['tds'] <=> $a['tds']);
@@ -1573,7 +1573,6 @@ public function exportTdsReport(Request $request)
         ['table' => 'cash_withdrawals', 'mobileField' => 'mobile', 'label' => 'AEPS', 'dateField' => 'created_at'],
         ['table' => 'utility_payments', 'mobileField' => 'mobile', 'label' => 'BBPS', 'dateField' => 'created_at'],
         ['table' => 'transactions_dmt_instant_pay', 'mobileField' => 'second_no', 'label' => 'DMT1', 'dateField' => 'created_at'],
-        ['table' => 'transactions_d_m_t1', 'mobileField' => 'mobile', 'label' => 'DMT2', 'dateField' => 'created_at'],
     ];
 
     foreach ($sources as $source) {

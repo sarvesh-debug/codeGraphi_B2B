@@ -41,19 +41,19 @@ public function veryfyRetailer(Request $request)
    // $mobile=
    // return $mobile;
     //Generate a 6-digit OTP
-        $otp = rand(100000, 999999);
-        session(['otp' => $otp]);
+        // $otp = rand(100000, 999999);
+        // session(['otp' => $otp]);
 
-        // Send OTP via SMS (replace with your SMS API logic)
-        $apikey = "Q5aq9iNxvaSeiOWS";
-        $senderid = "ABHEPY";
-        $mobile = $request->mobile;
-        $message = urlencode("Dear Customer your login otp for Abheepay will be $otp TEAM-ABHEEPAY");
+        // // Send OTP via SMS (replace with your SMS API logic)
+        // $apikey = "Q5aq9iNxvaSeiOWS";
+        // $senderid = "ABHEPY";
+        // $mobile = $request->mobile;
+        // $message = urlencode("Dear Customer your login otp for Abheepay will be $otp TEAM-ABHEEPAY");
         
-        $url = "https://manage.txly.in/vb/apikey.php?apikey=$apikey&senderid=$senderid&number=$mobile&message=$message";
+        // $url = "https://manage.txly.in/vb/apikey.php?apikey=$apikey&senderid=$senderid&number=$mobile&message=$message";
 
-        // Send the request to the SMS gateway
-        $response = file_get_contents($url);
+        // // Send the request to the SMS gateway
+        // $response = file_get_contents($url);
 
         if ($response) {
            // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
@@ -706,29 +706,29 @@ public function login(Request $request)
             //$otp=123456;
                 session(['otp' => $otp]);
 
-                    $mobile =  $customer->phone;  // Set mobile number
-                        $authorization = 'Utu5smrY82q1PHbiKzLOo6ewEFdv3Zp7ySfBcahIWk4gnJ9xVjWesiIKrTgkmSwZo8LzEHxabcRJACfn';
-        $route = 'dlt';
-        $sender_id = 'CGTSMS';
-        $message = '186957';
-        $variables_values = "$otp"; // customize this based on your SMS template
-        $numbers = $customer->phone;
+        //             $mobile =  $customer->phone;  // Set mobile number
+        //                 $authorization = 'Utu5smrY82q1PHbiKzLOo6ewEFdv3Zp7ySfBcahIWk4gnJ9xVjWesiIKrTgkmSwZo8LzEHxabcRJACfn';
+        // $route = 'dlt';
+        // $sender_id = 'CGTSMS';
+        // $message = '186957';
+        // $variables_values = "$otp"; // customize this based on your SMS template
+        // $numbers = $customer->phone;
 
-        $response = Http::get('https://www.fast2sms.com/dev/bulkV2', [
-            'authorization'     => $authorization,
-            'route'             => $route,
-            'sender_id'         => $sender_id,
-            'message'           => $message,
-            'variables_values'  => $variables_values,
-            'numbers'           => $numbers,
-            'flash'             => '0',
-            'schedule_time'     => '',
-        ]);
+        // $response = Http::get('https://www.fast2sms.com/dev/bulkV2', [
+        //     'authorization'     => $authorization,
+        //     'route'             => $route,
+        //     'sender_id'         => $sender_id,
+        //     'message'           => $message,
+        //     'variables_values'  => $variables_values,
+        //     'numbers'           => $numbers,
+        //     'flash'             => '0',
+        //     'schedule_time'     => '',
+        // ]);
 
-        // Optional: Log SMS API response
-        if (!$response->successful()) {
-            Log::error('SMS sending failed: ' . $response->body());
-        }
+        // // Optional: Log SMS API response
+        // if (!$response->successful()) {
+        //     Log::error('SMS sending failed: ' . $response->body());
+        // }
 
                // $response = file_get_contents($url);
 
@@ -747,11 +747,11 @@ public function login(Request $request)
             'sent_date' => $today,
         ]);
         
-
-        if ($response) {
-           // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
-           return view('user.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
-        }
+  return view('user.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
+        // if ($response) {
+        //    // return redirect()->route('generate.otp')->with('success', 'OTP sent successfully! Please verify.');
+        //    return view('user.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
+        // }
 
        }
     
@@ -1076,9 +1076,10 @@ public function active($id)
 
     public function approveFund(Request $request)
     {
-      //return $request;die();
-        if ($request->empin !== auth()->user()->empin) {
-    return back()->with('error', 'Invalid Employee PIN');
+      //return auth()->user()->empin;die();
+      //dd($request->empin,auth()->user()->empin);die();
+        if ($request->empin != auth()->user()->empin) {
+     return back()->with('error', 'Invalid Employee PIN');
 }
         $adminBalance=session('adminBalance');
          // Extract the required data from the request
@@ -1146,7 +1147,7 @@ session(['adminBalance'=> $balanceAd]);
     $id=$request->id;
     $remark=$request->remark;
 
-if ($request->empin !== auth()->user()->empin) {
+if ($request->empin != auth()->user()->empin) {
     return back()->with('error', 'Invalid Employee PIN');
 }
     // Update the status to 1 in the associated table (e.g., `add_moneys`)
