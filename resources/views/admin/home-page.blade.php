@@ -1,397 +1,248 @@
-@extends('admin/include.layout')  
+@extends('admin/include.layout')
+
 @php
-    $distibutor=\App\Models\CustomerModel::where('role', 'distibuter')->count();
-    $sd=\App\Models\CustomerModel::where('role', 'sd')->count();
-    $retailer=\App\Models\CustomerModel::where('role', 'Retailer')->count();
-    $userTotal=$retailer+$distibutor;
-    $amtDistributor=\App\Models\CustomerModel::where('role', 'distibuter')->sum('balance');
-    $amtSd=\App\Models\CustomerModel::where('role', 'sd')->sum('balance');
-    $amtRetailer=\App\Models\CustomerModel::where('role', 'Retailer')->sum('balance');
-    $userTotalAmt=$amtDistributor+$amtRetailer;
-    //PaymentRequest
-    use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
-$acceptAmt = DB::table('add_moneys')->where('status', 1)->where('date',today())->sum('amount');
-$rejectAmt = DB::table('add_moneys')->where('status', -1)->where('date',today())->sum('amount');
-$pendingAmt = DB::table('add_moneys')->where('status', 0)->where('date',today())->sum('amount');
-$acceptCnt = DB::table('add_moneys')->where('status', 1)->where('date',today())->count('amount');
-$rejectCnt = DB::table('add_moneys')->where('status', -1)->where('date',today())->count('amount');
-$pendingCnt = DB::table('add_moneys')->where('status', 0)->where('date',today())->count('amount');
+$distibutor = \App\Models\CustomerModel::where('role', 'distibuter')->count();
+$sd = \App\Models\CustomerModel::where('role', 'sd')->count();
+$retailer = \App\Models\CustomerModel::where('role', 'Retailer')->count();
+$userTotal = $retailer + $distibutor;
 
-$payCntTotal=$acceptCnt+$pendingCnt+$rejectCnt;
-$payAmtTotal=$acceptAmt+$pendingAmt+$rejectAmt;
+$amtDistributor = \App\Models\CustomerModel::where('role', 'distibuter')->sum('balance');
+$amtSd = \App\Models\CustomerModel::where('role', 'sd')->sum('balance');
+$amtRetailer = \App\Models\CustomerModel::where('role', 'Retailer')->sum('balance');
+$userTotalAmt = $amtDistributor + $amtRetailer;
 
+$acceptAmt = DB::table('add_moneys')->where('status', 1)->where('date', today())->sum('amount');
+$rejectAmt = DB::table('add_moneys')->where('status', -1)->where('date', today())->sum('amount');
+$pendingAmt = DB::table('add_moneys')->where('status', 0)->where('date', today())->sum('amount');
 
-    $DMTvalueAll=0;
-    $countDMT=0;
-            // Fetch data from 'cash_withdrawals'
-    $transactionsDMTInstantPay  = DB::table('transactions_dmt_instant_pay')->where('created_at',today())->get();
-   
-    foreach ($transactionsDMTInstantPay  as $transaction)  {
-        $responseData = json_decode($transaction->response_data, true);
-                        $payableValue=0;
+$acceptCnt = DB::table('add_moneys')->where('status', 1)->where('date', today())->count('amount');
+$rejectCnt = DB::table('add_moneys')->where('status', -1)->where('date', today())->count('amount');
+$pendingCnt = DB::table('add_moneys')->where('status', 0)->where('date', today())->count('amount');
 
-        if(isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN')
-        {
-            $payableValue = (float)($responseData['data']['txnValue'] ?? 0);
-            $DMTvalueAll += $payableValue;
-            $countDMT +=1;
-          
-        }
+$DMTvalueAll = 0;
+$countDMT = 0;
+$transactionsDMT = DB::table('transactions_dmt_instant_pay')->whereDate('created_at', today())->get();
+foreach ($transactionsDMT as $transaction) {
+    $responseData = json_decode($transaction->response_data, true);
+    if (($responseData['statuscode'] ?? '') === 'TXN') {
+        $DMTvalueAll += (float)($responseData['data']['txnValue'] ?? 0);
+        $countDMT++;
     }
-
-    $valueAll=0;
-    $countAEPS=0;
-            // Fetch data from 'cash_withdrawals'
-    $cashWithdrawals = DB::table('cash_withdrawals')->where('created_at',today())->get();
-    foreach ($cashWithdrawals as $withdrawal) {
-        $responseData = json_decode($withdrawal->response_data, true);
-        $payableValue=0;
-
-        if(isset($responseData['statuscode']) && $responseData['statuscode'] == 'TXN')
-        {
-            $payableValue = (float)($responseData['data']['transactionValue'] ?? 0);
-            $valueAll += $payableValue;
-            $countAEPS +=1;
-        }
 }
- //BBPS
-    $bbpsvalueAll=0;
-    $countbbpa=0;
-            // Fetch data from 'cash_withdrawals'
-    $transactionsBBPSInstantPay  = DB::table('utility_payments')->where('created_at',today())->get();
-   
-    foreach ($transactionsBBPSInstantPay  as $transaction)  {
-        $responseData = json_decode($transaction->response_body, true);
-                        $payableValue=0;
 
-        if(!isset($responseData['respose']['data']['txnValue']) || !in_array($responseData['statuscode'], ['TXN', 'TUP']))
-        {
-            
-            $payableValue = (float)($responseData['respose']['data']['txnValue'] ?? 0);
-            $bbpsvalueAll += $payableValue;
-            $countbbpa +=1;
-          
-        }
+$valueAll = 0;
+$countAEPS = 0;
+$cashWithdrawals = DB::table('cash_withdrawals')->whereDate('created_at', today())->get();
+foreach ($cashWithdrawals as $withdrawal) {
+    $responseData = json_decode($withdrawal->response_data, true);
+    if (($responseData['statuscode'] ?? '') === 'TXN') {
+        $valueAll += (float)($responseData['data']['transactionValue'] ?? 0);
+        $countAEPS++;
     }
+}
 
-    //payout
-    $tpayout=DB::table('cgpayout')->where('status','CREDITED')->where('created_at',today())->sum('amount');
+$bbpsvalueAll = 0;
+$countbbpa = 0;
+$bbpsTransactions = DB::table('utility_payments')->whereDate('created_at', today())->get();
+foreach ($bbpsTransactions as $transaction) {
+    $responseData = json_decode($transaction->response_body, true);
+    if (isset($responseData['statuscode']) && in_array($responseData['statuscode'], ['TXN', 'TUP'])) {
+        $bbpsvalueAll += (float)($responseData['respose']['data']['txnValue'] ?? 0);
+        $countbbpa++;
+    }
+}
 
- 
-
+$tpayout = DB::table('cgpayout')->where('status', 'CREDITED')->whereDate('created_at', today())->sum('amount');
 @endphp
+
 @section('content')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <style>
-    /* Services Icon Styling */
-    .services-icon {
-        width: 40%;
-        transition: transform 0.3s ease-in-out;
-    }
-    .services-icon:hover {
-        transform: scale(1.1);
-    }
-
-    /* Card Styling */
-    .card {
-        border: none;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    .kpi-card {
+        border-radius: 10px;
+        padding: 20px;
         color: white;
+        box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        text-align: center;
     }
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-body {
-        padding: 1.5rem;
-    }
-
-    /* Card Title */
-    .card-title {
-        font-size: 1.1rem;
-        margin-top: 0.75rem;
-        font-weight: bold;
+    .kpi-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
         text-transform: uppercase;
     }
-
-    /* Card Text */
-    .card-text {
-        font-size: 0.9rem;
-        color: rgb(15, 3, 3);
+    .kpi-value {
+        font-size: 24px;
+        font-weight: bold;
     }
-    .fas
-    {
-        color: black;
-        font-size: 20px;
+    .card-chart {
+        padding: 25px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.05);
     }
-    
-
-    /* Gradient Backgrounds */
-    /* .gradient-1 { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
-    .gradient-2 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-    .gradient-3 { background: linear-gradient(135deg, #fad0c4, #ffd1ff); }
-    .gradient-4 { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
-    .gradient-5 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
-    .gradient-6 { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
-    .gradient-7 { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
-    .gradient-8 { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
-    .gradient-9 { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
-    .gradient-10 { background: linear-gradient(135deg, #fccb90, #d57eeb); }
-    .gradient-11 { background: linear-gradient(135deg, #ff9a9e, #fecfef); }
-    .gradient-12 { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); } */
-
-
-/* Professional & Rich Gradient Backgrounds */
-.gradient-1 {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-} /* Soft pink to peach */
-.gradient-2 {
-  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
-} /* Lavender purple */
-.gradient-3 {
-  background: linear-gradient(135deg, #ffecd2, #fcb69f);
-} /* Warm sandy orange */
-.gradient-4 {
-  background: linear-gradient(135deg, #89f7fe, #66a6ff);
-} /* Aqua blue */
-.gradient-5 {
-  background: linear-gradient(135deg, #f6d365, #fda085);
-} /* Golden orange */
-.gradient-6 {
-  background: linear-gradient(135deg, #84fab0, #8fd3f4);
-} /* Fresh green-blue */
-.gradient-7 {
-  background: linear-gradient(135deg, #cfd9df, #e2ebf0);
-} /* Clean light steel */
-.gradient-8 {
-  background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
-} /* Pastel violet to blue */
-.gradient-9 {
-  background: linear-gradient(135deg, #f093fb, #f5576c);
-} /* Pink to red */
-.gradient-10 {
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
-} /* Sky blue to cyan */
-.gradient-11 {
-  background: linear-gradient(135deg, #43e97b, #38f9d7);
-} /* Green to teal */
-.gradient-12 {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-} /* Blue to rich violet */
-
-
-
 </style>
 
 <div class="container mt-4">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="row">
-                {{-- <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-1">
-                        <div class="card-body text-center">
-                            <a href="{{route('aepsReport')}}">
-                                <i class="fas fa-fingerprint services-icon"></i>
-                                <h5 class="card-title">AEPS</h5>
-                                <p class="card-text">₹ {{$valueAll}} | {{$countAEPS}}</p>
-                            </a>
-                        </div>
-                    </div>
-                </div> --}}
 
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-1">
-                        <div class="card-body">
-                            <a href="{{ route('aepsReport') }}" class="d-flex align-items-center">
-                                <i class="fas fa-fingerprint services-icon me-3 fa-2x"></i> <!-- icon on left -->
-                                <div>
-                                    <h5 class="card-title mb-1">AEPS</h5>
-                                    <p class="card-text mb-0">₹ {{$valueAll}} | {{$countAEPS}}</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    {{-- 🔹 KPI Summary --}}
+    <div class="row mb-4">
+        <div class="col-md-3"><div class="kpi-card bg-primary"><div class="kpi-title">AEPS</div><div class="kpi-value">₹ {{ $valueAll }}</div></div></div>
+        <div class="col-md-3"><div class="kpi-card bg-success"><div class="kpi-title">DMT</div><div class="kpi-value">₹ {{ $DMTvalueAll }}</div></div></div>
+        <div class="col-md-3"><div class="kpi-card bg-warning"><div class="kpi-title">BBPS</div><div class="kpi-value">₹ {{ $bbpsvalueAll }}</div></div></div>
+        <div class="col-md-3"><div class="kpi-card bg-danger"><div class="kpi-title">Payout</div><div class="kpi-value">₹ {{ $tpayout }}</div></div></div>
+    </div>
 
-
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-2">
-                        <div class="card-body text-center">
-                            <a href="{{route('dmt1Report')}}" class="d-flex align-items-center">
-                                <i class="fas fa-exchange-alt services-icon"></i>
-                                <div>
-                                <h5 class="card-title mb-1">DMT</h5>
-                                <p class="card-text mb-0">₹ {{$DMTvalueAll}} | {{$countDMT}}</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-3">
-                        <div class="card-body text-center">
-                            <a href="{{route('bbpsReport')}}"  class="d-flex align-items-center">
-                                <i class="fas fa-bolt services-icon"></i>
-                                <div>
-                                    <h5 class="card-title mb-1">BBPS</h5>
-                                    <p class="card-text mb-0">₹ {{$bbpsvalueAll}} | {{$countbbpa}} </p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                 <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-3">
-                        <div class="card-body text-center">
-                            <a href="{{route('payoutReport')}}"  class="d-flex align-items-center">
-                                <i class="fas fa-wallet services-icon"></i>
-                                <div>
-                                    <h5 class="card-title mb-1">Payout</h5>
-                                    <p class="card-text mb-0">₹ {{$tpayout}}</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card gradient-4">
-                        <div class="card-body text-center">
-                            <a href="{{route('dmt1Report')}}" class="d-flex align-items-center">
-                                <i class="fas fa-wallet services-icon"></i>
-                                <div>
-                                    <h5 class="card-title mb-1">Total</h5>
-                                    <p class="card-text mb-0">₹ {{$DMTvalueAll + $valueAll}} | {{$countAEPS + $countDMT}}</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    {{-- 🔹 Summary Tables --}}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card-chart">
+                <h5 class="mb-3">User Wallet Balances</h5>
+                <table class="table table-sm table-striped">
+                    <thead><tr><th>Role</th><th>Amount (₹)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Distributors</td><td>{{ $amtDistributor }}</td></tr>
+                        <tr><td>Super Distributors</td><td>{{ $amtSd }}</td></tr>
+                        <tr><td>Retailers</td><td>{{ $amtRetailer }}</td></tr>
+                        <tr class="table-light"><th>Total</th><th>{{ $userTotalAmt }}</th></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <h4 class="text-center">Users 
-        </h4>
-
-<div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-5">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-user-tie services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">S.Distributors</h5>
-                            <p class="card-text mb-0">₹ {{$amtSd}} | {{$sd}}</p>
-                        </div>
-                    </a>
-                </div>
+        <div class="col-md-6">
+            <div class="card-chart">
+                <h5 class="mb-3">Payment Request Summary</h5>
+                <table class="table table-sm table-bordered">
+                    <thead><tr><th>Status</th><th>Amount</th><th>Count</th></tr></thead>
+                    <tbody>
+                        <tr><td>Accepted</td><td>₹ {{ $acceptAmt }}</td><td>{{ $acceptCnt }}</td></tr>
+                        <tr><td>Pending</td><td>₹ {{ $pendingAmt }}</td><td>{{ $pendingCnt }}</td></tr>
+                        <tr><td>Rejected</td><td>₹ {{ $rejectAmt }}</td><td>{{ $rejectCnt }}</td></tr>
+                        <tr class="table-primary"><th>Total</th><th>₹ {{ $acceptAmt + $pendingAmt + $rejectAmt }}</th><th>{{ $acceptCnt + $pendingCnt + $rejectCnt }}</th></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-5">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-user-tie services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Distributors</h5>
-                            <p class="card-text mb-0">₹ {{$amtDistributor}} | {{$distibutor}}</p>
-                        </div>
-                    </a>
-                </div>
+    {{-- 🔹 User Summary Table --}}
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card-chart">
+                <h5 class="mb-3">User Summary by Role, Status & KYC</h5>
+
+                @php
+                    $roles = ['Retailer', 'distibuter', 'sd','rm'];
+                    $roleLabels = [
+                        'Retailer' => 'Retailers',
+                        'distibuter' => 'Distributors',
+                        'sd' => 'Super Distributors',
+                        'rm' => 'Relationship Managers'
+                    ];
+                @endphp
+
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            <th>Total Users</th>
+                            <th>Active</th>
+                            <th>Deactive</th>
+                            <th data-bs-toggle="tooltip" title="Users whose PIN is greater than 0">KYC Completed</th>
+                            <th data-bs-toggle="tooltip" title="Users whose PIN is 0 or not set">KYC Pending</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($roles as $role)
+                            @php
+                                $users = \App\Models\CustomerModel::where('role', $role);
+                                $total = $users->count();
+                                $active = $users->where('status', 'active')->count();
+                        
+                                $kycCompleted = $users->where('pin', '!=', 0)->count();
+                                $kycPending = $total - $kycCompleted;
+                                $kycPercent = $total > 0 ? round(($kycCompleted / $total) * 100) : 0;
+                            @endphp
+                            <tr>
+                                <td>{{ $roleLabels[$role] }}</td>
+                                <td>{{ $total }}</td>
+                                <td>{{ $active }}</td>
+                                <td>{{ $total-$active }}</td>
+                                <td>
+                                    {{ $kycCompleted }}
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $kycPercent }}%;"></div>
+                                    </div>
+                                </td>
+                                <td>{{ $kycPending }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
+    </div>
 
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-6">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-users services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Retailers</h5>
-                            <p class="card-text mb-0">₹ {{$amtRetailer}} | {{$retailer}}</p>
-                        </div>
-                    </a>
-                </div>
+    {{-- 🔹 Charts --}}
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card-chart">
+                <h5 class="mb-3">Transaction Overview</h5>
+                <canvas id="serviceChart"></canvas>
             </div>
         </div>
-
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-8">
-                <div class="card-body text-center">
-                    <a href="#"  class="d-flex align-items-center">
-                        <i class="fas fa-chart-bar services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Total</h5>
-                            <p class="card-text mb-0">₹ {{$userTotalAmt}} | {{$userTotal}}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <h4 class="text-center">Today Payment Request</h4>
-
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-9">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-check-circle services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Accepted</h5>
-                            <p class="card-text mb-0">₹ {{$acceptAmt}} | {{$acceptCnt}}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-10">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-hourglass-half services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Pending</h5>
-                            <p class="card-text mb-0">₹ {{$pendingAmt}} | {{$pendingCnt}}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-11">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-times-circle services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Rejected</h5>
-                            <p class="card-text mb-0">₹ {{$rejectAmt}} | {{$rejectCnt}}</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card gradient-12">
-                <div class="card-body text-center">
-                    <a href="#" class="d-flex align-items-center">
-                        <i class="fas fa-money-check services-icon"></i>
-                        <div>
-                            <h5 class="card-title mb-1">Total</h5>
-                            <p class="card-text mb-0">₹ {{$payAmtTotal}} | {{$payCntTotal}}</p>
-                        </div>
-                    </a>
-                </div>
+        <div class="col-md-6">
+            <div class="card-chart">
+                <h5 class="mb-3">KYC Completion Chart</h5>
+                <canvas id="kycPieChart"></canvas>
             </div>
         </div>
     </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+<script>
+    // Tooltip activation
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.map(function (el) {
+        return new bootstrap.Tooltip(el)
+    })
+
+    // Bar chart
+    new Chart(document.getElementById('serviceChart'), {
+        type: 'bar',
+        data: {
+            labels: ['AEPS', 'DMT', 'BBPS', 'Payout'],
+            datasets: [{
+                label: 'Transaction ₹',
+                data: [{{ $valueAll }}, {{ $DMTvalueAll }}, {{ $bbpsvalueAll }}, {{ $tpayout }}],
+                backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // KYC Pie chart
+    new Chart(document.getElementById('kycPieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Retailers', 'Distributors', 'Super Distributors'],
+            datasets: [{
+                data: [
+                    {{ \App\Models\CustomerModel::where('role', 'Retailer')->where('pin', '>', 0)->count() }},
+                    {{ \App\Models\CustomerModel::where('role', 'distibuter')->where('pin', '>', 0)->count() }},
+                    {{ \App\Models\CustomerModel::where('role', 'sd')->where('pin', '>', 0)->count() }}
+                ],
+                backgroundColor: ['#17a2b8', '#ffc107', '#28a745']
+            }]
+        }
+    });
+</script>
 @endsection

@@ -34,50 +34,53 @@ public function login(Request $request)
    // return $request;die();
     $user = User::where('email', $request->email)->first();
 
+   
+
      if ($user && trim($request->password) === $user->password) {
         Auth::login($user);
         //return  "Hello";die();
         $mobile = $user->phone;
-        $details = DB::table('business')->where('phone','8303040988')->first();
-
+        $details = DB::table('business')->where('phone',$mobile)->first();
+//  return $details; // Debugging line to check user retrieval
+//     die();
         session(['adminBalance' => $details->balance ?? 0]);
         session(['business_id' => $details->business_id ?? null]);
 
 
 
-         $otp = rand(100000, 999999);
-            //$otp=123456;
+         //$otp = rand(100000, 999999);
+            $otp=123456;
                 session(['otp' => $otp]);
 
                      // Set mobile number
-                        $authorization = 'Utu5smrY82q1PHbiKzLOo6ewEFdv3Zp7ySfBcahIWk4gnJ9xVjWesiIKrTgkmSwZo8LzEHxabcRJACfn';
-        $route = 'dlt';
-        $sender_id = 'CGTSMS';
-        $message = '186957';
-        $variables_values = "$otp"; // customize this based on your SMS template
-        $numbers = $mobile;
+        //                 $authorization = 'Utu5smrY82q1PHbiKzLOo6ewEFdv3Zp7ySfBcahIWk4gnJ9xVjWesiIKrTgkmSwZo8LzEHxabcRJACfn';
+        // $route = 'dlt';
+        // $sender_id = 'CGTSMS';
+        // $message = '186957';
+        // $variables_values = "$otp"; // customize this based on your SMS template
+        // $numbers = $mobile;
 
-        $response = Http::get('https://www.fast2sms.com/dev/bulkV2', [
-            'authorization'     => $authorization,
-            'route'             => $route,
-            'sender_id'         => $sender_id,
-            'message'           => $message,
-            'variables_values'  => $variables_values,
-            'numbers'           => $numbers,
-            'flash'             => '0',
-            'schedule_time'     => '',
-        ]);
+        // $response = Http::get('https://www.fast2sms.com/dev/bulkV2', [
+        //     'authorization'     => $authorization,
+        //     'route'             => $route,
+        //     'sender_id'         => $sender_id,
+        //     'message'           => $message,
+        //     'variables_values'  => $variables_values,
+        //     'numbers'           => $numbers,
+        //     'flash'             => '0',
+        //     'schedule_time'     => '',
+        // ]);
 
-        // Optional: Log SMS API response
-        if (!$response->successful()) {
-            Log::error('SMS sending failed: ' . $response->body());
-        }
+        // // Optional: Log SMS API response
+        // if (!$response->successful()) {
+        //     Log::error('SMS sending failed: ' . $response->body());
+        // }
 
-        if ($response) {
-             return view('admin.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
-        }
+        // if ($response) {
+        //      return view('admin.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
+        // }
 
-       
+       return view('admin.auth.logOtp', ['otp' => $otp, 'mobile' => $mobile]);
 
          //return redirect()->intended('/admin/dashboard');
 

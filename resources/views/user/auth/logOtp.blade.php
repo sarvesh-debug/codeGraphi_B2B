@@ -89,13 +89,13 @@
     </style>
 </head>
 <body>
+    {{-- {{ route('forgetPassworsAuth') }} --}}
     <div class="otp-container">
         <img src="{{ asset('assets/img/icons/codegraphi-logo.png') }}" alt="code graphi logo">
         <h1>CodeGraphi</h1>
-        <h2>OTP Verification</h2>
-        <p>We have sent an OTP to your Contact No <strong>{{ 'XXXXXX' . substr($mobile, -4) }}</strong>. Please enter it below.</p>
-
-        <form id="otpForm" action="{{ route('oneVerify.otp') }}" method="POST">
+        <h2>OTP Forget Password</h2>
+        <p>We have sent an OTP to your Contact No <strong>{{ $mobile }}</strong>. Please enter it below.</p>
+        <form id="otpForm" action="{{ route('forgetPassworsAuth') }}" method="POST">
             @csrf
             <div class="otp-input">
                 <input type="text" maxlength="6" name="otp" required>
@@ -105,7 +105,6 @@
         </form>
         <div class="resend-link">
             Didn't receive the OTP? <a href="#">Resend</a>
-            
         </div>
     </div>
 </body>

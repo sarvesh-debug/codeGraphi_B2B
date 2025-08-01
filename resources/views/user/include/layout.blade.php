@@ -498,7 +498,7 @@
         <span class="menu-header-text">BBPS</span>
     </li>
 
-    @if($customer->dmt == 1 && $customer->balance > 0 && $customer->status === "active" && $customer->pin > 0)
+    @if($customer->mprecharge == 1 && $customer->balance > 0 && $customer->status === "active" && $customer->pin > 0)
         <li class="menu-item">
             <a href="{{ route('mobileRecharge') }}" class="menu-link d-flex align-items-center gap-2">
                 <i class="fas fa-mobile-alt fs-5"></i>
@@ -575,6 +575,9 @@
                 <div data-i18n="Analytics">Fast Tag</div>
             </a>
         </li>
+
+        @else
+        
     @endif
 @endif
 
